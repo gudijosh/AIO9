@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/* SIGNAL palette and motion tokens. Tailwind utilities are generated from these. */
+@theme {
+  --color-midnight: #0b1421;
+  --color-midnight-900: #070d17;
+  --color-navy: #182d46;
+  --color-signal: #2558dc;
+  --color-signal-300: #86a8ff; /* blue for text and strokes on dark surfaces */
+  --color-slate: #8997a8;
+  --color-slate-600: #4d5c70; /* secondary text on light surfaces */
+  --color-cloud: #f5f7fa;
+  --color-amber: #e8a33d; /* exceptions inside demos only */
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --ease-signal: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --shadow-float: 0 28px 60px -24px rgb(3 8 16 / 0.7), 0 2px 6px rgb(3 8 16 / 0.25);
+
+  --animate-rise: rise 0.8s var(--ease-signal) both;
+  --animate-unmask: unmask 1s var(--ease-signal) both;
+  --animate-blink: blink 1.1s ease-in-out infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes unmask {
+    from {
+      clip-path: inset(100% 0% 0% 0%);
+    }
+    to {
+      clip-path: inset(0% 0% 0% 0%);
+    }
+  }
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  background: var(--color-midnight);
+}
+
+body {
+  background: var(--color-midnight);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal-300);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.on-light :focus-visible {
+  outline-color: var(--color-signal);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

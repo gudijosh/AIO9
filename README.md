@@ -1,0 +1,77 @@
+# AIO9 — Intelligence in Motion
+
+Landing bilingüe (ES / EN) de AIO9. Su centro es una galería interactiva de seis
+industrias; cada una reproduce una simulación propia de cómo una solución de IA
+convierte una solicitud en una acción.
+
+> Las demostraciones son **simulaciones locales y deterministas**, identificadas
+> como ilustrativas en la interfaz. No hay modelos de IA ni datos reales detrás.
+
+## Ejecutar
+
+Requiere Node 20.9 o superior.
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+Abre http://localhost:3000 (redirige a `/es`; inglés en `/en`).
+
+| Script | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | Build de producción |
+| `npm run start` | Sirve el build |
+| `npm run lint` | ESLint |
+| `npx tsc --noEmit` | Comprobación de tipos (después de un `build` o `npx next typegen`) |
+
+## Variables de entorno
+
+Copia `.env.example` a `.env.local`. Todas son opcionales.
+
+| Variable | Uso |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | URL pública: canónicas, Open Graph, sitemap |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Correo visible en Contacto (si falta, no se muestra) |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Enlace de WhatsApp (si falta, no se muestra) |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Envío del formulario por correo (Resend) |
+| `CONTACT_WEBHOOK_URL` | Alternativa: envío del formulario a un webhook |
+
+**Formulario:** sin Resend ni webhook configurados, `POST /api/contact` responde
+`503` y el formulario informa que la consulta no se envió. Nunca simula un envío.
+
+## Integraciones pendientes
+
+1. **Entrega del formulario**: crear cuenta en Resend (y verificar dominio) o
+   definir un webhook, y cargar las variables.
+2. **Datos de contacto reales**: correo y número de WhatsApp.
+3. **Dominio** y `NEXT_PUBLIC_SITE_URL`.
+4. **Analítica**: no hay ninguna instalada. El punto de conexión es
+   `src/lib/analytics.ts` (`track()` ya se llama en los eventos clave).
+5. **Protección anti-spam**: hay honeypot y validación en servidor, pero no
+   límite de peticiones. Añadirlo (p. ej. en el proveedor de hosting) antes de
+   recibir tráfico real.
+6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
+7. **Fotografías**: son imágenes generadas a 1280×720. Sustituirlas por
+   versiones de mayor resolución mejora pantallas grandes (ver `docs/IMAGES.md`).
+
+## Despliegue
+
+Proyecto Next.js estándar, sin configuración adicional.
+
+- **Vercel**: importar el repositorio y definir las variables de entorno.
+- **Netlify**: importar el repositorio; el runtime de Next.js se detecta solo
+  (build `npm run build`). Definir las variables de entorno.
+
+La ruta `/api/contact` necesita un runtime de servidor (no es un export estático).
+
+## Documentación
+
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): estructura, sistema de diseño y cómo ampliar.
+- [`docs/IMAGES.md`](docs/IMAGES.md): origen y tratamiento de las fotografías.
+- [`docs/TESTING.md`](docs/TESTING.md): pruebas realizadas y resultados.
+- `.claude/skills/`: guías de buenas prácticas usadas durante el desarrollo.
