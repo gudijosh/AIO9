@@ -55,7 +55,7 @@ export const en: Dictionary = {
         "Automate appointments, reminders and administrative work, and give more time back to care.",
       from: "Request",
       to: "Confirmed appointment",
-      alt: "Illustration of a stethoscope next to a calendar with one day checked",
+      alt: "Blue stethoscope on a clipboard with an appointment sheet, next to a calendar",
       steps: [
         "A patient request comes in",
         "The assistant replies",
@@ -87,7 +87,7 @@ export const en: Dictionary = {
         "Answer questions, manage reservations and connect every interaction to your operations.",
       from: "Request",
       to: "Table reserved",
-      alt: "Illustration of a restaurant menu with a fork and spoon",
+      alt: "Restaurant menu next to a plate of pasta and a blue napkin",
       steps: [
         "A guest asks about availability",
         "The AI replies",
@@ -119,7 +119,7 @@ export const en: Dictionary = {
         "Reply to buyers, identify opportunities and coordinate visits automatically.",
       from: "Inquiry",
       to: "Visit scheduled",
-      alt: "Illustration of a small house with a key",
+      alt: "Scale model of a house with a blue door and a set of keys",
       steps: [
         "An inquiry about a property comes in",
         "Retrieves the relevant details",
@@ -153,7 +153,7 @@ export const en: Dictionary = {
         "Connect questions, inventory, recommendations and order follow-up.",
       from: "Question",
       to: "Order followed up",
-      alt: "Illustration of a shopping bag with a garment",
+      alt: "Shopping bag with a blue sweater, sneakers and a card reader",
       steps: [
         "A customer asks about a product",
         "Checks inventory",
@@ -186,7 +186,7 @@ export const en: Dictionary = {
         "Automate repetitive tasks, organize information and help teams focus on higher-value work.",
       from: "Document",
       to: "Organized information",
-      alt: "Illustration of a folder with documents and a pen",
+      alt: "Navy portfolio with documents, a pen, glasses and a calculator",
       steps: [
         "A request arrives",
         "Identifies the document type",
@@ -219,7 +219,7 @@ export const en: Dictionary = {
         "Connect information, detect issues and speed up operational decisions.",
       from: "Order",
       to: "Action assigned",
-      alt: "Illustration of a neatly sealed shipping box",
+      alt: "Shipping box with blue tape, parcels and a barcode scanner",
       steps: [
         "An order comes in",
         "Verifies the data",

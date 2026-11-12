@@ -58,7 +58,7 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
    límite de peticiones. Añadirlo (p. ej. en el proveedor de hosting) antes de
    recibir tráfico real.
 6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
-7. **Ilustraciones**: son imágenes generadas a 1280×720. Sustituirlas por
+7. **Imágenes**: son imágenes generadas a 1280×720. Sustituirlas por
    versiones de mayor resolución mejora pantallas grandes (ver `docs/IMAGES.md`).
 
 ## Despliegue en Vercel
@@ -89,7 +89,7 @@ servidor; no es un export estático.
 ## Documentación
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): estructura, sistema de diseño y cómo ampliar.
-- [`docs/IMAGES.md`](docs/IMAGES.md): origen y tratamiento de las ilustraciones.
+- [`docs/IMAGES.md`](docs/IMAGES.md): origen y tratamiento de las imágenes.
 - [`docs/TESTING.md`](docs/TESTING.md): pruebas realizadas y resultados.
 - `docs/screenshots/`: capturas de escritorio y móvil.
 - `.claude/skills/`: guías de buenas prácticas usadas durante el desarrollo.

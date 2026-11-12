@@ -29,7 +29,8 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   configurada (nunca un éxito simulado). API: 422, 400 (honeypot), 400 (cuerpo).
 - Idiomas: la página en inglés no contiene textos en español y viceversa.
 - Movimiento reducido: la demo muestra su estado final, los pasos se recorren
-  a mano y el hero no rota.
+  a mano y el hero no rota. El parallax también se desactiva, pero eso no
+  tiene prueba automática.
 - Móvil: mosaico apilado sin fijación, la demo se reproduce al entrar en
   pantalla, objetivos táctiles de al menos 24 px.
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
@@ -38,11 +39,13 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 86 | 100 | 100 | 100 |
-| Escritorio | 95 | 100 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 90 | 100 | 100 | 100 |
+| Escritorio | 79 | 100 | 100 | 100 |
 
-LCP 3.1 s en móvil emulado y 0.7 s en escritorio; CLS 0 en ambos. Las cifras
-varían entre ejecuciones (en otras pasadas el móvil dio entre 86 y 95).
+LCP 3.3 s en móvil emulado y 0.7 s en escritorio; CLS 0 en ambos. El
+rendimiento en escritorio bajó respecto a versiones anteriores (antes 89–95)
+por el parallax ligado al scroll: el tiempo de bloqueo al cargar ronda los
+480 ms. Las cifras varían entre ejecuciones.
 
 ## Repetir las pruebas
 

@@ -32,9 +32,9 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   const centred = (id) => p.evaluate((id) => { const r = document.getElementById('industry-' + id).closest('article').getBoundingClientRect(); return Math.abs((r.left + r.right) / 2 - innerWidth / 2); }, id);
   const flow = await p.evaluate(() => { const w = document.querySelector('#industries > div'); return { top: w.getBoundingClientRect().top + scrollY, h: w.offsetHeight }; });
   await p.evaluate(({ top }) => scrollTo({ top, behavior: 'instant' }), flow); await p.waitForTimeout(500);
-  const x0 = await p.evaluate(() => document.getElementById('industry-healthcare').getBoundingClientRect().left);
+  const x0 = await p.evaluate(() => document.getElementById('industry-healthcare').closest('article').getBoundingClientRect().left);
   await p.evaluate(({ top }) => scrollTo({ top: top + 600, behavior: 'instant' }), flow); await p.waitForTimeout(500);
-  const x1 = await p.evaluate(() => document.getElementById('industry-healthcare').getBoundingClientRect().left);
+  const x1 = await p.evaluate(() => document.getElementById('industry-healthcare').closest('article').getBoundingClientRect().left);
   check('scrolling down moves the mosaic right-to-left, 1:1', Math.abs((x0 - x1) - 600) < 4, `moved ${Math.round(x0 - x1)}px for 600px of scroll`);
   check('section stays pinned while the mosaic travels', await p.evaluate(() => Math.abs(document.querySelector('#industries .lg\\:sticky').getBoundingClientRect().top) < 1));
   for (const i of [3, 0, 5, 1, 2, 4]) {

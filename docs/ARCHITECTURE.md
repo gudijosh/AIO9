@@ -17,7 +17,7 @@ src/
   components/
     brand/        Wordmark, Signal (motivo de marca)
     layout/       Header (menú móvil), LanguageSwitch, Footer
-    hero/         Hero, HeroStack (tres ilustraciones en capas)
+    hero/         Hero, HeroStack (tres fotografías en capas)
     flow/         ServicesFlow (mosaico horizontal), IndustryChapter, Tile, FlowNav
     industries/   StepTrack, DemoControls, WipeStack (hero)
     demos/        Una demostración por industria + primitives/
@@ -66,7 +66,7 @@ del proceso y la tarjeta de contacto.
 ## El mosaico (ServicesFlow)
 
 Todo lo que ofrece AIO9 vive en una sola cinta de recuadros: seis industrias
-(objeto ilustrado con su demo + recuadro de vidrio con el problema + recuadro de
+(bodegón fotográfico con su demo + recuadro de vidrio con el problema + recuadro de
 pasos), seis capacidades intercaladas en columnas de dos, y el proceso en tres
 pasos.
 
@@ -75,18 +75,27 @@ pasos.
   altura de la sección se calcula a partir del ancho real de la cinta
   (`ResizeObserver`), así que añadir o quitar recuadros no requiere tocar
   números. El fondo se desplaza más lento (parallax), la cinta se inclina
-  levemente según la velocidad del scroll y cada recuadro entra desde la
-  derecha la primera vez que aparece. No se secuestra el scroll.
-- **Pantallas menores**: nada se fija. Los recuadros se apilan y entran
-  deslizándose desde la derecha.
+  levemente según la velocidad del scroll. No se secuestra el scroll.
+- **Pantallas menores**: nada se fija. Los recuadros se apilan y se recorren
+  con scroll vertical.
+- **Parallax** (`src/components/flow/parallax.tsx`): cada recuadro calcula su
+  progreso `p` por el viewport (−1 entra, 0 centrado, +1 sale) sobre el eje en
+  que se mueve la página, horizontal en escritorio y vertical en móvil. De `p`
+  salen su deriva (`drift`), su separación vertical (`lift`), la inclinación 3D
+  (`tilt`) y la escala, de modo que cada recuadro se desliza a su
+  propio ritmo. `Layer` mueve capas internas en sentido contrario (la
+  fotografía dentro de su marco, los paneles de la demo). `Drift` mueve las
+  capas del hero a distintas velocidades y `Arrive` hace crecer la tarjeta de
+  contacto al llegar. Todo está ligado al scroll (solo `transform` y `opacity`),
+  sin temporizadores.
 - `FlowNav`: píldora de vidrio flotante para saltar a cualquier industria o
   avanzar y retroceder. Desplaza la página a la posición de esa industria.
 - El enlace "Cómo funciona" apunta a un ancla invisible colocada a la altura
   de scroll que centra el recuadro del proceso.
 - `useDemoTimeline`: motor de pasos determinista. Cada demo se reproduce una
   vez cuando su recuadro está en pantalla; con `prefers-reduced-motion`
-  muestra el estado final y los pasos se recorren a mano. La inclinación y el
-  parallax también se desactivan.
+  muestra el estado final y los pasos se recorren a mano. Todo el parallax
+  se desactiva también (`p` queda en 0).
 - Las demos son visuales (`aria-hidden`); los lectores de pantalla reciben la
   lista ordenada de pasos.
 - La página termina en `Contact`: una pantalla completa solo con el formulario.

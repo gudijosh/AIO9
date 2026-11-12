@@ -11,11 +11,12 @@ import { useDemoTimeline } from "@/lib/useDemoTimeline";
 import { DemoRenderer } from "@/components/demos/DemoRenderer";
 import { DemoControls } from "@/components/industries/DemoControls";
 import { StepTrack } from "@/components/industries/StepTrack";
+import { Layer } from "./parallax";
 import { Tile } from "./Tile";
 
 /**
- * One industry in the mosaic: an illustrated object that sets the scene with
- * its live demonstration floating around it, a glass tile that names the problem, and a glass tile with
+ * One industry in the mosaic: a product-style photograph that sets the scene
+ * with its live demonstration floating over it, a glass tile that names the problem, and a glass tile with
  * the step-by-step progress. The demonstration plays when the photograph is
  * on screen.
  */
@@ -57,13 +58,15 @@ export function IndustryChapter({
       )}
     >
       <Tile
+        drift={-0.55}
+        lift={-0.5}
         className={cn(
           "flex flex-col p-7 lg:row-start-1 lg:p-8",
           reversed ? "lg:col-start-1" : "lg:col-start-2",
         )}
       >
         <p className="font-mono text-[13px] text-slate-600">
-          {industry.number} <span className="text-slate-600/70">/ 0{count}</span>
+          {industry.number} <span className="text-slate-600">/ 0{count}</span>
         </p>
         <h3
           id={headingId}
@@ -86,32 +89,39 @@ export function IndustryChapter({
       <Tile
         ref={stageRef}
         surface="paper"
+        tilt={0.6}
         className={cn(
           "relative overflow-hidden lg:row-span-2 lg:row-start-1",
           reversed ? "lg:col-start-2" : "lg:col-start-1",
         )}
       >
-        {/* The object that sets the scene; the demo panels float around it. */}
-        <div className="relative aspect-[16/10] lg:absolute lg:inset-0 lg:aspect-auto">
-          <Image
-            src={industry.image}
-            alt={text.alt}
-            fill
-            sizes="(min-width: 1024px) 900px, 100vw"
-            quality={85}
-            placeholder="blur"
-            className="object-contain lg:scale-90"
-          />
+        {/* The photograph slides inside its frame; the demo panels float the other way. */}
+        <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/10] lg:absolute lg:inset-0 lg:aspect-auto">
+          <Layer shift={-48} zoom={1.13} className="absolute inset-0">
+            <Image
+              src={industry.image}
+              alt={text.alt}
+              fill
+              sizes="(min-width: 1024px) 1100px, 120vw"
+              quality={85}
+              placeholder="blur"
+              className="object-cover"
+              style={{ objectPosition: industry.focus }}
+            />
+          </Layer>
+          {/* Small screens: fade the photo into the tile so the panels below sit on one surface. */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-paper to-transparent lg:hidden" />
           <p className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-midnight/85 px-3 py-1 text-[11px] whitespace-nowrap text-white">
             {t.simulation}
           </p>
         </div>
-        <div
+        <Layer
+          shift={26}
           aria-hidden
           className="relative z-10 -mt-4 min-h-[25rem] pb-3 sm:min-h-[20rem] lg:absolute lg:inset-0 lg:mt-0 lg:min-h-0 lg:pb-0"
         >
           <DemoRenderer id={industry.id} step={timeline.step} industries={copy} />
-        </div>
+        </Layer>
         <ol className="sr-only">
           {text.steps.map((label) => (
             <li key={label}>{label}</li>
@@ -120,7 +130,8 @@ export function IndustryChapter({
       </Tile>
 
       <Tile
-        delay={0.08}
+        drift={0.45}
+        lift={0.5}
         className={cn(
           "flex flex-col gap-4 p-6 lg:row-start-2",
           reversed ? "lg:col-start-1" : "lg:col-start-2",

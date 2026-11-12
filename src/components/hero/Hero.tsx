@@ -1,9 +1,11 @@
 import type { Dictionary } from "@/i18n/dictionaries";
+import { Drift } from "@/components/flow/parallax";
 import { HeroStack } from "./HeroStack";
 
 /**
  * Entrance sequence (CSS only, so it never blocks interaction):
  * wordmark → headline → photograph mask → secondary elements → first case.
+ * On scroll, the copy and each photograph leave at different speeds.
  */
 export function Hero({ dict }: { dict: Dictionary }) {
   const t = dict.hero;
@@ -18,7 +20,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
         className="absolute bottom-[-30%] left-[-15%] -z-10 size-[45vw] rounded-full bg-white blur-[120px]"
       />
       <div className="mx-auto grid min-h-svh max-w-[1600px] items-center gap-14 px-5 pt-28 pb-16 lg:grid-cols-[1.08fr_1fr] lg:gap-10 lg:px-10 lg:pt-24 lg:pb-12">
-        <div>
+        <Drift speed={0.32} fade={720}>
           <h1 className="max-w-[11ch] animate-rise text-[clamp(2.75rem,6.3vw,6rem)] leading-[0.96] font-medium tracking-[-0.04em] text-balance [animation-delay:120ms]">
             {t.title}
           </h1>
@@ -39,7 +41,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
               {t.secondary}
             </a>
           </div>
-        </div>
+        </Drift>
         <HeroStack t={t} industries={dict.industries} />
       </div>
     </section>

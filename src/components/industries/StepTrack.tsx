@@ -52,7 +52,7 @@ export function StepTrack({
             aria-label={`${fill(t.goToStep, { n: i + 1 })}: ${label}`}
             aria-current={i === step ? "step" : undefined}
             onClick={() => goTo(i)}
-            className="group flex h-6 flex-1 items-center"
+            className="group flex h-7 flex-1 items-center"
           >
             <span
               className={cn(

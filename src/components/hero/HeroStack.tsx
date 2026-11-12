@@ -9,16 +9,30 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { heroIndustryIds, industryById } from "@/data/industries";
 import { ease } from "@/lib/motion";
 import { cn } from "@/lib/cn";
+import { Drift } from "@/components/flow/parallax";
 import { WipeStack, type WipeImage } from "@/components/industries/WipeStack";
 
 const ROTATE_MS = 4200;
 
+/** Where each frame sits, how it looks, and how fast it leaves on scroll. */
 const frames = [
   // Front frame: revealed with a mask on load.
-  "left-[8%] top-[9%] z-20 h-[80%] w-[72%] rounded-[28px] animate-unmask [animation-delay:300ms]",
+  {
+    place: "left-[8%] top-[9%] z-20 h-[80%] w-[72%]",
+    look: "rounded-[28px] animate-unmask [animation-delay:300ms]",
+    speed: -0.06,
+  },
   // Two frames peeking from behind hint at the other industries.
-  "right-0 top-0 z-10 h-[46%] w-[42%] rounded-[22px] animate-rise [animation-delay:650ms]",
-  "bottom-0 left-0 z-10 h-[38%] w-[38%] rounded-[22px] animate-rise [animation-delay:780ms]",
+  {
+    place: "right-0 top-0 z-10 h-[46%] w-[42%]",
+    look: "rounded-[22px] animate-rise [animation-delay:650ms]",
+    speed: -0.3,
+  },
+  {
+    place: "bottom-0 left-0 z-10 h-[38%] w-[38%]",
+    look: "rounded-[22px] animate-rise [animation-delay:780ms]",
+    speed: 0.2,
+  },
 ];
 
 /**
@@ -66,35 +80,48 @@ export function HeroStack({
           <WipeStack
             images={images}
             active={index}
-            sizes={slot === 0 ? "(min-width: 1024px) 390px, 72vw" : "(min-width: 1024px) 230px, 40vw"}
+            sizes={
+              slot === 0
+                ? "(min-width: 1024px) 390px, 72vw"
+                : "(min-width: 1024px) 230px, 40vw"
+            }
             preloadFirst={slot === 0}
           />
         );
-        if (slot === 0) {
-          return (
-            <div key={slot} className={cn("absolute overflow-hidden border border-white shadow-glass", frame)}>
-              {stack}
-            </div>
-          );
-        }
         return (
-          <button
-            key={slot}
-            type="button"
-            aria-label={`${t.show}: ${industries[heroIndustryIds[index]].name}`}
-            onClick={() => {
-              setActive(index);
-              setPaused(true);
-            }}
-            className={cn("group absolute overflow-hidden border border-white shadow-glass", frame)}
-          >
-            {stack}
-            <span className="absolute inset-0 z-10 bg-cream/45 transition-opacity duration-300 group-hover:opacity-0" />
-          </button>
+          <Drift key={slot} speed={frame.speed} className={cn("absolute", frame.place)}>
+            {slot === 0 ? (
+              <div
+                className={cn(
+                  "relative size-full overflow-hidden border border-white shadow-glass",
+                  frame.look,
+                )}
+              >
+                {stack}
+              </div>
+            ) : (
+              <button
+                type="button"
+                aria-label={`${t.show}: ${industries[heroIndustryIds[index]].name}`}
+                onClick={() => {
+                  setActive(index);
+                  setPaused(true);
+                }}
+                className={cn(
+                  "group relative block size-full overflow-hidden border border-white shadow-glass",
+                  frame.look,
+                )}
+              >
+                {stack}
+                <span className="absolute inset-0 z-10 bg-cream/45 transition-opacity duration-300 group-hover:opacity-0" />
+              </button>
+            )}
+          </Drift>
         );
       })}
 
-      <div className="absolute right-0 bottom-[3%] z-30 w-[min(300px,78%)] glass animate-rise rounded-2xl p-4 [animation-delay:950ms]">
+      <Drift speed={-0.18} className="absolute right-0 bottom-[3%] z-30 w-[min(300px,78%)]">
+        <div className="glass animate-rise rounded-2xl p-4 [animation-delay:950ms]">
         <div className="flex items-start justify-between gap-3">
           <AnimatePresence mode="wait" initial={false}>
             <m.div
@@ -105,9 +132,16 @@ export function HeroStack({
               transition={{ duration: 0.28, ease }}
               className="min-w-0 flex-1"
             >
-              <p className="truncate text-[12px] text-slate-600">{current.name}</p>
-              <p className="mt-2 text-[13px] font-medium text-slate-600">{current.from}</p>
-              <span aria-hidden className="my-1.5 flex items-center gap-[3px] text-signal">
+              <p className="truncate text-[12px] text-slate-600">
+                {current.name}
+              </p>
+              <p className="mt-2 text-[13px] font-medium text-slate-600">
+                {current.from}
+              </p>
+              <span
+                aria-hidden
+                className="my-1.5 flex items-center gap-[3px] text-signal"
+              >
                 <span className="size-[5px] rounded-full bg-current" />
                 <span className="relative h-px flex-1 bg-midnight/15">
                   <m.span
@@ -134,11 +168,16 @@ export function HeroStack({
               onClick={() => setPaused((value) => !value)}
               className="-mt-1.5 -mr-1.5 grid size-9 shrink-0 place-items-center rounded-full text-slate-600 transition-colors duration-200 hover:bg-midnight/8 hover:text-midnight"
             >
-              {paused ? <Play aria-hidden className="size-3.5" /> : <Pause aria-hidden className="size-3.5" />}
+              {paused ? (
+                <Play aria-hidden className="size-3.5" />
+              ) : (
+                <Pause aria-hidden className="size-3.5" />
+              )}
             </button>
           )}
         </div>
-      </div>
+        </div>
+      </Drift>
     </div>
   );
 }

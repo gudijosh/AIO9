@@ -57,7 +57,7 @@ export const es = {
         "Automatiza citas, recordatorios y procesos administrativos para dedicar más tiempo a la atención.",
       from: "Consulta",
       to: "Cita confirmada",
-      alt: "Ilustración de un estetoscopio junto a un calendario con un día marcado",
+      alt: "Estetoscopio azul sobre una tablilla con una hoja de citas, junto a un calendario",
       steps: [
         "Entra la consulta de un paciente",
         "El asistente responde",
@@ -89,7 +89,7 @@ export const es = {
         "Atiende consultas, gestiona reservas y conecta cada interacción con tus operaciones.",
       from: "Consulta",
       to: "Mesa reservada",
-      alt: "Ilustración de un menú de restaurante con tenedor y cuchara",
+      alt: "Menú de restaurante junto a un plato de pasta y una servilleta azul",
       steps: [
         "Un cliente pregunta por disponibilidad",
         "La IA responde",
@@ -121,7 +121,7 @@ export const es = {
         "Responde a compradores, identifica oportunidades y coordina visitas automáticamente.",
       from: "Consulta",
       to: "Visita agendada",
-      alt: "Ilustración de una casa pequeña con una llave",
+      alt: "Maqueta de una casa con puerta azul y un juego de llaves",
       steps: [
         "Entra una consulta sobre una propiedad",
         "Recupera la información relevante",
@@ -155,7 +155,7 @@ export const es = {
         "Conecta consultas, inventario, recomendaciones y seguimiento de pedidos.",
       from: "Pregunta",
       to: "Pedido en seguimiento",
-      alt: "Ilustración de una bolsa de compras con una prenda",
+      alt: "Bolsa de compras con un suéter azul, unos tenis y un lector de tarjetas",
       steps: [
         "Un cliente pregunta por un producto",
         "Consulta el inventario",
@@ -188,7 +188,7 @@ export const es = {
         "Automatiza tareas repetitivas, organiza información y ayuda a los equipos a concentrarse en trabajo de mayor valor.",
       from: "Documento",
       to: "Información organizada",
-      alt: "Ilustración de una carpeta con documentos y un bolígrafo",
+      alt: "Portafolio azul con documentos, pluma, lentes y calculadora",
       steps: [
         "Llega una solicitud",
         "Identifica el tipo de documento",
@@ -221,7 +221,7 @@ export const es = {
         "Conecta información, detecta incidencias y agiliza decisiones operativas.",
       from: "Orden",
       to: "Acción asignada",
-      alt: "Ilustración de una caja de envío bien cerrada",
+      alt: "Caja de envío con cinta azul, paquetes y un lector de códigos",
       steps: [
         "Entra una orden",
         "Verifica los datos",
