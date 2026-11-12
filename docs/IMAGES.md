@@ -1,43 +1,52 @@
-# Ilustraciones
+# Imágenes de cada industria
 
-Cada industria se ambienta con **un objeto ilustrado en 3D**, no con una
-fotografía: `public/images/industries/`. Son imágenes generadas con IA para
-este proyecto (ElevenLabs Image, modelo `gpt-image-2.5-sunburst`, desde la
-cuenta del propietario del repositorio). Revisa los términos de tu plan de
-ElevenLabs para confirmar el uso comercial.
+Cada industria se ambienta con **un bodegón fotográfico de objetos propios del
+sector** (no una fotografía de un lugar), con los azules de la marca como
+acento en piezas concretas: `public/images/industries/`. Son imágenes generadas
+con IA para este proyecto (ElevenLabs Image, modelo `gpt-image-2.5-sunburst`,
+desde la cuenta del propietario del repositorio). Revisa los términos de tu
+plan de ElevenLabs para confirmar el uso comercial.
 
-- Original: PNG 1280×720. En el repo: WebP calidad 88 (15–40 KB).
+- Generadas a 1280×720 y ampliadas a 2560×1440 (Topaz Upscale, también en
+  ElevenLabs) para que se vean nítidas en pantallas de alta densidad. En el
+  repo: WebP calidad 82.
 - `next/image` sirve AVIF/WebP redimensionado y un placeholder borroso.
 - El hero reutiliza tres de ellas (salud, hospitalidad, servicios).
-- El fondo de las ilustraciones es el token `paper` (`#FEFBF4`).
+- En el mosaico la imagen ocupa todo el recuadro; el token `paper`
+  (`#E6DED3`) iguala el fondo de estudio.
 
 ## Dirección
 
-Un solo objeto por escena, material mate tipo arcilla, flotando con sombra
-suave, en la paleta de la marca. Todas comparten este prompt base:
+Fotografía de producto realista, objetos reales agrupados al centro, fondo de
+estudio crema y **solo azul Signal y azul marino como colores de acento**.
+Todas comparten este prompt base:
 
-> Minimal stylized 3D illustration, not photorealistic: a single [objeto],
-> floating slightly above the ground with a soft shadow, centered in the frame
-> with generous empty space around it. Soft matte clay-like material, smooth
-> rounded edges, friendly and simple. Color palette limited to deep navy blue,
-> royal blue, soft grey-blue and warm cream. Seamless plain warm off-white
-> cream studio background, soft diffused studio lighting. No text, no logos,
-> no people.
+> Photorealistic studio product photograph, real objects, shot on a full-frame
+> camera with an 85mm lens, sharp detail, true-to-life materials: [objetos].
+> Objects arranged together in the center of the frame with generous empty
+> space around, soft natural contact shadows. Accent colors limited to royal
+> blue and deep navy, everything else natural and neutral. Seamless warm
+> off-white cream studio backdrop, soft diffused daylight-style studio
+> lighting, premium editorial still life. No text, no logos, no people.
 
-| Archivo | Objeto |
+| Archivo | Objetos (acento azul) |
 |---|---|
-| `healthcare.webp` | Estetoscopio y calendario con un día marcado |
-| `hospitality.webp` | Menú de restaurante con tenedor y cuchara |
-| `real-estate.webp` | Casa pequeña con una llave |
-| `retail.webp` | Bolsa de compras con una prenda |
-| `services.webp` | Carpeta con documentos y un bolígrafo |
-| `logistics.webp` | Caja de envío |
+| `healthcare.webp` | Estetoscopio azul (dos olivas, tubo en Y, una campana), tablilla con hoja de citas, calendario, suculenta en maceta azul marino |
+| `hospitality.webp` | Menú de cuero azul marino, plato de pasta, servilleta azul |
+| `real-estate.webp` | Maqueta de casa con puerta azul, llaves con llavero azul marino |
+| `retail.webp` | Bolsa kraft con suéter azul, tenis blancos, lector de tarjetas |
+| `services.webp` | Portafolio azul marino, documentos, pluma azul, lentes, calculadora, café |
+| `logistics.webp` | Caja con cinta azul, paquete azul marino, lector de códigos |
 
-(Antes se probaron dos series fotográficas, una de arquitectura sofisticada y
-otra de negocios cotidianos; ambas se descartaron a favor de las ilustraciones.)
+La foto de salud se regeneró una vez: en la primera versión el estetoscopio
+no tenía olivas y el tubo formaba un aro cerrado. Conviene revisar que los
+objetos generados sean correctos, no solo bonitos.
+
+(Series anteriores descartadas: arquitectura sofisticada, negocios cotidianos
+fotografiados, ilustraciones monocromas en azul y renders 3D a color.)
 
 ## Sustituir una imagen
 
 Reemplaza el archivo conservando el nombre (16:9, idealmente 2560×1440), con
-el objeto centrado, fondo `#FEFBF4` y sin texto. Los paneles de la demo flotan
-en las esquinas, así que el centro debe quedar libre para el objeto.
+los objetos centrados, fondo de estudio crema y sin texto. Los paneles de la
+demo flotan en las esquinas, así que lo importante debe quedar al centro.

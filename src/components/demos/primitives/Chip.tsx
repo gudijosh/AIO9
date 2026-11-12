@@ -1,11 +1,12 @@
 import { cn } from "@/lib/cn";
 
 const tones = {
-  neutral: "bg-white/10 text-white/80",
-  blue: "bg-signal text-white",
-  soft: "bg-signal/12 text-signal",
-  amber: "bg-amber/18 text-amber",
-  ink: "bg-midnight/8 text-midnight/80",
+  neutral: "bg-(--win-fill) text-(--win-muted)",
+  /** Solid product colour. */
+  accent: "bg-(--app) text-(--app-on)",
+  /** Tinted product colour. */
+  soft: "bg-(--app-soft) text-(--app-ink)",
+  warn: "bg-(--warn-bg) text-(--warn-text)",
 } as const;
 
 export function Chip({

@@ -3,6 +3,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { industryIds } from "@/data/industries";
 import { siteConfig } from "@/lib/site-config";
 import { Signal } from "@/components/brand/Signal";
+import { Arrive } from "@/components/flow/parallax";
 import { Footer } from "@/components/layout/Footer";
 import { ContactForm } from "./ContactForm";
 
@@ -30,7 +31,7 @@ export function Contact({ dict, locale }: { dict: Dictionary; locale: Locale }) 
       </div>
 
       <div className="mx-auto flex w-full max-w-[1280px] flex-1 items-center px-5 pt-24 pb-10 lg:px-10 lg:pt-28">
-        <div className="glass grid w-full gap-12 rounded-[28px] px-6 py-10 sm:px-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:rounded-[40px] lg:p-14">
+        <Arrive className="glass grid w-full gap-12 rounded-[28px] px-6 py-10 sm:px-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:rounded-[40px] lg:p-14">
           <div>
             <Signal className="w-16 text-signal" />
             <h2
@@ -67,7 +68,7 @@ export function Contact({ dict, locale }: { dict: Dictionary; locale: Locale }) 
             industryNames={industryNames}
             contactEmail={contactEmail}
           />
-        </div>
+        </Arrive>
       </div>
 
       <Footer t={dict.footer} />
