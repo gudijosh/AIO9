@@ -13,7 +13,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   let r = await p.goto(base + '/', { waitUntil: 'networkidle' });
   check('root redirects to /es', p.url().endsWith('/es'), p.url());
   check('html lang is es', (await p.getAttribute('html', 'lang')) === 'es');
-  check('ES headline', (await p.textContent('h1')).includes('La inteligencia que transforma negocios.'));
+  check('ES headline', (await p.textContent('h1')).includes('IA y software para que tu empresa trabaje mejor.'));
 
   for (const [label, id] of [['Soluciones', 'industries'], ['Contacto', 'contact']]) {
     await p.locator('header nav a:visible', { hasText: label }).click();
@@ -102,15 +102,15 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   // Language
   await p.locator('header a[hreflang=en]').click(); await p.waitForURL('**/en**'); await p.waitForTimeout(800);
   check('EN: url and html lang', p.url().includes('/en') && (await p.getAttribute('html', 'lang')) === 'en');
-  check('EN headline', (await p.textContent('h1')).includes('Intelligence that moves business forward.'));
+  check('EN headline', (await p.textContent('h1')).includes('AI and software that help your business work better.'));
   const body = (await p.locator('body').innerText());
-  const leaks = ['Soluciones', 'Cómo funciona', 'Hablemos', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Entender', 'Agentes', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos'].filter(w => body.includes(w));
+  const leaks = ['Soluciones', 'Cómo funciona', 'Hablemos', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificar', 'Mantenimiento', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos'].filter(w => body.includes(w));
   check('EN page has no Spanish strings', leaks.length === 0, leaks.join(', '));
-  check('EN <title> and description', (await p.title()).includes('Intelligence that moves business forward') && (await p.getAttribute('meta[name=description]', 'content')).startsWith('AIO9 builds'));
+  check('EN <title> and description', (await p.title()).includes('AI and software that help your business work better') && (await p.getAttribute('meta[name=description]', 'content')).startsWith('AIO9 implements'));
   check('hreflang alternates present', (await p.locator('link[rel=alternate][hreflang]').count()) >= 3);
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
   const esBody = await p.locator('body').innerText();
-  const enLeaks = ['Solutions', 'How it works', "Let's talk", 'Healthcare', 'Step ', 'Replay', 'Illustrative', 'Understand', 'Company', 'All rights'].filter(w => esBody.includes(w));
+  const enLeaks = ['Solutions', 'How it works', "Let's talk", 'Healthcare', 'Step ', 'Replay', 'Illustrative', 'Identify', 'Company', 'All rights'].filter(w => esBody.includes(w));
   check('ES page has no English strings', enLeaks.length === 0, enLeaks.join(', '));
   check('unknown locale → 404', (await p.request.get(base + '/fr', { failOnStatusCode: false })).status() === 404);
   check('og image renders', (await p.request.get(base + (await p.getAttribute('meta[property="og:image"]', 'content')).replace(/^https?:\/\/[^/]+/, ''))).status() === 200);
