@@ -125,6 +125,14 @@ tema. Cada par texto/fondo de los seis temas se verificó a 4.5:1 o más.
 Para cambiar los colores de un producto basta editar su entrada en
 `src/data/themes.ts`.
 
+### El software en el hero
+
+`hero/HeroApp.tsx` muestra, junto a las fotografías, una ventana compacta del
+producto del rubro activo (agenda clínica, reservas, documentos), con su tema.
+Las ventanas se relevan con el mismo barrido de `clip-path` que las fotos. Los
+rubros del hero se eligen en `heroIndustryIds` (`src/data/industries.ts`); uno
+sin vista compacta propia cae a una línea "de → a".
+
 ### Añadir una industria
 
 1. Imagen en `public/images/industries/` y entrada en `src/data/industries.ts`

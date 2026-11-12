@@ -122,7 +122,6 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
   const backdropY = useTransform(scrollYProgress, (value) =>
     distance ? 0 : value * -260,
   );
-  const wordsX = useTransform(scrollYProgress, (value) => `${8 - value * 70}%`);
   const flow = useMemo(
     () => ({ trackX: x, horizontal: distance > 0 }),
     [x, distance],
@@ -194,12 +193,6 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
               <span className="absolute top-[2%] left-[52%] size-[42vmax] rounded-full bg-signal-300/35 blur-[120px]" />
               <span className="absolute top-[40%] left-[76%] size-[40vmax] rounded-full bg-signal/18 blur-[110px]" />
             </m.div>
-            <m.p
-              style={{ x: wordsX }}
-              className="absolute top-1/2 left-0 hidden -translate-y-1/2 text-[24vw] leading-none font-semibold tracking-[-0.05em] whitespace-nowrap text-midnight/[0.035] lg:block"
-            >
-              {dict.footer.tagline}
-            </m.p>
           </div>
 
           <FlowContext value={flow}>
