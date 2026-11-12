@@ -29,7 +29,7 @@ Abre http://localhost:3000 (redirige a `/es`; inglés en `/en`).
 | `npm run build` | Build de producción |
 | `npm run start` | Sirve el build |
 | `npm run lint` | ESLint |
-| `npx tsc --noEmit` | Comprobación de tipos (después de un `build` o `npx next typegen`) |
+| `npm run typecheck` | Genera los tipos de rutas y comprueba TypeScript |
 
 ## Variables de entorno
 
@@ -61,15 +61,30 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
 7. **Ilustraciones**: son imágenes generadas a 1280×720. Sustituirlas por
    versiones de mayor resolución mejora pantallas grandes (ver `docs/IMAGES.md`).
 
-## Despliegue
+## Despliegue en Vercel
 
-Proyecto Next.js estándar, sin configuración adicional.
+1. En Vercel: **Add New → Project** e importa `gudijosh/AIO9`. Detecta Next.js
+   solo; no cambies el comando de build ni el directorio de salida.
+2. Rama de producción: `main` (Settings → Environments → Production).
+3. Variables de entorno (Settings → Environment Variables):
 
-- **Vercel**: importar el repositorio y definir las variables de entorno.
-- **Netlify**: importar el repositorio; el runtime de Next.js se detecta solo
-  (build `npm run build`). Definir las variables de entorno.
+   | Variable | ¿Obligatoria? |
+   |---|---|
+   | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` **o** `CONTACT_WEBHOOK_URL` | Sí, para que el formulario envíe |
+   | `NEXT_PUBLIC_SITE_URL` | Solo al conectar un dominio propio |
+   | `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_WHATSAPP_NUMBER` | Opcionales |
 
-La ruta `/api/contact` necesita un runtime de servidor (no es un export estático).
+4. Despliega y envía una consulta de prueba desde el sitio publicado.
+
+Las variables `NEXT_PUBLIC_*` se leen al compilar: después de cambiarlas hay
+que volver a desplegar.
+
+Sin `NEXT_PUBLIC_SITE_URL`, las URL canónicas, Open Graph y el sitemap usan el
+dominio de producción del proyecto en Vercel.
+
+Netlify también funciona: importa el repositorio (build `npm run build`) y
+define las mismas variables. La ruta `/api/contact` necesita un runtime de
+servidor; no es un export estático.
 
 ## Documentación
 
