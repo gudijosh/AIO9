@@ -27,6 +27,8 @@ export interface Industry {
   image: StaticImageData;
   /** CSS object-position used when the photo is cropped. */
   focus: string;
+  /** Framing for the narrow portrait crop in the hero, when it needs its own. */
+  heroFocus?: string;
   /**
    * One entry per step of the demonstration: how long that step stays on
    * screen (ms). The step labels live in the dictionaries and must have the
@@ -40,7 +42,7 @@ export interface Industry {
 }
 
 export const industries: readonly Industry[] = [
-  { id: "healthcare", icon: Stethoscope, theme: themes.healthcare, number: "01", image: healthcare, focus: "30% 65%", stepDurations: [1000, 1100, 1300, 1200, 1000, 1400] },
+  { id: "healthcare", icon: Stethoscope, theme: themes.healthcare, number: "01", image: healthcare, focus: "48% 55%", heroFocus: "31% 55%", stepDurations: [1000, 1100, 1300, 1200, 1000, 1400] },
   { id: "hospitality", icon: UtensilsCrossed, theme: themes.hospitality, number: "02", image: hospitality, focus: "58% 50%", stepDurations: [1000, 1100, 1400, 1200, 1400] },
   { id: "realEstate", icon: House, theme: themes.realEstate, number: "03", image: realEstate, focus: "45% 55%", stepDurations: [1000, 1100, 1500, 1300, 1100, 1400] },
   { id: "retail", icon: ShoppingBag, theme: themes.retail, number: "04", image: retail, focus: "62% 50%", stepDurations: [1000, 1300, 1300, 1200, 1400] },

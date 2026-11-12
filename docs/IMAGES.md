@@ -31,12 +31,16 @@ Todas comparten este prompt base:
 
 | Archivo | Objetos (acento azul) |
 |---|---|
-| `healthcare.webp` | Estetoscopio azul, tablilla con hoja de citas, calendario, suculenta en maceta azul marino |
+| `healthcare.webp` | Estetoscopio azul (dos olivas, tubo en Y, una campana), tablilla con hoja de citas, calendario, suculenta en maceta azul marino |
 | `hospitality.webp` | Menú de cuero azul marino, plato de pasta, servilleta azul |
 | `real-estate.webp` | Maqueta de casa con puerta azul, llaves con llavero azul marino |
 | `retail.webp` | Bolsa kraft con suéter azul, tenis blancos, lector de tarjetas |
 | `services.webp` | Portafolio azul marino, documentos, pluma azul, lentes, calculadora, café |
 | `logistics.webp` | Caja con cinta azul, paquete azul marino, lector de códigos |
+
+La foto de salud se regeneró una vez: en la primera versión el estetoscopio
+no tenía olivas y el tubo formaba un aro cerrado. Conviene revisar que los
+objetos generados sean correctos, no solo bonitos.
 
 (Series anteriores descartadas: arquitectura sofisticada, negocios cotidianos
 fotografiados, ilustraciones monocromas en azul y renders 3D a color.)

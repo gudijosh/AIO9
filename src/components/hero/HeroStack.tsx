@@ -62,7 +62,7 @@ export function HeroStack({
     key: id,
     src: industryById[id].image,
     alt: industries[id].alt,
-    focus: industryById[id].focus,
+    focus: industryById[id].heroFocus ?? industryById[id].focus,
   }));
 
   return (
