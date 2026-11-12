@@ -167,7 +167,10 @@ export function HeroApp({
   if (state.active !== active) setState({ active, previous: state.active });
 
   return (
-    <div className="relative h-[164px]">
+    // The shadow and rounded corners live here, not on the windows: each window
+    // is clipped by a rectangle during the wipe, which would otherwise leave
+    // its own shadow visible as square corners.
+    <div className="relative h-[164px] overflow-hidden rounded-xl shadow-float">
       {ids.map((id, i) => {
         const isActive = i === state.active;
         const isPrevious = i === state.previous && !isActive;
@@ -177,11 +180,16 @@ export function HeroApp({
             key={id}
             aria-hidden={!isActive}
             inert={!isActive}
-            style={{ ...themeVars(theme), zIndex: isActive ? 2 : isPrevious ? 1 : 0 }}
+            style={{
+              ...themeVars(theme),
+              zIndex: isActive ? 2 : isPrevious ? 1 : 0,
+              // Solid from the first frame: only the clip animates, never the opacity.
+              opacity: isActive || isPrevious ? 1 : 0,
+            }}
             initial={false}
-            animate={{ clipPath: isActive ? [FROM, FULL] : FULL, opacity: isActive || isPrevious ? 1 : 0 }}
+            animate={{ clipPath: isActive ? [FROM, FULL] : FULL }}
             transition={{ duration: reduced || !isActive ? 0 : duration.scene, ease }}
-            className="absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-(--win-line) bg-(--win) text-(--win-text) shadow-float"
+            className="absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-(--win-line) bg-(--win) text-(--win-text)"
           >
             <div className="flex h-8 shrink-0 items-center gap-2 border-b border-(--win-line) bg-(--win-chrome) pr-1 pl-2.5 text-(--win-chrome-text)">
               <span className="grid size-[18px] shrink-0 place-items-center rounded-[5px] bg-(--app) text-(--app-on)">
