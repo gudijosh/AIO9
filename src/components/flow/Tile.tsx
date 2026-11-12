@@ -11,6 +11,10 @@ const surfaces = {
   blue: "bg-signal text-white shadow-glass",
   /** Studio backdrop of the industry photographs. */
   paper: "border border-white bg-paper text-midnight shadow-glass",
+  /** Glass washed with the colour of the industry's product. */
+  tint: "glass relative overflow-hidden text-midnight before:pointer-events-none before:absolute before:inset-0 before:bg-(--app) before:opacity-[0.09]",
+  /** Solid in the dark tone of the industry's product. */
+  brand: "bg-(--tile-ink) text-white shadow-glass",
   /** No surface: type sits directly on the page. */
   bare: "text-midnight",
 } as const;

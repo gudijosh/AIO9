@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { useInView } from "motion/react";
 import type { Industry } from "@/data/industries";
+import { themeVars } from "@/data/themes";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
@@ -46,6 +47,7 @@ export function IndustryChapter({
     enabled: inView,
   });
   const text = copy[industry.id];
+  const ProductIcon = industry.icon;
   const headingId = `industry-${industry.id}`;
 
   return (
@@ -56,6 +58,8 @@ export function IndustryChapter({
         else if (ref) ref.current = node;
       }}
       aria-labelledby={headingId}
+      // Everything inside the chapter takes the colours of this industry's product.
+      style={themeVars(industry.theme)}
       className={cn(
         "grid gap-5 lg:h-(--tile-h) lg:shrink-0 lg:grid-rows-[1fr_auto] lg:gap-6",
         reversed
@@ -66,27 +70,34 @@ export function IndustryChapter({
       <Tile
         progress={chapter}
         from={{ x: reversed ? -260 : 240, y: -360, rotateX: 58, rotateZ: reversed ? 10 : -10, side: -1 }}
+        surface="tint"
         className={cn(
           "flex flex-col p-7 lg:row-start-1 lg:p-8",
           reversed ? "lg:col-start-1" : "lg:col-start-2",
         )}
       >
-        <p className="font-mono text-[13px] text-slate-600">
-          {industry.number} <span className="text-slate-600">/ 0{count}</span>
+        <p className="relative flex items-center gap-2 text-[13px] font-semibold text-(--tile-ink)">
+          <span className="grid size-7 place-items-center rounded-lg bg-(--tile-ink) text-white">
+            <ProductIcon aria-hidden className="size-4" />
+          </span>
+          {text.demo.app}
+          <span className="ml-auto font-mono text-[12px] font-normal text-slate-600">
+            {industry.number} / 0{count}
+          </span>
         </p>
         <h3
           id={headingId}
-          className="mt-4 text-[clamp(1.75rem,2.3vw,2.375rem)] leading-[1.06] font-medium tracking-[-0.03em] text-balance"
+          className="relative mt-5 text-[clamp(1.75rem,2.3vw,2.375rem)] leading-[1.06] font-medium tracking-[-0.03em] text-balance"
         >
           {text.title}
         </h3>
-        <p className="mt-4 text-base leading-relaxed text-slate-600">{text.description}</p>
+        <p className="relative mt-4 text-base leading-relaxed text-slate-600">{text.description}</p>
         <a
           href="#contact"
           onClick={() =>
             window.dispatchEvent(new CustomEvent("aio9:industry", { detail: industry.id }))
           }
-          className="mt-auto inline-block self-start pt-5 pb-1 text-[15px] font-medium underline decoration-midnight/30 underline-offset-[6px] transition-colors duration-200 hover:decoration-midnight"
+          className="relative mt-auto inline-block self-start pt-5 pb-1 text-[15px] font-semibold text-(--tile-ink) underline decoration-(--tile-ink)/40 underline-offset-[6px] transition-colors duration-200 hover:decoration-(--tile-ink)"
         >
           {t.consult}
         </a>

@@ -100,15 +100,30 @@ pasos.
   lista ordenada de pasos.
 - La página termina en `Contact`: una pantalla completa solo con el formulario.
 
-### Las demostraciones como software
+### Seis productos, seis identidades
 
-Cada demo es un producto distinto hecho con ventanas de aplicación
-(`demos/primitives/AppWindow.tsx`: barra de título, menú lateral `SideNav`,
-tablas y tableros): agenda clínica, sistema de reservas con plano del salón,
-CRM inmobiliario con tablero por etapas, tienda con tabla de inventario, gestor
-documental con visor y extracción de datos, y consola de operaciones con
-indicadores y tabla de órdenes. La conversación llega en una ventana de
-"Mensajes" y el resultado en una ventana o aviso propio.
+Cada rubro es un producto de software distinto, con colores propios fuera de
+la paleta AIO9 (definidos en `src/data/themes.ts`) y una estructura distinta:
+
+| Rubro | Producto | Color | Forma |
+|---|---|---|---|
+| Salud | Agenda clínica | Verde azulado | Clara, menú lateral, agenda por horas |
+| Restaurantes | Reservas | Terracota sobre café oscuro | App oscura con plano del salón y turnos |
+| Bienes raíces | CRM inmobiliario | Verde bosque y dorado | Marco verde oscuro, tablero por etapas |
+| Retail | Tienda | Frambuesa | Pestañas superiores, tabla de inventario, pedido tipo recibo |
+| Servicios | Documentos | Índigo | Riel de iconos, visor y extracción con confianza |
+| Logística | Operaciones | Ámbar sobre carbón | Consola oscura, indicadores y tabla monoespaciada |
+
+`IndustryChapter` expone el tema como variables CSS (`themeVars`) en su
+`<article>`; las piezas de `demos/primitives/AppWindow.tsx` (`AppWindow`,
+`SideNav`, `IconRail`, `Tabs`, `Avatar`, `SearchField`, `Toast`) y `Bubble` /
+`Chip` las leen, así que ningún componente lleva colores fijos. Los recuadros
+que acompañan a cada rubro (título con la insignia del producto, pasos y el par
+de capacidades que le sigue) y la píldora activa de la navegación usan el mismo
+tema. Cada par texto/fondo de los seis temas se verificó a 4.5:1 o más.
+
+Para cambiar los colores de un producto basta editar su entrada en
+`src/data/themes.ts`.
 
 ### Añadir una industria
 
@@ -117,6 +132,7 @@ indicadores y tabla de órdenes. La conversación llega en una ventana de
 2. Textos en `es.ts` y `en.ts` (`steps` con la misma cantidad de entradas).
 3. Componente en `src/components/demos/` usando `primitives/` y un `case` en
    `DemoRenderer.tsx`.
+4. Su tema en `src/data/themes.ts` y su icono en `src/data/industries.ts`.
 
 La cinta y la navegación se ajustan solas.
 

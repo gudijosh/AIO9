@@ -11,12 +11,15 @@ const arrow =
 /** Floating glass control: jump to any industry, or step back and forward. */
 export function FlowNav({
   active,
+  accent,
   onSelect,
   copy,
   t,
 }: {
   /** Index of the industry nearest the centre, or -1 outside the industries. */
   active: number;
+  /** Colour of the industry on screen; the active pill takes it. */
+  accent?: string;
   onSelect: (index: number) => void;
   copy: Dictionary["industries"];
   t: Dictionary["experience"];
@@ -26,6 +29,7 @@ export function FlowNav({
   return (
     <nav
       aria-label={t.railLabel}
+      style={{ "--nav-accent": accent ?? "var(--color-midnight)" } as React.CSSProperties}
       className="glass absolute bottom-5 left-1/2 z-30 hidden -translate-x-1/2 items-center gap-1 rounded-full p-1.5 lg:flex"
     >
       <button
@@ -48,7 +52,7 @@ export function FlowNav({
                 onClick={() => onSelect(i)}
                 className={cn(
                   "flex h-10 items-center gap-2 rounded-full px-3.5 text-[13px] font-medium whitespace-nowrap transition-colors duration-300",
-                  selected ? "bg-midnight text-white" : "text-slate-600 hover:bg-midnight/8 hover:text-midnight",
+                  selected ? "bg-(--nav-accent) text-white" : "text-slate-600 hover:bg-midnight/8 hover:text-midnight",
                 )}
               >
                 <span className="font-mono text-[12px]">{industry.number}</span>

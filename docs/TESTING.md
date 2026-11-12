@@ -40,13 +40,20 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 84 | 100 | 100 | 100 |
-| Escritorio | 80 | 100 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 77 | 100 | 100 | 100 |
+| Escritorio | 81 | 100 | 100 | 100 |
 
-LCP 3.3 s en móvil emulado y 0.7 s en escritorio; CLS 0 en ambos. El
-rendimiento es más bajo que en las primeras versiones (89–95) por el armado
-ligado al scroll y las fotografías a mayor resolución: el tiempo de bloqueo al
-cargar ronda los 400–450 ms. Las cifras varían entre ejecuciones.
+LCP 3.6 s en móvil emulado y 0.7 s en escritorio; CLS 0 en ambos. El
+rendimiento es más bajo que en las primeras versiones (89–95): el armado
+ligado al scroll, las fotografías a mayor resolución y las ventanas con más
+detalle suman unos 400–520 ms de bloqueo al cargar. Las cifras varían entre
+ejecuciones.
+
+## Contraste de los temas
+
+`node tests/contrast.js` calcula la razón de contraste de los pares
+texto/fondo de los seis productos. Última ejecución: todos en 4.5:1 o más.
+Los valores del script deben mantenerse iguales a `src/data/themes.ts`.
 
 ## Repetir las pruebas
 

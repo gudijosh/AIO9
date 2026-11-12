@@ -65,6 +65,8 @@ export const en: Dictionary = {
         "Sends the confirmation",
       ],
       demo: {
+        views: ["Day", "Week"],
+        openings: ["2 open slots", "1 open slot"],
         app: "Clinic schedule",
         nav: ["Schedule", "Patients", "Reminders"],
         inbox: "Messages",
@@ -100,6 +102,7 @@ export const en: Dictionary = {
         "Sends the confirmation",
       ],
       demo: {
+        shifts: ["7 PM", "8 PM", "9 PM"],
         app: "Reservations",
         nav: ["Floor", "Bookings", "Waitlist"],
         inbox: "Messages",
@@ -137,6 +140,8 @@ export const en: Dictionary = {
         "Updates the CRM",
       ],
       demo: {
+        search: "Search leads",
+        addLead: "Lead",
         app: "Real estate CRM",
         nav: ["Leads", "Listings", "Visits"],
         inbox: "Messages",
@@ -176,6 +181,7 @@ export const en: Dictionary = {
         "Creates a follow-up",
       ],
       demo: {
+        sku: "Ref. 204",
         app: "Store",
         nav: ["Products", "Orders", "Customers"],
         inbox: "Messages",
@@ -216,6 +222,7 @@ export const en: Dictionary = {
         "Hands off to human review",
       ],
       demo: {
+        confidence: "Confidence",
         app: "Documents",
         nav: ["Inbox", "In review", "Archived"],
         notice: "Inbox",
@@ -252,6 +259,8 @@ export const en: Dictionary = {
         "Updates the operations board",
       ],
       demo: {
+        approve: "Approve",
+        live: "Live",
         app: "Operations",
         nav: ["Orders", "Routes", "Exceptions"],
         columns: ["Order", "Route", "Status"],

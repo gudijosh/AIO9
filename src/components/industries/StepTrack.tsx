@@ -43,7 +43,7 @@ export function StepTrack({
           </m.p>
         </AnimatePresence>
       </div>
-      <div role="group" aria-label={t.stepsLabel} className="mt-2 flex items-center gap-1 text-signal">
+      <div role="group" aria-label={t.stepsLabel} className="mt-2 flex items-center gap-1 text-(--tile-ink)">
         <span aria-hidden className="size-[7px] shrink-0 rounded-full bg-current" />
         {steps.map((label, i) => (
           <button
@@ -57,7 +57,7 @@ export function StepTrack({
             <span
               className={cn(
                 "h-[3px] w-full rounded-full transition-colors duration-300",
-                i <= step ? "bg-signal" : "bg-midnight/12 group-hover:bg-midnight/30",
+                i <= step ? "bg-(--tile-ink)" : "bg-midnight/12 group-hover:bg-midnight/30",
               )}
             />
           </button>

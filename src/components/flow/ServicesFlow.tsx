@@ -11,7 +11,9 @@ import {
 import { useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import * as m from "motion/react-m";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { AppWindow, Bot, Cable, Clapperboard, Files, Workflow } from "lucide-react";
 import { industries } from "@/data/industries";
+import { themeVars } from "@/data/themes";
 import { ease } from "@/lib/motion";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
@@ -21,15 +23,10 @@ import { FlowContext, type Scatter } from "./parallax";
 import { Tile, type TileSurface } from "./Tile";
 
 const DESKTOP = "(min-width: 1024px)";
-/** Surfaces for the six capability tiles, two per column. */
-const CAPABILITY_SURFACES: TileSurface[] = [
-  "glass",
-  "ink",
-  "blue",
-  "glass",
-  "glass",
-  "ink",
-];
+/** The pair of capability tiles after an industry: one solid, one tinted glass. */
+const CAPABILITY_SURFACES: TileSurface[] = ["brand", "tint"];
+/** One icon per capability, in the order of the dictionary. */
+const CAPABILITY_ICONS = [Bot, Workflow, AppWindow, Cable, Files, Clapperboard];
 /** Each capability tile flies in from a different corner. */
 const CAPABILITY_FROM: Scatter[] = [
   { x: 280, y: -400, rotateY: -55, rotateZ: 14, side: -1 },
@@ -240,25 +237,26 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                     t={t}
                   />
                   {i % 2 === 0 && (
-                    <ul className="grid gap-5 sm:grid-cols-2 lg:h-(--tile-h) lg:w-[300px] lg:shrink-0 lg:grid-cols-1 lg:gap-6">
+                    <ul
+                    // These two tiles follow the industry before them and take its colours.
+                    style={themeVars(industry.theme)}
+                    className="grid gap-5 sm:grid-cols-2 lg:h-(--tile-h) lg:w-[300px] lg:shrink-0 lg:grid-cols-1 lg:gap-6"
+                  >
                       {dict.capabilities.items
                         .slice(i, i + 2)
                         .map((item, j) => (
                           <li key={item.name} className="flex">
                             <Tile
-                              surface={CAPABILITY_SURFACES[i + j]}
+                              surface={CAPABILITY_SURFACES[j]}
                               from={CAPABILITY_FROM[i + j]}
                               className="flex min-h-44 flex-1 flex-col justify-between p-7"
                             >
-                              <span
-                                aria-hidden
-                                className="size-2.5 bg-current opacity-80"
-                              />
+                              <CapabilityIcon index={i + j} />
                               <span>
-                                <span className="block text-[1.625rem] leading-[1.08] font-medium tracking-[-0.03em]">
+                                <span className="relative block text-[1.625rem] leading-[1.08] font-medium tracking-[-0.03em]">
                                   {item.name}
                                 </span>
-                                <span className="mt-2 block text-[14px] leading-snug opacity-90">
+                                <span className="relative mt-2 block text-[14px] leading-snug opacity-90">
                                   {item.text}
                                 </span>
                               </span>
@@ -326,9 +324,20 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
             </m.div>
           </FlowContext>
 
-          <FlowNav active={active} onSelect={go} copy={dict.industries} t={t} />
+          <FlowNav
+            accent={active >= 0 ? industries[active].theme.tileInk : undefined}
+            active={active} onSelect={go} copy={dict.industries} t={t} />
         </div>
       </div>
     </section>
+  );
+}
+
+function CapabilityIcon({ index }: { index: number }) {
+  const Icon = CAPABILITY_ICONS[index];
+  return (
+    <span className="relative grid size-10 place-items-center rounded-xl bg-current/10">
+      <Icon aria-hidden className="size-5" />
+    </span>
   );
 }

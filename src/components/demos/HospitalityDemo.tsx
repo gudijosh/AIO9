@@ -1,7 +1,9 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { MessageSquare, Send, Ticket } from "lucide-react";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { industryById } from "@/data/industries";
+import { cn } from "@/lib/cn";
 import { AppWindow, SideNav } from "./primitives/AppWindow";
 import { Bubble, Working } from "./primitives/Bubble";
 import { Connector, DemoFrame } from "./primitives/DemoFrame";
@@ -33,15 +35,15 @@ const TABLES: Table[] = [
 ];
 const PARTY = 4;
 const ASSIGNED = 7;
+/** The shift the guest asked for, as an index into `shifts`. */
+const SHIFT = 1;
 
 function TableShape({ table, step }: { table: Table; step: number }) {
   const fits = !table.taken && table.seats >= PARTY && step >= 2;
   const assigned = table.n === ASSIGNED && step >= 3;
-  const fill = assigned ? "var(--color-signal)" : table.taken ? "rgb(11 20 33 / 0.14)" : "#fff";
-  const stroke = assigned || fits ? "var(--color-signal)" : table.taken ? "transparent" : "rgb(11 20 33 / 0.3)";
   const common = {
-    fill,
-    stroke,
+    fill: assigned ? "var(--app)" : table.taken ? "rgb(255 255 255 / 0.16)" : "transparent",
+    stroke: assigned || fits ? "var(--app)" : table.taken ? "transparent" : "rgb(255 255 255 / 0.4)",
     strokeWidth: fits || assigned ? 1.75 : 1,
     strokeDasharray: fits && !assigned ? "4 3" : undefined,
     style: { transition: "fill 300ms, stroke 300ms" },
@@ -60,8 +62,8 @@ function TableShape({ table, step }: { table: Table; step: number }) {
         y={cy + 3.5}
         textAnchor="middle"
         fontSize={10}
-        fontWeight={assigned ? 600 : 400}
-        fill={assigned ? "#fff" : "rgb(11 20 33 / 0.6)"}
+        fontWeight={assigned ? 700 : 400}
+        fill={assigned ? "var(--app-on)" : "rgb(255 255 255 / 0.7)"}
       >
         {table.n}
       </text>
@@ -70,8 +72,9 @@ function TableShape({ table, step }: { table: Table; step: number }) {
 }
 
 /**
- * A restaurant reservations app: the guest's request arrives, the assistant
- * checks the floor plan for a table that fits, assigns it and confirms.
+ * "Reservations": a dark floor-management app for evening service. The
+ * guest's request arrives, the assistant checks the dining room for a table
+ * that fits, assigns it and sends the confirmation.
  */
 export function HospitalityDemo({ step, t }: { step: number; t: Copy }) {
   return (
@@ -79,7 +82,12 @@ export function HospitalityDemo({ step, t }: { step: number; t: Copy }) {
       <Connector when={step >= 2} d="M 15 22 C 50 22, 50 74, 85 74" />
       <Connector when={step >= 4} axis="-x" d="M 80 86 L 18 86" />
 
-      <AppWindow when={step >= 0} title={t.inbox} className="lg:absolute lg:top-6 lg:left-6 lg:w-[272px]">
+      <AppWindow
+        when={step >= 0}
+        title={t.inbox}
+        icon={MessageSquare}
+        className="lg:absolute lg:top-6 lg:left-6 lg:w-[272px]"
+      >
         <div className="flex flex-col gap-2.5 p-3">
           <Bubble when={step >= 0} from="them" who={t.guest}>
             {t.ask}
@@ -93,29 +101,47 @@ export function HospitalityDemo({ step, t }: { step: number; t: Copy }) {
       <AppWindow
         when={step >= 2}
         title={t.app}
-        badge={step === 2 ? <Working className="text-signal" /> : undefined}
+        icon={industryById.hospitality.icon}
+        right={step === 2 ? <Working className="text-(--app-ink)" /> : undefined}
         className="lg:absolute lg:right-6 lg:bottom-6 lg:w-[412px]"
       >
         <div className="flex">
           <SideNav items={t.nav} />
           <div className="min-w-0 flex-1 p-3">
-            <p className="text-[12px] font-semibold">{t.floor}</p>
-            <svg viewBox="0 0 300 140" className="mt-1.5 w-full rounded-lg bg-cloud" aria-hidden>
+            <div className="flex items-center justify-between gap-2">
+              <p className="truncate text-[12px] font-semibold">{t.floor}</p>
+              <p className="flex shrink-0 gap-1 text-[10px]">
+                {t.shifts.map((shift, i) => (
+                  <span
+                    key={shift}
+                    className={cn(
+                      "rounded-full px-1.5 py-0.5",
+                      i === SHIFT
+                        ? "bg-(--app) font-semibold text-(--app-on)"
+                        : "bg-(--win-fill) text-(--win-muted)",
+                    )}
+                  >
+                    {shift}
+                  </span>
+                ))}
+              </p>
+            </div>
+            <svg viewBox="0 0 300 140" className="mt-2 w-full rounded-lg bg-(--win-fill)" aria-hidden>
               {TABLES.map((table) => (
                 <TableShape key={table.n} table={table} step={step} />
               ))}
             </svg>
-            <ul className="mt-2 flex flex-wrap gap-x-3.5 gap-y-1 text-[10.5px] text-slate-600">
+            <ul className="mt-2 flex flex-wrap gap-x-3.5 gap-y-1 text-[10.5px] text-(--win-muted)">
               <li className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded-[3px] bg-midnight/15" />
+                <span className="size-2.5 rounded-[3px] bg-white/20" />
                 {t.taken}
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded-[3px] border-[1.5px] border-dashed border-signal" />
+                <span className="size-2.5 rounded-[3px] border-[1.5px] border-dashed border-(--app)" />
                 {t.fits}
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded-[3px] bg-signal" />
+                <span className="size-2.5 rounded-[3px] bg-(--app)" />
                 {t.assigned}
               </li>
             </ul>
@@ -126,18 +152,19 @@ export function HospitalityDemo({ step, t }: { step: number; t: Copy }) {
       <AppWindow
         when={step >= 4}
         title={t.notice}
+        icon={Ticket}
         className="lg:absolute lg:bottom-6 lg:left-6 lg:w-[236px]"
       >
         <div className="p-3">
           <p className="text-[13px] font-semibold">{t.ticket}</p>
-          <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 border-y border-dashed border-midnight/20 py-2.5 text-[12px]">
-            <dt className="font-mono text-[15px] font-semibold text-signal">7</dt>
+          <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 border-y border-dashed border-(--win-line) py-2.5 text-[12px]">
+            <dt className="font-mono text-[17px] leading-none font-bold text-(--app-ink)">7</dt>
             <dd className="self-center font-medium">{t.table}</dd>
-            <dt className="col-span-2 text-slate-600">
+            <dt className="col-span-2 text-(--win-muted)">
               {t.when} · {t.party}
             </dt>
           </dl>
-          <p className="mt-2.5 flex items-center gap-1.5 text-[11.5px] text-slate-600">
+          <p className="mt-2.5 flex items-center gap-1.5 text-[11.5px] text-(--win-muted)">
             <Send aria-hidden className="size-3.5" />
             {t.sent}
           </p>

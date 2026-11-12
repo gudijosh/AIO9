@@ -67,6 +67,8 @@ export const es = {
         "Envía la confirmación",
       ],
       demo: {
+        views: ["Día", "Semana"],
+        openings: ["2 espacios libres", "1 espacio libre"],
         app: "Agenda clínica",
         nav: ["Agenda", "Pacientes", "Avisos"],
         inbox: "Mensajes",
@@ -102,6 +104,7 @@ export const es = {
         "Envía la confirmación",
       ],
       demo: {
+        shifts: ["19:00", "20:00", "21:00"],
         app: "Reservas",
         nav: ["Salón", "Reservas", "En espera"],
         inbox: "Mensajes",
@@ -139,6 +142,8 @@ export const es = {
         "Actualiza el CRM",
       ],
       demo: {
+        search: "Buscar prospecto",
+        addLead: "Prospecto",
         app: "CRM inmobiliario",
         nav: ["Prospectos", "Propiedades", "Visitas"],
         inbox: "Mensajes",
@@ -178,6 +183,7 @@ export const es = {
         "Genera un seguimiento",
       ],
       demo: {
+        sku: "Ref. 204",
         app: "Tienda",
         nav: ["Productos", "Pedidos", "Clientes"],
         inbox: "Mensajes",
@@ -218,6 +224,7 @@ export const es = {
         "Pasa a revisión humana",
       ],
       demo: {
+        confidence: "Confianza",
         app: "Documentos",
         nav: ["Bandeja", "En revisión", "Archivados"],
         notice: "Bandeja de entrada",
@@ -254,6 +261,8 @@ export const es = {
         "Actualiza el panel operativo",
       ],
       demo: {
+        approve: "Aprobar",
+        live: "En vivo",
         app: "Operaciones",
         nav: ["Órdenes", "Rutas", "Incidencias"],
         columns: ["Orden", "Ruta", "Estado"],
