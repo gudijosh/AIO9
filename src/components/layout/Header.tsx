@@ -53,7 +53,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-300",
         scrolled || open
-          ? "border-b border-white/8 bg-midnight/85 backdrop-blur-xl"
+          ? "border-b border-midnight/8 bg-cream/75 backdrop-blur-xl backdrop-saturate-150"
           : "border-b border-transparent",
       )}
     >
@@ -62,7 +62,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
           href="#top"
           aria-label={t.home}
           onClick={() => setOpen(false)}
-          className="animate-rise text-white"
+          className="animate-rise text-midnight"
         >
           <Wordmark />
         </a>
@@ -72,7 +72,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
             <a
               key={link.href}
               href={link.href}
-              className="py-2 text-sm text-white/70 transition-colors duration-200 hover:text-white"
+              className="py-2 text-sm text-midnight/70 transition-colors duration-200 hover:text-midnight"
             >
               {t[link.key]}
             </a>
@@ -83,7 +83,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
           <LanguageSwitch current={locale} label={t.language} />
           <a
             href="#contact"
-            className="hidden h-10 items-center rounded-full bg-white px-5 text-sm font-medium text-midnight transition-colors duration-200 hover:bg-cloud lg:inline-flex"
+            className="hidden h-10 items-center rounded-full bg-midnight px-5 text-sm font-medium text-white transition-colors duration-200 hover:bg-navy lg:inline-flex"
           >
             {t.cta}
           </a>
@@ -94,7 +94,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
             aria-controls="mobile-menu"
             aria-label={open ? t.menuClose : t.menuOpen}
             onClick={() => setOpen((value) => !value)}
-            className="-mr-2 grid size-11 place-items-center rounded-full text-white lg:hidden"
+            className="-mr-2 grid size-11 place-items-center rounded-full text-midnight lg:hidden"
           >
             {open ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
           </button>
@@ -104,7 +104,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
       <div
         id="mobile-menu"
         hidden={!open}
-        className="h-[calc(100dvh-4rem)] overflow-y-auto bg-midnight px-5 pt-6 pb-10 lg:hidden"
+        className="h-[calc(100dvh-4rem)] overflow-y-auto bg-cream px-5 pt-6 pb-10 lg:hidden"
       >
         <nav aria-label={t.primary} className="flex flex-col">
           {links.map((link, i) => (
@@ -113,7 +113,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
               ref={i === 0 ? firstLinkRef : undefined}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="border-b border-white/10 py-5 text-3xl font-medium tracking-tight text-white"
+              className="border-b border-midnight/10 py-5 text-3xl font-medium tracking-tight text-midnight"
             >
               {t[link.key]}
             </a>

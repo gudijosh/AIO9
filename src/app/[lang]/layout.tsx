@@ -14,7 +14,7 @@ export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
-export const viewport: Viewport = { themeColor: "#0b1421", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#f6f3ec", colorScheme: "light" };
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;

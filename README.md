@@ -1,8 +1,10 @@
 # AIO9 — Intelligence in Motion
 
-Landing bilingüe (ES / EN) de AIO9. Su centro es una galería interactiva de seis
-industrias; cada una reproduce una simulación propia de cómo una solución de IA
-convierte una solicitud en una acción.
+Landing bilingüe (ES / EN) de AIO9. Sobre un fondo claro, todo lo que ofrecemos
+se presenta como un mosaico de recuadros de vidrio que fluye de derecha a
+izquierda al hacer scroll. Cada una de las seis industrias reproduce una
+simulación propia de cómo una solución de IA convierte una solicitud en una
+acción. La página termina solo con el formulario de contacto.
 
 > Las demostraciones son **simulaciones locales y deterministas**, identificadas
 > como ilustrativas en la interfaz. No hay modelos de IA ni datos reales detrás.
@@ -56,7 +58,7 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
    límite de peticiones. Añadirlo (p. ej. en el proveedor de hosting) antes de
    recibir tráfico real.
 6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
-7. **Fotografías**: son imágenes generadas a 1280×720. Sustituirlas por
+7. **Ilustraciones**: son imágenes generadas a 1280×720. Sustituirlas por
    versiones de mayor resolución mejora pantallas grandes (ver `docs/IMAGES.md`).
 
 ## Despliegue
@@ -72,6 +74,7 @@ La ruta `/api/contact` necesita un runtime de servidor (no es un export estátic
 ## Documentación
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): estructura, sistema de diseño y cómo ampliar.
-- [`docs/IMAGES.md`](docs/IMAGES.md): origen y tratamiento de las fotografías.
+- [`docs/IMAGES.md`](docs/IMAGES.md): origen y tratamiento de las ilustraciones.
 - [`docs/TESTING.md`](docs/TESTING.md): pruebas realizadas y resultados.
+- `docs/screenshots/`: capturas de escritorio y móvil.
 - `.claude/skills/`: guías de buenas prácticas usadas durante el desarrollo.

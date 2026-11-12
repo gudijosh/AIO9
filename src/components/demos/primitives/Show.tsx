@@ -35,8 +35,8 @@ export function Show({
 }
 
 const tones = {
-  dark: "border-white/12 bg-midnight/72 text-white backdrop-blur-xl",
-  light: "border-white/60 bg-white/94 text-midnight backdrop-blur-xl",
+  dark: "border-white/10 bg-midnight/92 text-white backdrop-blur-xl",
+  light: "border-midnight/8 bg-white/95 text-midnight backdrop-blur-xl",
 } as const;
 
 /** A floating interface surface placed over the photograph. */

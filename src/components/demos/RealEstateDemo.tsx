@@ -40,7 +40,7 @@ export function RealEstateDemo({ step, t }: { step: number; t: Copy }) {
               alt=""
               fill
               sizes="250px"
-              className="object-cover object-[80%_40%]"
+              className="bg-paper object-cover"
             />
           </div>
           <div className="p-3.5">

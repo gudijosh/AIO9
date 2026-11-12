@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone Playwright scripts (CommonJS), see docs/TESTING.md
+    "tests/**",
   ]),
 ]);
 

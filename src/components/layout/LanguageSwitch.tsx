@@ -12,7 +12,7 @@ export function LanguageSwitch({ current, label }: { current: Locale; label: str
     <div role="group" aria-label={label} className="flex items-center gap-1 text-[13px] font-medium">
       {locales.map((locale, i) => (
         <span key={locale} className="flex items-center gap-1">
-          {i > 0 && <span aria-hidden className="text-white/25">/</span>}
+          {i > 0 && <span aria-hidden className="text-midnight/25">/</span>}
           <Link
             href={`/${locale}`}
             hrefLang={locale}
@@ -27,7 +27,7 @@ export function LanguageSwitch({ current, label }: { current: Locale; label: str
             }}
             className={cn(
               "rounded px-1.5 py-2 uppercase transition-colors duration-200",
-              locale === current ? "text-white" : "text-slate hover:text-white",
+              locale === current ? "text-midnight" : "text-slate-600 hover:text-midnight",
             )}
           >
             {locale}

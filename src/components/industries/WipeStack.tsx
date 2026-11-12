@@ -41,7 +41,7 @@ export function WipeStack({
   const from = direction > 0 ? "inset(0% 0% 0% 100%)" : "inset(0% 100% 0% 0%)";
 
   return (
-    <div className="absolute inset-0 bg-navy">
+    <div className="absolute inset-0 bg-paper">
       {images.map((image, i) => {
         const isActive = i === state.active;
         const isPrevious = i === state.previous && !isActive;

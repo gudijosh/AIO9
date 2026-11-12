@@ -20,7 +20,7 @@ const empty: Values = { name: "", company: "", email: "", industry: "", message:
 const order: ContactField[] = ["name", "company", "email", "industry", "message"];
 
 const control =
-  "w-full rounded-xl border bg-white/[0.04] px-4 text-base text-white placeholder:text-slate transition-colors duration-200 hover:border-white/30 focus:border-signal-300 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-signal-300/40";
+  "w-full rounded-xl border bg-white/70 px-4 text-base text-midnight placeholder:text-slate-600 transition-colors duration-200 hover:border-midnight/35 focus:border-signal focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-signal/30";
 
 function Field({
   id,
@@ -39,16 +39,16 @@ function Field({
 }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-2 block text-[13px] font-medium text-white/80">
+      <label htmlFor={id} className="mb-2 block text-[13px] font-medium text-midnight/80">
         {label}
       </label>
       {children}
       {error ? (
-        <p id={`${id}-error`} className="mt-2 text-[13px] text-amber">
+        <p id={`${id}-error`} className="mt-2 text-[13px] font-medium text-amber-700">
           {error}
         </p>
       ) : hint ? (
-        <p id={`${id}-hint`} className="mt-2 text-[13px] text-slate">
+        <p id={`${id}-hint`} className="mt-2 text-[13px] text-slate-600">
           {hint}
         </p>
       ) : null}
@@ -149,7 +149,7 @@ export function ContactForm({
         <button
           type="button"
           onClick={() => setStatus("idle")}
-          className="mt-5 py-2 text-[15px] font-medium underline decoration-white/30 underline-offset-[6px] hover:decoration-white"
+          className="mt-5 py-2 text-[15px] font-medium underline decoration-midnight/30 underline-offset-[6px] hover:decoration-midnight"
         >
           {t.sendAnother}
         </button>
@@ -165,7 +165,7 @@ export function ContactForm({
     "aria-invalid": errors[field] ? true : undefined,
     "aria-describedby": errors[field] ? `${field}-error` : hint ? `${field}-hint` : undefined,
   });
-  const border = (field: ContactField) => (errors[field] ? "border-amber" : "border-white/14");
+  const border = (field: ContactField) => (errors[field] ? "border-amber-700" : "border-midnight/15");
   const hasErrors = order.some((field) => errors[field]);
 
   return (
@@ -224,9 +224,9 @@ export function ContactForm({
           onBlur={validateField("industry")}
           className={cn(
             control,
-            "h-13 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 fill=%22none%22 stroke=%22%238997A8%22 stroke-width=%221.5%22><path d=%22M1 1.5l5 5 5-5%22/></svg>')] bg-[position:right_1rem_center] bg-no-repeat pr-10",
+            "h-13 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 fill=%22none%22 stroke=%22%234D5C70%22 stroke-width=%221.5%22><path d=%22M1 1.5l5 5 5-5%22/></svg>')] bg-[position:right_1rem_center] bg-no-repeat pr-10",
             border("industry"),
-            !values.industry && "text-slate",
+            !values.industry && "text-slate-600",
           )}
           {...aria("industry")}
         >
@@ -234,7 +234,7 @@ export function ContactForm({
             {t.industryPlaceholder}
           </option>
           {industryOptions.map((option) => (
-            <option key={option} value={option} className="bg-midnight text-white">
+            <option key={option} value={option} className="bg-white text-midnight">
               {option === "other" ? t.other : industryNames[option]}
             </option>
           ))}
@@ -270,9 +270,9 @@ export function ContactForm({
 
       <div className="flex flex-col gap-4 sm:col-span-2">
         <div aria-live="polite" className="text-[14px] leading-relaxed empty:hidden">
-          {hasErrors && <p className="text-amber">{t.summary}</p>}
+          {hasErrors && <p className="font-medium text-amber-700">{t.summary}</p>}
           {status === "not_configured" && (
-            <p className="rounded-xl border border-amber/40 bg-amber/10 px-4 py-3 text-white">
+            <p className="rounded-xl border border-amber/60 bg-amber/15 px-4 py-3 text-midnight">
               {t.notConfigured}
               {contactEmail && (
                 <>
@@ -287,7 +287,7 @@ export function ContactForm({
             </p>
           )}
           {status === "failed" && (
-            <p className="rounded-xl border border-amber/40 bg-amber/10 px-4 py-3 text-white">
+            <p className="rounded-xl border border-amber/60 bg-amber/15 px-4 py-3 text-midnight">
               {t.failed}
             </p>
           )}
