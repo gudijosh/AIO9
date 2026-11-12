@@ -74,31 +74,41 @@ pasos.
   mueve la cinta de derecha a izquierda, 1 px de scroll = 1 px de recorrido. La
   altura de la sección se calcula a partir del ancho real de la cinta
   (`ResizeObserver`), así que añadir o quitar recuadros no requiere tocar
-  números. El fondo se desplaza más lento (parallax), la cinta se inclina
-  levemente según la velocidad del scroll. No se secuestra el scroll.
+  números. El fondo se desplaza más lento. No se secuestra el scroll.
 - **Pantallas menores**: nada se fija. Los recuadros se apilan y se recorren
   con scroll vertical.
-- **Parallax** (`src/components/flow/parallax.tsx`): cada recuadro calcula su
-  progreso `p` por el viewport (−1 entra, 0 centrado, +1 sale) sobre el eje en
-  que se mueve la página, horizontal en escritorio y vertical en móvil. De `p`
-  salen su deriva (`drift`), su separación vertical (`lift`), la inclinación 3D
-  (`tilt`) y la escala, de modo que cada recuadro se desliza a su
-  propio ritmo. `Layer` mueve capas internas en sentido contrario (la
-  fotografía dentro de su marco, los paneles de la demo). `Drift` mueve las
-  capas del hero a distintas velocidades y `Arrive` hace crecer la tarjeta de
-  contacto al llegar. Todo está ligado al scroll (solo `transform` y `opacity`),
-  sin temporizadores.
+- **Armado al hacer scroll** (`src/components/flow/parallax.tsx`): cada rubro
+  llega deslizándose con su fotografía y sus ventanas de software, y sus
+  recuadros (título, pasos) entran dispersos desde lados distintos, girados en
+  3D y transparentes, hasta encajar en la cuadrícula cuando el rubro llega al
+  centro. Las capacidades y el proceso hacen lo mismo. Cada pieza calcula su
+  progreso `p` por el viewport (−1 entra, 0 centrado) sobre el eje en que se
+  mueve la página: horizontal en escritorio, vertical en móvil (donde entran
+  desde los costados). `from` define de dónde viene cada recuadro y `progress`
+  lo ata a su rubro. Está ligado al scroll, sin temporizadores: al volver
+  atrás se reproduce al revés. `Drift` mueve levemente las capas del hero y
+  `Arrive` hace crecer la tarjeta de contacto.
 - `FlowNav`: píldora de vidrio flotante para saltar a cualquier industria o
   avanzar y retroceder. Desplaza la página a la posición de esa industria.
 - El enlace "Cómo funciona" apunta a un ancla invisible colocada a la altura
   de scroll que centra el recuadro del proceso.
 - `useDemoTimeline`: motor de pasos determinista. Cada demo se reproduce una
   vez cuando su recuadro está en pantalla; con `prefers-reduced-motion`
-  muestra el estado final y los pasos se recorren a mano. Todo el parallax
-  se desactiva también (`p` queda en 0).
+  muestra el estado final y los pasos se recorren a mano. El armado también
+  se desactiva (`p` queda en 0 y todo está en su sitio).
 - Las demos son visuales (`aria-hidden`); los lectores de pantalla reciben la
   lista ordenada de pasos.
 - La página termina en `Contact`: una pantalla completa solo con el formulario.
+
+### Las demostraciones como software
+
+Cada demo es un producto distinto hecho con ventanas de aplicación
+(`demos/primitives/AppWindow.tsx`: barra de título, menú lateral `SideNav`,
+tablas y tableros): agenda clínica, sistema de reservas con plano del salón,
+CRM inmobiliario con tablero por etapas, tienda con tabla de inventario, gestor
+documental con visor y extracción de datos, y consola de operaciones con
+indicadores y tabla de órdenes. La conversación llega en una ventana de
+"Mensajes" y el resultado en una ventana o aviso propio.
 
 ### Añadir una industria
 

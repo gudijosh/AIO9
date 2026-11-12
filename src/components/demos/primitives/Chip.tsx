@@ -1,10 +1,10 @@
 import { cn } from "@/lib/cn";
 
 const tones = {
-  neutral: "bg-white/10 text-white/80",
+  neutral: "bg-midnight/6 text-slate-600",
   blue: "bg-signal text-white",
   soft: "bg-signal/12 text-signal",
-  amber: "bg-amber/18 text-amber",
+  amber: "bg-amber/20 text-amber-700",
   ink: "bg-midnight/8 text-midnight/80",
 } as const;
 

@@ -7,7 +7,9 @@ con IA para este proyecto (ElevenLabs Image, modelo `gpt-image-2.5-sunburst`,
 desde la cuenta del propietario del repositorio). Revisa los términos de tu
 plan de ElevenLabs para confirmar el uso comercial.
 
-- Original: PNG 1280×720. En el repo: WebP calidad 86 (unos 50 KB).
+- Generadas a 1280×720 y ampliadas a 2560×1440 (Topaz Upscale, también en
+  ElevenLabs) para que se vean nítidas en pantallas de alta densidad. En el
+  repo: WebP calidad 82.
 - `next/image` sirve AVIF/WebP redimensionado y un placeholder borroso.
 - El hero reutiliza tres de ellas (salud, hospitalidad, servicios).
 - En el mosaico la imagen ocupa todo el recuadro; el token `paper`

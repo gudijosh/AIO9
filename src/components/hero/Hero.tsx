@@ -20,7 +20,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
         className="absolute bottom-[-30%] left-[-15%] -z-10 size-[45vw] rounded-full bg-white blur-[120px]"
       />
       <div className="mx-auto grid min-h-svh max-w-[1600px] items-center gap-14 px-5 pt-28 pb-16 lg:grid-cols-[1.08fr_1fr] lg:gap-10 lg:px-10 lg:pt-24 lg:pb-12">
-        <Drift speed={0.32} fade={720}>
+        <Drift speed={0.14} fade={720}>
           <h1 className="max-w-[11ch] animate-rise text-[clamp(2.75rem,6.3vw,6rem)] leading-[0.96] font-medium tracking-[-0.04em] text-balance [animation-delay:120ms]">
             {t.title}
           </h1>

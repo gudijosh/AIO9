@@ -58,9 +58,6 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
    límite de peticiones. Añadirlo (p. ej. en el proveedor de hosting) antes de
    recibir tráfico real.
 6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
-7. **Imágenes**: son imágenes generadas a 1280×720. Sustituirlas por
-   versiones de mayor resolución mejora pantallas grandes (ver `docs/IMAGES.md`).
-
 ## Despliegue en Vercel
 
 1. En Vercel: **Add New → Project** e importa `gudijosh/AIO9`. Detecta Next.js

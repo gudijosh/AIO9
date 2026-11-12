@@ -7,15 +7,16 @@ import { cn } from "@/lib/cn";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 /**
- * Scroll-linked parallax shared by the whole page.
+ * Scroll-linked motion shared by the whole page.
  *
- * Every tile computes its own progress `p`:
+ * Every piece has a progress `p` through the viewport:
  *   -1  entering (from the right on large screens, from below on small ones)
- *    0  centred in the viewport
+ *    0  centred
  *   +1  leaving
- * and everything else (drift, tilt, scale, inner layers) derives from it,
- * so each piece moves at its own pace and nothing animates on a timer.
- * With reduced motion `p` stays at 0 and the page is static.
+ * Tiles use it to *assemble*: they start scattered (offset, rotated in 3D and
+ * transparent) and fly into their place in the grid as `p` approaches 0, then
+ * stay put. Nothing runs on a timer, so scrolling back plays it in reverse.
+ * With reduced motion `p` stays at 0 and everything is simply in place.
  */
 
 interface FlowState {
@@ -45,28 +46,40 @@ export function useTileProgress(ref: React.RefObject<HTMLElement | null>): Motio
   });
 }
 
-export interface Depth {
-  /** Sideways drift. Negative = foreground (faster), positive = background (slower). */
-  drift?: number;
-  /** Vertical spread away from the centre line (large screens). */
-  lift?: number;
-  /** Strength of the 3D tilt, 0–1. */
-  tilt?: number;
+/** Where a tile comes from before it settles into the grid. */
+export interface Scatter {
+  /** Offset in px while fully scattered (large screens). */
+  x?: number;
+  y?: number;
+  /** Rotation in degrees while fully scattered. */
+  rotateX?: number;
+  rotateY?: number;
+  rotateZ?: number;
+  scale?: number;
+  /** Small screens: which side it flies in from (-1 left, 1 right). */
+  side?: -1 | 1;
+  /** Set false to keep it opaque while it travels (e.g. the photograph). */
+  fade?: boolean;
 }
 
+const smooth = (t: number) => t * t * (3 - 2 * t);
+
 /**
- * A block that moves through the viewport with its own depth. Children can
- * read the same progress with <Layer> to move at yet another pace.
+ * A tile that assembles into the layout as it scrolls into view.
+ * `progress` lets several tiles share one progress (an industry's tiles all
+ * follow their chapter); without it the tile follows its own position.
+ * Children can read the tile's progress with <Layer>.
  */
 export function ParallaxTile({
-  drift = 0,
-  lift = 0,
-  tilt = 1,
+  from,
+  progress,
   className,
   children,
   ref,
   ...rest
-}: Depth & {
+}: {
+  from?: Scatter;
+  progress?: MotionValue<number>;
   className?: string;
   children: React.ReactNode;
   ref?: React.Ref<HTMLDivElement>;
@@ -75,15 +88,26 @@ export function ParallaxTile({
 }) {
   const local = useRef<HTMLDivElement>(null);
   const { horizontal } = use(FlowContext);
-  const p = useTileProgress(local);
+  const own = useTileProgress(local);
+  // Stacked layouts are too tall for a shared progress, so each tile follows itself.
+  const p = horizontal && progress ? progress : own;
 
-  const x = useTransform(p, (v) => (horizontal ? v * drift * 80 : 0));
-  // Stacked neighbours spread apart away from the centre, so they never collide.
-  const y = useTransform(p, (v) => (horizontal ? Math.abs(v) * lift * 46 : v * drift * -26));
-  const scale = useTransform(p, (v) => 1 - Math.min(1, Math.abs(v)) ** 2 * (horizontal ? 0.12 : 0.07));
-  const rotateY = useTransform(p, (v) => (horizontal ? v * 9 * tilt : 0));
-  const rotateX = useTransform(p, (v) => (horizontal ? 0 : v * -5 * tilt));
-
+  // 1 = fully scattered, 0 = in place. Settles a little before the centre.
+  const amount = useTransform(p, (v) => {
+    if (!from) return 0;
+    const [settled, range] = horizontal ? [0.08, 0.85] : [0.42, 0.5];
+    return smooth(clamp((-v - settled) / range, 0, 1));
+  });
+  const side = from?.side ?? 1;
+  const x = useTransform(amount, (a) => a * (horizontal ? (from?.x ?? 0) : side * 150));
+  const y = useTransform(amount, (a) => a * (horizontal ? (from?.y ?? 0) : 70));
+  const rotateX = useTransform(amount, (a) => a * (horizontal ? (from?.rotateX ?? 0) : 12));
+  const rotateY = useTransform(amount, (a) => a * (horizontal ? (from?.rotateY ?? 0) : side * -38));
+  const rotateZ = useTransform(amount, (a) => a * (horizontal ? (from?.rotateZ ?? 0) : side * 6));
+  const scale = useTransform(amount, (a) => 1 - a * (1 - (from?.scale ?? 0.82)));
+  const opacity = useTransform(amount, (a) =>
+    from?.fade === false ? 1 : 1 - clamp((a - 0.3) / 0.6, 0, 1),
+  );
 
   return (
     <m.div
@@ -92,7 +116,7 @@ export function ParallaxTile({
         if (typeof ref === "function") ref(node);
         else if (ref) ref.current = node;
       }}
-      style={{ x, y, scale, rotateX, rotateY, transformPerspective: 1400 }}
+      style={{ x, y, rotateX, rotateY, rotateZ, scale, opacity, transformPerspective: 1200 }}
       className={cn("will-change-transform", className)}
       {...rest}
     >

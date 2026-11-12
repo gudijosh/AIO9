@@ -8,23 +8,16 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-  useVelocity,
-} from "motion/react";
+import { useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import * as m from "motion/react-m";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { industries } from "@/data/industries";
 import { ease } from "@/lib/motion";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { FlowNav } from "./FlowNav";
 import { IndustryChapter } from "./IndustryChapter";
-import { FlowContext, ParallaxTile } from "./parallax";
+import { FlowContext, type Scatter } from "./parallax";
 import { Tile, type TileSurface } from "./Tile";
 
 const DESKTOP = "(min-width: 1024px)";
@@ -37,14 +30,14 @@ const CAPABILITY_SURFACES: TileSurface[] = [
   "glass",
   "ink",
 ];
-/** Each capability tile gets its own depth: [drift, lift]. */
-const CAPABILITY_DEPTH: Array<[number, number]> = [
-  [-0.9, -0.8],
-  [0.6, 0.8],
-  [0.7, -0.8],
-  [-0.8, 0.8],
-  [-0.6, -0.8],
-  [0.9, 0.8],
+/** Each capability tile flies in from a different corner. */
+const CAPABILITY_FROM: Scatter[] = [
+  { x: 280, y: -400, rotateY: -55, rotateZ: 14, side: -1 },
+  { x: 320, y: 420, rotateY: 50, rotateZ: -12, side: 1 },
+  { x: 260, y: -420, rotateX: 55, rotateZ: -14, side: 1 },
+  { x: 340, y: 400, rotateX: -50, rotateZ: 12, side: -1 },
+  { x: 300, y: -380, rotateY: 55, rotateZ: 10, side: -1 },
+  { x: 280, y: 440, rotateY: -50, rotateZ: -14, side: 1 },
 ];
 /** The AIO9 Signal marks: point (input), stroke (intelligence), square (action). */
 const MARKS = [
@@ -57,14 +50,14 @@ const MARKS = [
  * Everything AIO9 offers as one mosaic of glass tiles.
  *
  * Large screens: the section pins and vertical scrolling moves the mosaic
- * from right to left (1px of scroll = 1px of travel), with a slower backdrop
- * behind it and a slight lean that follows scroll speed.
+ * from right to left (1px of scroll = 1px of travel), with a slower backdrop.
  * Small screens: nothing pins; tiles stack and scroll vertically.
- * On both, every tile has its own depth (see ./parallax).
+ * On both, each industry slides in with its photograph and software windows,
+ * and its tiles fly in scattered from different sides and assemble into the
+ * grid as it reaches the centre (see ./parallax).
  */
 export function ServicesFlow({ dict }: { dict: Dictionary }) {
   const t = dict.experience;
-  const reduced = usePrefersReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const processRef = useRef<HTMLDivElement>(null);
@@ -99,8 +92,10 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                   window.innerWidth / 2,
               ),
             ) + 80
-          : process.getBoundingClientRect().top -
-            wrap.getBoundingClientRect().top;
+          : // Layout position, not the visual one: the tile may still be flying in.
+            trackEl.getBoundingClientRect().top -
+            wrap.getBoundingClientRect().top +
+            process.offsetTop;
       setMetrics((current) =>
         current.distance === distance &&
         Math.abs(current.processTop - processTop) < 2
@@ -134,13 +129,6 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
   const flow = useMemo(
     () => ({ trackX: x, horizontal: distance > 0 }),
     [x, distance],
-  );
-  const velocity = useVelocity(scrollYProgress);
-  const lean = useSpring(
-    useTransform(velocity, (value) =>
-      distance && !reduced ? Math.max(-2.5, Math.min(2.5, value * -5)) : 0,
-    ),
-    { stiffness: 140, damping: 28 },
   );
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
@@ -220,18 +208,14 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
           <FlowContext value={flow}>
             <m.div
               ref={trackRef}
-              style={{ x, skewX: lean }}
+              style={{ x }}
               className={cn(
                 "relative flex flex-col gap-5 px-5 py-20",
                 "lg:w-max lg:flex-row lg:items-center lg:gap-10 lg:px-[max(2.5rem,calc((100vw-1600px)/2+2.5rem))] lg:py-0",
                 "lg:[--stage-w:clamp(700px,56vw,900px)] lg:[--tile-h:min(calc(100svh-12.5rem),640px)]",
               )}
             >
-              <ParallaxTile
-                drift={0.9}
-                tilt={0}
-                className="mb-6 lg:mb-0 lg:w-[min(34rem,40vw)] lg:shrink-0 lg:pr-8"
-              >
+              <div className="mb-6 lg:mb-0 lg:w-[min(34rem,40vw)] lg:shrink-0 lg:pr-8">
                 <h2
                   id="flow-heading"
                   className="text-[clamp(2rem,4.2vw,4rem)] leading-[1.02] font-medium tracking-[-0.035em] text-balance"
@@ -241,7 +225,7 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                 <p className="mt-6 max-w-[42ch] text-[17px] leading-relaxed text-slate-600 lg:text-lg">
                   {t.intro}
                 </p>
-              </ParallaxTile>
+              </div>
 
               {industries.map((industry, i) => (
                 <Fragment key={industry.id}>
@@ -263,8 +247,7 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                           <li key={item.name} className="flex">
                             <Tile
                               surface={CAPABILITY_SURFACES[i + j]}
-                              drift={CAPABILITY_DEPTH[i + j][0]}
-                              lift={CAPABILITY_DEPTH[i + j][1]}
+                              from={CAPABILITY_FROM[i + j]}
                               className="flex min-h-44 flex-1 flex-col justify-between p-7"
                             >
                               <span
@@ -287,21 +270,16 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                 </Fragment>
               ))}
 
-              <ParallaxTile
-                drift={-0.8}
-                tilt={0}
-                className="py-6 lg:w-[26rem] lg:shrink-0 lg:px-6"
-              >
+              <div className="py-6 lg:w-[26rem] lg:shrink-0 lg:px-6">
                 <p className="text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.02] font-medium tracking-[-0.035em] text-balance">
                   {dict.capabilities.title}
                 </p>
-              </ParallaxTile>
+              </div>
 
               <Tile
                 ref={processRef}
                 aria-labelledby="process-heading"
-                drift={0.3}
-                tilt={0.5}
+                from={{ y: 360, rotateX: -40, rotateZ: 6, side: -1 }}
                 className="flex flex-col justify-between gap-10 p-7 lg:h-(--tile-h) lg:w-[min(900px,78vw)] lg:shrink-0 lg:p-12"
               >
                 <div>

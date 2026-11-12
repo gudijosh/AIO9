@@ -20,18 +20,18 @@ const frames = [
   {
     place: "left-[8%] top-[9%] z-20 h-[80%] w-[72%]",
     look: "rounded-[28px] animate-unmask [animation-delay:300ms]",
-    speed: -0.06,
+    speed: -0.03,
   },
   // Two frames peeking from behind hint at the other industries.
   {
     place: "right-0 top-0 z-10 h-[46%] w-[42%]",
     look: "rounded-[22px] animate-rise [animation-delay:650ms]",
-    speed: -0.3,
+    speed: -0.12,
   },
   {
     place: "bottom-0 left-0 z-10 h-[38%] w-[38%]",
     look: "rounded-[22px] animate-rise [animation-delay:780ms]",
-    speed: 0.2,
+    speed: 0.08,
   },
 ];
 
@@ -80,10 +80,12 @@ export function HeroStack({
           <WipeStack
             images={images}
             active={index}
+            // The photo is landscape but the frame is portrait, so the visible crop
+            // comes from an image roughly 2.4× wider than the frame itself.
             sizes={
               slot === 0
-                ? "(min-width: 1024px) 390px, 72vw"
-                : "(min-width: 1024px) 230px, 40vw"
+                ? "(min-width: 1024px) 960px, 180vw"
+                : "(min-width: 1024px) 560px, 110vw"
             }
             preloadFirst={slot === 0}
           />
@@ -120,7 +122,7 @@ export function HeroStack({
         );
       })}
 
-      <Drift speed={-0.18} className="absolute right-0 bottom-[3%] z-30 w-[min(300px,78%)]">
+      <Drift speed={-0.07} className="absolute right-0 bottom-[3%] z-30 w-[min(300px,78%)]">
         <div className="glass animate-rise rounded-2xl p-4 [animation-delay:950ms]">
         <div className="flex items-start justify-between gap-3">
           <AnimatePresence mode="wait" initial={false}>

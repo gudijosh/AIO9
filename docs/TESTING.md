@@ -16,7 +16,8 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 - `/` redirige a `/es`; `lang`, título y descripción por idioma; `hreflang`.
 - Anclas del menú, botón principal y menú móvil (abrir, Escape, enlace).
 - El mosaico avanza de derecha a izquierda 1:1 con el scroll y la sección
-  permanece fija mientras tanto.
+  permanece fija mientras tanto. (El efecto de armado de los recuadros se
+  revisó en capturas, no tiene prueba automática.)
 - Navegación flotante: cada industria se centra; anterior, siguiente, estado
   deshabilitado en los extremos y uso con teclado.
 - Demostración: reproduce hasta el último paso, repetir, pausar, reanudar y
@@ -29,8 +30,8 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   configurada (nunca un éxito simulado). API: 422, 400 (honeypot), 400 (cuerpo).
 - Idiomas: la página en inglés no contiene textos en español y viceversa.
 - Movimiento reducido: la demo muestra su estado final, los pasos se recorren
-  a mano y el hero no rota. El parallax también se desactiva, pero eso no
-  tiene prueba automática.
+  a mano y el hero no rota. El armado al hacer scroll también se desactiva,
+  pero eso no tiene prueba automática.
 - Móvil: mosaico apilado sin fijación, la demo se reproduce al entrar en
   pantalla, objetivos táctiles de al menos 24 px.
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
@@ -39,13 +40,13 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 90 | 100 | 100 | 100 |
-| Escritorio | 79 | 100 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 84 | 100 | 100 | 100 |
+| Escritorio | 80 | 100 | 100 | 100 |
 
 LCP 3.3 s en móvil emulado y 0.7 s en escritorio; CLS 0 en ambos. El
-rendimiento en escritorio bajó respecto a versiones anteriores (antes 89–95)
-por el parallax ligado al scroll: el tiempo de bloqueo al cargar ronda los
-480 ms. Las cifras varían entre ejecuciones.
+rendimiento es más bajo que en las primeras versiones (89–95) por el armado
+ligado al scroll y las fotografías a mayor resolución: el tiempo de bloqueo al
+cargar ronda los 400–450 ms. Las cifras varían entre ejecuciones.
 
 ## Repetir las pruebas
 

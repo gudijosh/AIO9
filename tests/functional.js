@@ -72,25 +72,25 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   await items.nth(2).click(); await p.waitForTimeout(1800);
 
   // "Talk about my sector" preselects industry
-  await p.locator('article', { has: p.locator('#industry-realEstate') }).getByRole('link', { name: 'Hablar de mi sector' }).click(); await p.waitForTimeout(1500);
+  await p.locator('article', { has: p.locator('#industry-realEstate') }).getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(1500);
   check('sector link preselects industry in the form', (await p.inputValue('#industry')) === 'realEstate', await p.inputValue('#industry'));
 
   check('page ends on the contact form (nothing after it but the legal line)', await p.evaluate(() => { const c = document.getElementById('contact'); return !c.nextElementSibling && c.parentElement.id === 'main' && c.offsetHeight >= innerHeight; }));
 
   // Form
   await p.reload({ waitUntil: 'networkidle' }); await p.evaluate(() => document.getElementById('contact').scrollIntoView({ behavior: 'instant' }));
-  await p.getByRole('button', { name: 'Enviar consulta' }).click(); await p.waitForTimeout(300);
+  await p.getByRole('button', { name: 'Enviar mensaje' }).click(); await p.waitForTimeout(300);
   check('empty submit shows 5 field errors', (await p.locator('[id$="-error"]').count()) === 5, String(await p.locator('[id$="-error"]').count()));
   check('focus moves to first invalid field', await p.evaluate(() => document.activeElement?.id === 'name'));
   await p.fill('#name', 'Ana Pérez'); await p.fill('#company', 'Empresa Demo'); await p.fill('#email', 'no-es-correo');
   await p.selectOption('#industry', 'retail'); await p.fill('#message', 'Queremos automatizar la atención de pedidos en línea.');
-  await p.getByRole('button', { name: 'Enviar consulta' }).click(); await p.waitForTimeout(300);
+  await p.getByRole('button', { name: 'Enviar mensaje' }).click(); await p.waitForTimeout(300);
   check('invalid email is the only error', (await p.locator('[id$="-error"]').count()) === 1 && (await p.textContent('#email-error')).includes('correo válido'));
   await p.fill('#email', 'ana@example.com');
-  const [resp] = await Promise.all([p.waitForResponse(x => x.url().includes('/api/contact')), p.getByRole('button', { name: 'Enviar consulta' }).click()]);
+  const [resp] = await Promise.all([p.waitForResponse(x => x.url().includes('/api/contact')), p.getByRole('button', { name: 'Enviar mensaje' }).click()]);
   await p.waitForTimeout(400);
   const formText = await p.textContent('#contact');
-  check('unconfigured backend → 503 and honest message (no fake success)', resp.status() === 503 && formText.includes('no se envió') && !formText.includes('Consulta enviada'), 'status ' + resp.status());
+  check('unconfigured backend → 503 and honest message (no fake success)', resp.status() === 503 && formText.includes('no se envió') && !formText.includes('Recibimos tu mensaje'), 'status ' + resp.status());
   errors.splice(0, errors.length, ...errors.filter(e => !e.includes('503'))); // expected network error line
 
   // API contract
@@ -104,7 +104,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('EN: url and html lang', p.url().includes('/en') && (await p.getAttribute('html', 'lang')) === 'en');
   check('EN headline', (await p.textContent('h1')).includes('Intelligence that moves business forward.'));
   const body = (await p.locator('body').innerText());
-  const leaks = ['Soluciones', 'Cómo funciona', 'Hablemos', 'Salud', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Entender', 'Agentes', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos'].filter(w => body.includes(w));
+  const leaks = ['Soluciones', 'Cómo funciona', 'Hablemos', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Entender', 'Agentes', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos'].filter(w => body.includes(w));
   check('EN page has no Spanish strings', leaks.length === 0, leaks.join(', '));
   check('EN <title> and description', (await p.title()).includes('Intelligence that moves business forward') && (await p.getAttribute('meta[name=description]', 'content')).startsWith('AIO9 builds'));
   check('hreflang alternates present', (await p.locator('link[rel=alternate][hreflang]').count()) >= 3);

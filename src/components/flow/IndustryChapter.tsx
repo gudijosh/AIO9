@@ -11,7 +11,7 @@ import { useDemoTimeline } from "@/lib/useDemoTimeline";
 import { DemoRenderer } from "@/components/demos/DemoRenderer";
 import { DemoControls } from "@/components/industries/DemoControls";
 import { StepTrack } from "@/components/industries/StepTrack";
-import { Layer } from "./parallax";
+import { Layer, useTileProgress } from "./parallax";
 import { Tile } from "./Tile";
 
 /**
@@ -34,8 +34,10 @@ export function IndustryChapter({
   reversed: boolean;
   copy: Dictionary["industries"];
   t: Dictionary["experience"];
-  ref: React.Ref<HTMLElement>;
+  ref: React.RefCallback<HTMLElement> | React.RefObject<HTMLElement | null>;
 }) {
+  const articleRef = useRef<HTMLElement>(null);
+  const chapter = useTileProgress(articleRef);
   const stageRef = useRef<HTMLDivElement>(null);
   const inView = useInView(stageRef, { amount: 0.35 });
   const timeline = useDemoTimeline({
@@ -48,7 +50,11 @@ export function IndustryChapter({
 
   return (
     <article
-      ref={ref}
+      ref={(node) => {
+        articleRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) ref.current = node;
+      }}
       aria-labelledby={headingId}
       className={cn(
         "grid gap-5 lg:h-(--tile-h) lg:shrink-0 lg:grid-rows-[1fr_auto] lg:gap-6",
@@ -58,8 +64,8 @@ export function IndustryChapter({
       )}
     >
       <Tile
-        drift={-0.55}
-        lift={-0.5}
+        progress={chapter}
+        from={{ x: reversed ? -260 : 240, y: -360, rotateX: 58, rotateZ: reversed ? 10 : -10, side: -1 }}
         className={cn(
           "flex flex-col p-7 lg:row-start-1 lg:p-8",
           reversed ? "lg:col-start-1" : "lg:col-start-2",
@@ -89,20 +95,21 @@ export function IndustryChapter({
       <Tile
         ref={stageRef}
         surface="paper"
-        tilt={0.6}
+        progress={chapter}
+        from={{ x: 220, rotateY: -22, scale: 0.9, side: 1, fade: false }}
         className={cn(
           "relative overflow-hidden lg:row-span-2 lg:row-start-1",
           reversed ? "lg:col-start-2" : "lg:col-start-1",
         )}
       >
-        {/* The photograph slides inside its frame; the demo panels float the other way. */}
+        {/* The photograph drifts slightly inside its frame as the chapter passes. */}
         <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/10] lg:absolute lg:inset-0 lg:aspect-auto">
-          <Layer shift={-48} zoom={1.13} className="absolute inset-0">
+          <Layer shift={-22} zoom={1.07} className="absolute inset-0">
             <Image
               src={industry.image}
               alt={text.alt}
               fill
-              sizes="(min-width: 1024px) 1100px, 120vw"
+              sizes="(min-width: 1024px) 1150px, 150vw"
               quality={85}
               placeholder="blur"
               className="object-cover"
@@ -111,12 +118,9 @@ export function IndustryChapter({
           </Layer>
           {/* Small screens: fade the photo into the tile so the panels below sit on one surface. */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-paper to-transparent lg:hidden" />
-          <p className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-midnight/85 px-3 py-1 text-[11px] whitespace-nowrap text-white">
-            {t.simulation}
-          </p>
         </div>
         <Layer
-          shift={26}
+          shift={0}
           aria-hidden
           className="relative z-10 -mt-4 min-h-[25rem] pb-3 sm:min-h-[20rem] lg:absolute lg:inset-0 lg:mt-0 lg:min-h-0 lg:pb-0"
         >
@@ -130,8 +134,8 @@ export function IndustryChapter({
       </Tile>
 
       <Tile
-        drift={0.45}
-        lift={0.5}
+        progress={chapter}
+        from={{ x: reversed ? -220 : 300, y: 380, rotateX: -55, rotateZ: reversed ? -12 : 12, side: 1 }}
         className={cn(
           "flex flex-col gap-4 p-6 lg:row-start-2",
           reversed ? "lg:col-start-1" : "lg:col-start-2",
@@ -149,6 +153,7 @@ export function IndustryChapter({
             },
           }}
         />
+        <p className="text-[11.5px] text-slate-600">{t.simulation}</p>
       </Tile>
     </article>
   );

@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { ParallaxTile, type Depth } from "./parallax";
+import type { MotionValue } from "motion/react";
+import { ParallaxTile, type Scatter } from "./parallax";
 
 const surfaces = {
   /** Semi-transparent glass over the coloured backdrop. */
@@ -17,15 +18,17 @@ const surfaces = {
 export type TileSurface = keyof typeof surfaces;
 
 /**
- * One piece of the mosaic. Its `drift`, `lift` and `tilt` give it a depth of
- * its own, so neighbouring tiles slide past each other as the page scrolls.
+ * One piece of the mosaic. `from` says where it flies in from before it
+ * settles into the grid; `progress` ties it to its chapter.
  */
 export function Tile({
   surface = "glass",
   className,
   children,
   ...rest
-}: Depth & {
+}: {
+  from?: Scatter;
+  progress?: MotionValue<number>;
   surface?: TileSurface;
   className?: string;
   children: React.ReactNode;

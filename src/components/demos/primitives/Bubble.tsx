@@ -17,13 +17,13 @@ export function Bubble({
 }) {
   return (
     <Show when={when} delay={delay} className={cn("flex flex-col", from === "ai" ? "items-end" : "items-start")}>
-      <span className="mb-1 px-1 text-[10.5px] font-medium text-white/55">{who}</span>
+      <span className="mb-1 px-1 text-[10.5px] font-medium text-slate-600">{who}</span>
       <span
         className={cn(
-          "max-w-[92%] rounded-2xl px-3 py-2 text-[13px] leading-snug",
+          "max-w-[92%] rounded-2xl px-3 py-2 text-[12.5px] leading-snug",
           from === "ai"
             ? "rounded-br-md bg-signal text-white"
-            : "rounded-bl-md bg-white/12 text-white",
+            : "rounded-bl-md bg-cloud text-midnight",
         )}
       >
         {children}
