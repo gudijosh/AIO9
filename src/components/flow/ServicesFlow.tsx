@@ -11,7 +11,14 @@ import {
 import { useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import * as m from "motion/react-m";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { AppWindow, Bot, Cable, Clapperboard, Files, Workflow } from "lucide-react";
+import {
+  AppWindow,
+  Bot,
+  Clapperboard,
+  Globe,
+  GraduationCap,
+  Wrench,
+} from "lucide-react";
 import { industries } from "@/data/industries";
 import { themeVars } from "@/data/themes";
 import { ease } from "@/lib/motion";
@@ -25,8 +32,8 @@ import { Tile, type TileSurface } from "./Tile";
 const DESKTOP = "(min-width: 1024px)";
 /** The pair of capability tiles after an industry: one solid, one tinted glass. */
 const CAPABILITY_SURFACES: TileSurface[] = ["brand", "tint"];
-/** One icon per capability, in the order of the dictionary. */
-const CAPABILITY_ICONS = [Bot, Workflow, AppWindow, Cable, Files, Clapperboard];
+/** One icon per tile, in dictionary order: Automate, Web, Systems, maintenance, creative, training. */
+const CAPABILITY_ICONS = [Bot, Globe, AppWindow, Wrench, Clapperboard, GraduationCap];
 /** Each capability tile flies in from a different corner. */
 const CAPABILITY_FROM: Scatter[] = [
   { x: 280, y: -400, rotateY: -55, rotateZ: 14, side: -1 },
@@ -233,7 +240,7 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                     <ul
                     // These two tiles follow the industry before them and take its colours.
                     style={themeVars(industry.theme)}
-                    className="grid gap-5 sm:grid-cols-2 lg:h-(--tile-h) lg:w-[300px] lg:shrink-0 lg:grid-cols-1 lg:gap-6"
+                    className="grid gap-5 sm:grid-cols-2 lg:h-(--tile-h) lg:w-[330px] lg:shrink-0 lg:grid-cols-1 lg:gap-6"
                   >
                       {dict.capabilities.items
                         .slice(i, i + 2)
@@ -246,10 +253,10 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                             >
                               <CapabilityIcon index={i + j} />
                               <span>
-                                <span className="relative block text-[1.625rem] leading-[1.08] font-medium tracking-[-0.03em]">
+                                <span className="relative block text-[1.375rem] leading-[1.1] font-medium tracking-[-0.025em]">
                                   {item.name}
                                 </span>
-                                <span className="relative mt-2 block text-[14px] leading-snug opacity-90">
+                                <span className="relative mt-1.5 block text-[13px] leading-snug opacity-90">
                                   {item.text}
                                 </span>
                               </span>
@@ -261,8 +268,8 @@ export function ServicesFlow({ dict }: { dict: Dictionary }) {
                 </Fragment>
               ))}
 
-              <div className="py-6 lg:w-[26rem] lg:shrink-0 lg:px-6">
-                <p className="text-[clamp(2rem,3.4vw,3.5rem)] leading-[1.02] font-medium tracking-[-0.035em] text-balance">
+              <div className="py-6 lg:w-[30rem] lg:shrink-0 lg:px-6">
+                <p className="text-[clamp(1.5rem,2.2vw,2.25rem)] leading-[1.12] font-medium tracking-[-0.03em] text-balance">
                   {dict.capabilities.title}
                 </p>
               </div>

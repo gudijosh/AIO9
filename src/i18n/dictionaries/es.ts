@@ -5,10 +5,10 @@
  */
 export const es = {
   meta: {
-    title: "AIO9 — La inteligencia que transforma negocios",
+    title: "AIO9 — IA y software para que tu empresa trabaje mejor",
     description:
-      "AIO9 construye soluciones de inteligencia artificial que automatizan procesos, conectan sistemas y convierten ideas en resultados.",
-    ogAlt: "AIO9, inteligencia en movimiento",
+      "AIO9 implementa IA y software para que las empresas atiendan mejor, reduzcan tareas manuales y conecten sus operaciones.",
+    ogAlt: "AIO9, IA y software para tu empresa",
   },
   nav: {
     solutions: "Soluciones",
@@ -23,20 +23,20 @@ export const es = {
     language: "Idioma",
   },
   hero: {
-    title: "La inteligencia que transforma negocios.",
+    title: "IA y software para que tu empresa trabaje mejor.",
     subtitle:
-      "Te ayudamos a que tu negocio atienda, agende y responda por su cuenta, para que tú y tu equipo se dediquen a lo que de verdad importa.",
+      "Implementamos IA y software para que tu empresa atienda mejor, reduzca tareas manuales y conecte sus operaciones.",
     primary: "Hablemos de tu proyecto",
-    secondary: "Mira cómo se vería en tu sector",
-    stackLabel: "Industrias donde aplicamos inteligencia artificial",
+    secondary: "Mira ejemplos por sector",
+    stackLabel: "Ejemplos de sectores donde aplicamos nuestras soluciones",
     show: "Mostrar",
     pause: "Pausar la rotación",
     play: "Reanudar la rotación",
   },
   experience: {
-    heading: "Una industria. Un problema. Una solución inteligente.",
+    heading: "Nuestros productos son las soluciones. Los sectores, ejemplos.",
     intro:
-      "Elige tu sector y mira, paso a paso, cómo sería tu día con un sistema que te echa una mano.",
+      "Clínicas, restaurantes, inmobiliarias, comercios y empresas de servicios: así se ve nuestro trabajo en cada uno. Elige un sector y míralo paso a paso.",
     railLabel: "Industrias",
     simulation: "Simulación ilustrativa",
     stepOf: "Paso {n} de {total}",
@@ -52,9 +52,11 @@ export const es = {
   industries: {
     healthcare: {
       name: "Salud",
+      /** Which AIO9 service this example illustrates. */
+      service: "Ejemplo de AIO9 Automate",
       title: "Tu clínica, sin llamadas perdidas.",
       description:
-        "Tus pacientes escriben, el asistente revisa la agenda y aparta la cita. Tú solo llegas a atender.",
+        "Un asistente responde a tus pacientes, revisa la agenda y aparta la cita.",
       from: "Consulta",
       to: "Cita confirmada",
       alt: "Estetoscopio azul sobre una tablilla con una hoja de citas, junto a un calendario",
@@ -90,9 +92,11 @@ export const es = {
     },
     hospitality: {
       name: "Hospitalidad y restaurantes",
+      /** Which AIO9 service this example illustrates. */
+      service: "Ejemplo de AIO9 Automate",
       title: "Cada huésped importa.",
       description:
-        "Que nadie se quede sin respuesta en la hora pico: el sistema contesta, revisa el salón y aparta la mesa.",
+        "Responde a quien escribe, revisa el salón y deja la mesa reservada.",
       from: "Consulta",
       to: "Mesa reservada",
       alt: "Menú de restaurante junto a un plato de pasta y una servilleta azul",
@@ -127,9 +131,11 @@ export const es = {
     },
     realEstate: {
       name: "Bienes raíces",
+      /** Which AIO9 service this example illustrates. */
+      service: "Ejemplo de AIO9 Automate",
       title: "Del interés a la oportunidad.",
       description:
-        "Responde al instante a quien pregunta por una propiedad, entiende qué busca y deja la visita agendada.",
+        "Atiende al interesado, entiende qué busca y registra la oportunidad en tu CRM.",
       from: "Consulta",
       to: "Visita agendada",
       alt: "Maqueta de una casa con puerta azul y un juego de llaves",
@@ -169,9 +175,11 @@ export const es = {
     },
     retail: {
       name: "Retail y ecommerce",
+      /** Which AIO9 service this example illustrates. */
+      service: "Ejemplo de AIO9 Automate + Systems",
       title: "Vende sin hacer esperar a nadie.",
       description:
-        "“¿Lo tienen en mi talla?” El sistema revisa el inventario, ofrece opciones y le da seguimiento al pedido.",
+        "Responde con tu inventario real y da seguimiento a cada pedido.",
       from: "Pregunta",
       to: "Pedido en seguimiento",
       alt: "Bolsa de compras con un suéter azul, unos tenis y un lector de tarjetas",
@@ -209,9 +217,11 @@ export const es = {
     },
     services: {
       name: "Servicios profesionales",
+      /** Which AIO9 service this example illustrates. */
+      service: "Ejemplo de AIO9 Systems",
       title: "Menos papeleo, más tiempo para tus clientes.",
       description:
-        "Deja que el sistema lea, ordene y resuma los documentos. Tu equipo revisa y decide.",
+        "Un sistema que lee, ordena y resume documentos; tu equipo revisa y decide.",
       from: "Documento",
       to: "Información organizada",
       alt: "Portafolio azul con documentos, pluma, lentes y calculadora",
@@ -246,9 +256,11 @@ export const es = {
     },
     logistics: {
       name: "Operaciones y logística",
+      /** Which AIO9 service this example illustrates. */
+      service: "Ejemplo de AIO9 Systems",
       title: "Operaciones que se anticipan.",
       description:
-        "Entérate de un problema antes de que te llame el cliente: el sistema lo detecta, propone qué hacer y tú decides.",
+        "Seguimiento de órdenes que detecta incidencias y propone qué hacer; tú decides.",
       from: "Orden",
       to: "Acción asignada",
       alt: "Caja de envío con cinta azul, paquetes y un lector de códigos",
@@ -289,38 +301,38 @@ export const es = {
     },
   },
   process: {
-    title: "De la complejidad a la claridad.",
-    subtitle: "Sin tecnicismos y a tu ritmo. Así trabajamos contigo.",
+    title: "Así trabajamos contigo.",
+    subtitle: "Identificamos qué está frenando tu operación y construimos la solución con IA, automatización o software.",
     steps: [
       {
-        name: "Entender",
-        text: "Nos sentamos contigo a ver cómo trabajas hoy y dónde se te va el tiempo.",
+        name: "Identificar",
+        text: "Vemos contigo qué te quita tiempo y qué proceso conviene resolver primero.",
       },
       {
         name: "Construir",
-        text: "Armamos la solución y la conectamos con las herramientas que ya usas.",
+        text: "Armamos la solución con IA, automatización o software, según lo que haga falta.",
       },
       {
-        name: "Evolucionar",
-        text: "La probamos contigo, vemos qué tal va y la seguimos mejorando.",
+        name: "Conectar y capacitar",
+        text: "La unimos a tus herramientas y enseñamos a tu equipo a usarla.",
       },
     ],
   },
   capabilities: {
-    title: "Una inteligencia. Aplicaciones infinitas.",
+    title: "Empezamos por un proceso concreto y medible. La web y el software a medida amplían la solución cuando los necesitas.",
     items: [
-      { name: "Agentes de IA", text: "Asistentes que contestan, consultan y resuelven por ti." },
-      { name: "Automatización de negocio", text: "Adiós a copiar y pegar entre sistemas." },
-      { name: "Software a medida", text: "La aplicación que tu negocio necesita, hecha para ti." },
-      { name: "Integraciones inteligentes", text: "Tus herramientas, por fin hablando entre sí." },
-      { name: "Datos y documentos", text: "Tus archivos, ordenados y fáciles de encontrar." },
-      { name: "Tecnología creativa", text: "Video, imagen y audio con ayuda de la IA." },
+      { name: "AIO9 Automate", text: "Nuestra oferta principal: asistentes de IA, automatizaciones e integración de tus herramientas. Atiende consultas, agenda citas y registra oportunidades en tu CRM." },
+      { name: "AIO9 Web", text: "Páginas empresariales y experiencias web hechas para captar solicitudes y conectarlas con tu proceso comercial." },
+      { name: "AIO9 Systems", text: "Software a medida para lo que tu operación necesita: seguimiento de pedidos, documentos o tareas internas." },
+      { name: "Mantenimiento y mejoras", text: "Seguimos contigo después de la entrega: ajustes, soporte y nuevas funciones." },
+      { name: "Tecnología creativa", text: "Imágenes, video y experiencias interactivas con IA." },
+      { name: "Conexión y capacitación", text: "Conectamos la solución con tus herramientas y enseñamos a tu equipo a usarla." },
     ],
   },
   contact: {
     title: "Tu negocio. Reinventado.",
     subtitle: "Construyamos inteligencia que trabaje para ti.",
-    note: "Cuéntanos qué te quita más tiempo en el día a día. Te respondemos con ideas concretas para tu negocio.",
+    note: "Cuéntanos qué está frenando tu operación. Te respondemos con una propuesta concreta para empezar.",
     emailLabel: "Escríbenos",
     whatsappLabel: "WhatsApp",
     form: {
@@ -352,9 +364,9 @@ export const es = {
     },
   },
   footer: {
-    tagline: "Inteligencia en movimiento.",
+    tagline: "IA y software para tu empresa.",
     disclaimer:
-      "Las demostraciones de esta página son simulaciones para que te hagas una idea; no son sistemas en producción.",
+      "Las demostraciones ilustran posibilidades; cada implementación se define y valida por proyecto.",
     rights: "Todos los derechos reservados.",
   },
 };

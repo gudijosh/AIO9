@@ -1,13 +1,19 @@
 # AIO9 — Intelligence in Motion
 
-Landing bilingüe (ES / EN) de AIO9. Sobre un fondo claro, todo lo que ofrecemos
-se presenta como un mosaico de recuadros de vidrio que fluye de derecha a
-izquierda al hacer scroll. Cada una de las seis industrias reproduce una
-simulación propia de cómo una solución de IA convierte una solicitud en una
-acción. La página termina solo con el formulario de contacto.
+Landing bilingüe (ES / EN) de AIO9: implementamos IA y software para que las
+empresas atiendan mejor, reduzcan tareas manuales y conecten sus operaciones.
+
+La oferta son tres servicios: **AIO9 Automate** (principal: asistentes de IA,
+automatizaciones e integración de herramientas), **AIO9 Web** y **AIO9
+Systems**, más mantenimiento y tecnología creativa como complementos. Los seis
+sectores de la página son ejemplos de aplicación: cada uno reproduce una
+simulación de cómo se vería la solución. Todo se presenta como un mosaico de
+recuadros que fluye de derecha a izquierda al hacer scroll, y la página termina
+solo con el formulario de contacto.
 
 > Las demostraciones son **simulaciones locales y deterministas**, identificadas
-> como ilustrativas en la interfaz. No hay modelos de IA ni datos reales detrás.
+> como ilustrativas en la interfaz: muestran posibilidades, y cada implementación
+> se define y valida por proyecto. No hay modelos de IA ni datos reales detrás.
 
 ## Ejecutar
 

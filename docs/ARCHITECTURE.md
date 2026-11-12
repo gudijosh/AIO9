@@ -63,6 +63,20 @@ Aparece en el wordmark (el cuadrado), el panel del hero, el indicador de pasos
 de cada demo (`StepTrack`), los conectores entre paneles (`Connector`), la línea
 del proceso y la tarjeta de contacto.
 
+## Mensaje y oferta
+
+La página presenta **tres servicios** y dos complementos; los sectores son
+ejemplos de aplicación, no el producto.
+
+- Los seis recuadros intercalados entre rubros (`capabilities.items` en los
+  diccionarios) son, en orden: AIO9 Automate (oferta principal), AIO9 Web, AIO9
+  Systems, Mantenimiento y mejoras, Tecnología creativa, y Conexión y
+  capacitación. Sus iconos están en `CAPABILITY_ICONS` (`ServicesFlow.tsx`), en
+  el mismo orden.
+- Cada industria tiene una clave `service` ("Ejemplo de AIO9 Automate"…) que se
+  muestra en su recuadro de título.
+- `capabilities.title` es la frase que precede al proceso (por dónde empezamos).
+
 ## El mosaico (ServicesFlow)
 
 Todo lo que ofrece AIO9 vive en una sola cinta de recuadros: seis industrias

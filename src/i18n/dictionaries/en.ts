@@ -3,10 +3,10 @@ import type { Dictionary } from "./index";
 /** English copy. Must match the shape of the Spanish dictionary. */
 export const en: Dictionary = {
   meta: {
-    title: "AIO9 — Intelligence that moves business forward",
+    title: "AIO9 — AI and software that help your business work better",
     description:
-      "AIO9 builds artificial intelligence solutions that automate processes, connect systems and turn ideas into results.",
-    ogAlt: "AIO9, intelligence in motion",
+      "AIO9 implements AI and software so businesses serve customers better, cut manual work and connect their operations.",
+    ogAlt: "AIO9, AI and software for your business",
   },
   nav: {
     solutions: "Solutions",
@@ -21,20 +21,20 @@ export const en: Dictionary = {
     language: "Language",
   },
   hero: {
-    title: "Intelligence that moves business forward.",
+    title: "AI and software that help your business work better.",
     subtitle:
-      "We help your business answer, book and follow up on its own, so you and your team can focus on what really matters.",
+      "We implement AI and software so your business serves customers better, cuts manual work and connects its operations.",
     primary: "Let's talk",
-    secondary: "See what it looks like in your industry",
-    stackLabel: "Industries where we apply artificial intelligence",
+    secondary: "See examples by industry",
+    stackLabel: "Examples of industries where we apply our solutions",
     show: "Show",
     pause: "Pause rotation",
     play: "Resume rotation",
   },
   experience: {
-    heading: "One industry. One problem. One intelligent solution.",
+    heading: "Our products are the solutions. Industries are examples.",
     intro:
-      "Pick your industry and see, step by step, what your day could look like with a system that lends a hand.",
+      "Clinics, restaurants, real estate, retail and service firms: here is what our work looks like in each. Pick an industry and follow it step by step.",
     railLabel: "Industries",
     simulation: "Illustrative simulation",
     stepOf: "Step {n} of {total}",
@@ -50,9 +50,11 @@ export const en: Dictionary = {
   industries: {
     healthcare: {
       name: "Healthcare",
+      /** Which AIO9 service this example illustrates. */
+      service: "Example of AIO9 Automate",
       title: "Your clinic, without missed calls.",
       description:
-        "Patients write in, the assistant checks the schedule and books the visit. You just show up and care for them.",
+        "An assistant replies to your patients, checks the schedule and books the visit.",
       from: "Request",
       to: "Confirmed appointment",
       alt: "Blue stethoscope on a clipboard with an appointment sheet, next to a calendar",
@@ -88,9 +90,11 @@ export const en: Dictionary = {
     },
     hospitality: {
       name: "Hospitality & restaurants",
+      /** Which AIO9 service this example illustrates. */
+      service: "Example of AIO9 Automate",
       title: "Every guest matters.",
       description:
-        "Nobody goes unanswered at rush hour: the system replies, checks the floor and holds the table.",
+        "It replies to whoever writes in, checks the floor and leaves the table booked.",
       from: "Request",
       to: "Table reserved",
       alt: "Restaurant menu next to a plate of pasta and a blue napkin",
@@ -125,9 +129,11 @@ export const en: Dictionary = {
     },
     realEstate: {
       name: "Real estate",
+      /** Which AIO9 service this example illustrates. */
+      service: "Example of AIO9 Automate",
       title: "From interest to opportunity.",
       description:
-        "Reply right away to anyone asking about a property, learn what they need and get the visit on the calendar.",
+        "It answers the inquiry, learns what they need and logs the opportunity in your CRM.",
       from: "Inquiry",
       to: "Visit scheduled",
       alt: "Scale model of a house with a blue door and a set of keys",
@@ -167,9 +173,11 @@ export const en: Dictionary = {
     },
     retail: {
       name: "Retail & ecommerce",
+      /** Which AIO9 service this example illustrates. */
+      service: "Example of AIO9 Automate + Systems",
       title: "Sell without keeping anyone waiting.",
       description:
-        "“Do you have it in my size?” The system checks stock, offers options and follows up on the order.",
+        "It answers from your real stock and follows up on every order.",
       from: "Question",
       to: "Order followed up",
       alt: "Shopping bag with a blue sweater, sneakers and a card reader",
@@ -207,9 +215,11 @@ export const en: Dictionary = {
     },
     services: {
       name: "Professional services",
+      /** Which AIO9 service this example illustrates. */
+      service: "Example of AIO9 Systems",
       title: "Less paperwork, more time for your clients.",
       description:
-        "Let the system read, sort and summarize the documents. Your team reviews and decides.",
+        "A system that reads, sorts and summarizes documents; your team reviews and decides.",
       from: "Document",
       to: "Organized information",
       alt: "Navy portfolio with documents, a pen, glasses and a calculator",
@@ -244,9 +254,11 @@ export const en: Dictionary = {
     },
     logistics: {
       name: "Operations & logistics",
+      /** Which AIO9 service this example illustrates. */
+      service: "Example of AIO9 Systems",
       title: "Operations that think ahead.",
       description:
-        "Hear about a problem before your customer calls: the system spots it, suggests what to do, and you decide.",
+        "Order tracking that spots exceptions and suggests what to do; you decide.",
       from: "Order",
       to: "Action assigned",
       alt: "Shipping box with blue tape, parcels and a barcode scanner",
@@ -287,38 +299,38 @@ export const en: Dictionary = {
     },
   },
   process: {
-    title: "From complexity to clarity.",
-    subtitle: "No jargon, at your pace. Here's how we work with you.",
+    title: "How we work with you.",
+    subtitle: "We find what is holding your operation back and build the solution with AI, automation or software.",
     steps: [
       {
-        name: "Understand",
-        text: "We sit down with you to see how you work today and where your time goes.",
+        name: "Identify",
+        text: "Together we look at what takes your time and which process to solve first.",
       },
       {
-        name: "Engineer",
-        text: "We build the solution and connect it to the tools you already use.",
+        name: "Build",
+        text: "We build the solution with AI, automation or software, whichever it takes.",
       },
       {
-        name: "Evolve",
-        text: "We try it with you, see how it's going and keep improving it.",
+        name: "Connect and train",
+        text: "We connect it to your tools and teach your team to use it.",
       },
     ],
   },
   capabilities: {
-    title: "One intelligence. Endless applications.",
+    title: "We start with one concrete, measurable process. Web and custom software extend the solution when you need them.",
     items: [
-      { name: "AI Agents", text: "Assistants that answer, look things up and get it done for you." },
-      { name: "Business Automation", text: "No more copying and pasting between systems." },
-      { name: "Custom Software", text: "The app your business needs, built for you." },
-      { name: "Intelligent Integrations", text: "Your tools, finally talking to each other." },
-      { name: "Data & Documents", text: "Your files, organized and easy to find." },
-      { name: "Creative Technology", text: "Video, image and audio with a little help from AI." },
+      { name: "AIO9 Automate", text: "Our core offer: AI assistants, automations and tool integration. Answer inquiries, book appointments and log opportunities in your CRM." },
+      { name: "AIO9 Web", text: "Business websites and web experiences built to capture requests and connect them to your sales process." },
+      { name: "AIO9 Systems", text: "Custom software for what your operation needs: tracking orders, documents or internal tasks." },
+      { name: "Maintenance and improvements", text: "We stay with you after delivery: adjustments, support and new features." },
+      { name: "Creative technology", text: "Images, video and interactive experiences with AI." },
+      { name: "Connection and training", text: "We connect the solution to your tools and teach your team to use it." },
     ],
   },
   contact: {
     title: "Your business. Reimagined.",
     subtitle: "Let's build intelligence that works for you.",
-    note: "Tell us what eats up most of your day. We'll reply with concrete ideas for your business.",
+    note: "Tell us what is holding your operation back. We'll reply with a concrete proposal to get started.",
     emailLabel: "Email us",
     whatsappLabel: "WhatsApp",
     form: {
@@ -350,9 +362,9 @@ export const en: Dictionary = {
     },
   },
   footer: {
-    tagline: "Intelligence in motion.",
+    tagline: "AI and software for your business.",
     disclaimer:
-      "The demonstrations on this page are simulations to give you an idea; they are not production systems.",
+      "The demonstrations illustrate what is possible; every implementation is defined and validated per project.",
     rights: "All rights reserved.",
   },
 };

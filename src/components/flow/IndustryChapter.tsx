@@ -85,9 +85,10 @@ export function IndustryChapter({
             {industry.number} / 0{count}
           </span>
         </p>
+        <p className="relative mt-5 text-[12px] font-medium tracking-wide text-slate-600">{text.service}</p>
         <h3
           id={headingId}
-          className="relative mt-5 text-[clamp(1.75rem,2.3vw,2.375rem)] leading-[1.06] font-medium tracking-[-0.03em] text-balance"
+          className="relative mt-1.5 text-[clamp(1.75rem,2.3vw,2.375rem)] leading-[1.06] font-medium tracking-[-0.03em] text-balance"
         >
           {text.title}
         </h3>
