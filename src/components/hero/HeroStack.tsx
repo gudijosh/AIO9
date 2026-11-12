@@ -72,7 +72,7 @@ export function HeroStack({
         );
         if (slot === 0) {
           return (
-            <div key={slot} className={cn("absolute overflow-hidden shadow-float", frame)}>
+            <div key={slot} className={cn("absolute overflow-hidden border border-white shadow-glass", frame)}>
               {stack}
             </div>
           );
@@ -86,15 +86,15 @@ export function HeroStack({
               setActive(index);
               setPaused(true);
             }}
-            className={cn("group absolute overflow-hidden", frame)}
+            className={cn("group absolute overflow-hidden border border-white shadow-glass", frame)}
           >
             {stack}
-            <span className="absolute inset-0 z-10 bg-midnight/45 transition-opacity duration-300 group-hover:opacity-40" />
+            <span className="absolute inset-0 z-10 bg-cream/45 transition-opacity duration-300 group-hover:opacity-0" />
           </button>
         );
       })}
 
-      <div className="absolute right-0 bottom-[3%] z-30 w-[min(300px,78%)] animate-rise rounded-2xl border border-white/12 bg-midnight/75 p-4 shadow-float backdrop-blur-xl [animation-delay:950ms]">
+      <div className="absolute right-0 bottom-[3%] z-30 w-[min(300px,78%)] glass animate-rise rounded-2xl p-4 [animation-delay:950ms]">
         <div className="flex items-start justify-between gap-3">
           <AnimatePresence mode="wait" initial={false}>
             <m.div
@@ -105,11 +105,11 @@ export function HeroStack({
               transition={{ duration: 0.28, ease }}
               className="min-w-0 flex-1"
             >
-              <p className="truncate text-[12px] text-slate">{current.name}</p>
-              <p className="mt-2 text-[13px] font-medium text-white/70">{current.from}</p>
-              <span aria-hidden className="my-1.5 flex items-center gap-[3px] text-signal-300">
+              <p className="truncate text-[12px] text-slate-600">{current.name}</p>
+              <p className="mt-2 text-[13px] font-medium text-slate-600">{current.from}</p>
+              <span aria-hidden className="my-1.5 flex items-center gap-[3px] text-signal">
                 <span className="size-[5px] rounded-full bg-current" />
-                <span className="relative h-px flex-1 bg-white/15">
+                <span className="relative h-px flex-1 bg-midnight/15">
                   <m.span
                     className="absolute inset-0 origin-left bg-current"
                     initial={{ scaleX: 0 }}
@@ -124,7 +124,7 @@ export function HeroStack({
                   transition={{ duration: 0.2, delay: 1 }}
                 />
               </span>
-              <p className="text-[15px] font-medium text-white">{current.to}</p>
+              <p className="text-[15px] font-medium">{current.to}</p>
             </m.div>
           </AnimatePresence>
           {!reduced && (
@@ -132,7 +132,7 @@ export function HeroStack({
               type="button"
               aria-label={paused ? t.play : t.pause}
               onClick={() => setPaused((value) => !value)}
-              className="-mt-1.5 -mr-1.5 grid size-9 shrink-0 place-items-center rounded-full text-white/60 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+              className="-mt-1.5 -mr-1.5 grid size-9 shrink-0 place-items-center rounded-full text-slate-600 transition-colors duration-200 hover:bg-midnight/8 hover:text-midnight"
             >
               {paused ? <Play aria-hidden className="size-3.5" /> : <Pause aria-hidden className="size-3.5" />}
             </button>

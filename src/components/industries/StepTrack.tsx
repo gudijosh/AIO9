@@ -26,7 +26,7 @@ export function StepTrack({
   const { step, total, done, goTo } = timeline;
   return (
     <div>
-      <p className="font-mono text-[12px] text-slate tabular-nums">
+      <p className="font-mono text-[12px] text-slate-600 tabular-nums">
         {fill(t.stepOf, { n: step + 1, total })}
       </p>
       <div className="relative mt-1 h-6 overflow-hidden">
@@ -43,7 +43,7 @@ export function StepTrack({
           </m.p>
         </AnimatePresence>
       </div>
-      <div role="group" aria-label={t.stepsLabel} className="mt-2 flex items-center gap-1 text-signal-300">
+      <div role="group" aria-label={t.stepsLabel} className="mt-2 flex items-center gap-1 text-signal">
         <span aria-hidden className="size-[7px] shrink-0 rounded-full bg-current" />
         {steps.map((label, i) => (
           <button
@@ -57,7 +57,7 @@ export function StepTrack({
             <span
               className={cn(
                 "h-[3px] w-full rounded-full transition-colors duration-300",
-                i <= step ? "bg-signal-300" : "bg-white/15 group-hover:bg-white/35",
+                i <= step ? "bg-signal" : "bg-midnight/12 group-hover:bg-midnight/30",
               )}
             />
           </button>

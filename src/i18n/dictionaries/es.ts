@@ -57,7 +57,7 @@ export const es = {
         "Automatiza citas, recordatorios y procesos administrativos para dedicar más tiempo a la atención.",
       from: "Consulta",
       to: "Cita confirmada",
-      alt: "Recepción de una clínica privada moderna con luz natural",
+      alt: "Ilustración de un estetoscopio junto a un calendario con un día marcado",
       steps: [
         "Entra la consulta de un paciente",
         "El asistente responde",
@@ -89,7 +89,7 @@ export const es = {
         "Atiende consultas, gestiona reservas y conecta cada interacción con tus operaciones.",
       from: "Consulta",
       to: "Mesa reservada",
-      alt: "Interior de un restaurante contemporáneo con mesas preparadas",
+      alt: "Ilustración de un menú de restaurante con tenedor y cuchara",
       steps: [
         "Un cliente pregunta por disponibilidad",
         "La IA responde",
@@ -121,7 +121,7 @@ export const es = {
         "Responde a compradores, identifica oportunidades y coordina visitas automáticamente.",
       from: "Consulta",
       to: "Visita agendada",
-      alt: "Residencia contemporánea de concreto y vidrio al anochecer",
+      alt: "Ilustración de una casa pequeña con una llave",
       steps: [
         "Entra una consulta sobre una propiedad",
         "Recupera la información relevante",
@@ -133,11 +133,11 @@ export const es = {
       demo: {
         buyer: "Comprador",
         assistant: "Asistente",
-        ask: "¿Sigue disponible la casa frente al lago?",
+        ask: "¿Sigue disponible la casa de tres habitaciones?",
         reply: "Sí, está disponible. ¿Qué presupuesto y plazo manejas?",
-        answer: "Hasta 450 mil. Quiero mudarme este año.",
-        property: "Residencia frente al lago",
-        specs: ["4 habitaciones", "3 baños", "420 m²"],
+        answer: "Hasta 180 mil. Quiero mudarme este año.",
+        property: "Casa en zona residencial",
+        specs: ["3 habitaciones", "2 baños", "180 m²"],
         available: "Disponible",
         lead: "Prospecto",
         criteria: ["Presupuesto", "Tipo de propiedad", "Plazo"],
@@ -155,7 +155,7 @@ export const es = {
         "Conecta consultas, inventario, recomendaciones y seguimiento de pedidos.",
       from: "Pregunta",
       to: "Pedido en seguimiento",
-      alt: "Tienda contemporánea con repisas iluminadas y un mostrador de piedra",
+      alt: "Ilustración de una bolsa de compras con una prenda",
       steps: [
         "Un cliente pregunta por un producto",
         "Consulta el inventario",
@@ -188,7 +188,7 @@ export const es = {
         "Automatiza tareas repetitivas, organiza información y ayuda a los equipos a concentrarse en trabajo de mayor valor.",
       from: "Documento",
       to: "Información organizada",
-      alt: "Sala de juntas de una firma profesional con vista a la ciudad al atardecer",
+      alt: "Ilustración de una carpeta con documentos y un bolígrafo",
       steps: [
         "Llega una solicitud",
         "Identifica el tipo de documento",
@@ -221,7 +221,7 @@ export const es = {
         "Conecta información, detecta incidencias y agiliza decisiones operativas.",
       from: "Orden",
       to: "Acción asignada",
-      alt: "Pasillo de un centro de distribución moderno con estanterías altas",
+      alt: "Ilustración de una caja de envío bien cerrada",
       steps: [
         "Entra una orden",
         "Verifica los datos",

@@ -17,10 +17,11 @@ src/
   components/
     brand/        Wordmark, Signal (motivo de marca)
     layout/       Header (menú móvil), LanguageSwitch, Footer
-    hero/         Hero, HeroStack (tres fotografías en capas)
-    industries/   IndustryExperience, IndustryRail, StepTrack, DemoControls, WipeStack
+    hero/         Hero, HeroStack (tres ilustraciones en capas)
+    flow/         ServicesFlow (mosaico horizontal), IndustryChapter, Tile, FlowNav
+    industries/   StepTrack, DemoControls, WipeStack (hero)
     demos/        Una demostración por industria + primitives/
-    sections/     Process, Capabilities, Contact, ContactForm
+    sections/     Contact, ContactForm
   data/industries.ts         Modelo tipado de las industrias
   i18n/                      config + diccionarios es.ts / en.ts
   lib/                       motion, useDemoTimeline, contact-*, site-config, analytics
@@ -39,13 +40,18 @@ Tokens en `src/app/globals.css` (`@theme`), disponibles como utilidades Tailwind
 
 | Token | Valor | Uso |
 |---|---|---|
-| `midnight` | `#0B1421` | Fondo principal |
-| `navy` | `#182D46` | Superficies secundarias |
-| `signal` | `#2558DC` | Acento: acciones y estados confirmados |
-| `signal-300` | `#86A8FF` | Azul para texto y trazos sobre oscuro (contraste) |
+| `cream` | `#F6F3EC` | Fondo de página (predominante) |
+| `midnight` | `#0B1421` | Texto, botones y paneles de las demos |
+| `navy` | `#182D46` | Hover de superficies oscuras, color de fondo difuso |
+| `signal` | `#2558DC` | Acento: acciones, progreso y estados confirmados |
+| `signal-300` | `#86A8FF` | Azul sobre superficies oscuras (dentro de las demos) |
 | `slate` / `slate-600` | `#8997A8` / `#4D5C70` | Texto secundario sobre oscuro / claro |
-| `cloud` | `#F5F7FA` | Sección clara |
-| `amber` | `#E8A33D` | Solo excepciones y errores |
+| `amber` / `amber-700` | `#E8A33D` / `#96560A` | Solo excepciones y errores |
+
+**Vidrio**: la utilidad `glass` (borde blanco, fondo blanco al 52 %,
+`backdrop-filter: blur + saturate`, brillo interior) define los recuadros
+semitransparentes. Detrás de ellos hay manchas de color difuminadas para que
+el vidrio tenga algo que refractar.
 
 Tipografía: Geist (texto y titulares) y Geist Mono (horas, contadores, IDs).
 Movimiento: `--ease-signal` y `src/lib/motion.ts` (micro 0.28 s, escena 0.8 s).
@@ -55,23 +61,35 @@ Movimiento: `--ease-signal` y `src/lib/motion.ts` (micro 0.28 s, escena 0.8 s).
 Motivo de marca: **punto → línea → cuadrado** (Input → Intelligence → Action).
 Aparece en el wordmark (el cuadrado), el panel del hero, el indicador de pasos
 de cada demo (`StepTrack`), los conectores entre paneles (`Connector`), la línea
-de "Cómo funciona" y el pie.
+del proceso y la tarjeta de contacto.
 
-## Industry Experience
+## El mosaico (ServicesFlow)
 
-- **Pantallas ≥ 1024 px**: la sección se fija (sticky) y el scroll recorre las
-  seis industrias (70 vh cada una). El riel, las flechas y el teclado
-  (← → Inicio Fin) desplazan la página a la posición de esa industria, así el
-  scroll es la única fuente de verdad. No se secuestra el scroll.
-- **Pantallas menores**: sin sticky. Carrusel por toque en las píldoras,
-  flechas o deslizamiento horizontal sobre la fotografía.
-- `WipeStack`: las fotos permanecen montadas; la activa entra con un barrido
-  direccional de `clip-path` y un ligero zoom.
-- `useDemoTimeline`: motor de pasos determinista. Reproduce una vez y se
-  detiene; se pausa fuera de pantalla; con `prefers-reduced-motion` muestra el
-  estado final y los pasos se recorren a mano.
+Todo lo que ofrece AIO9 vive en una sola cinta de recuadros: seis industrias
+(objeto ilustrado con su demo + recuadro de vidrio con el problema + recuadro de
+pasos), seis capacidades intercaladas en columnas de dos, y el proceso en tres
+pasos.
+
+- **Pantallas ≥ 1024 px**: la sección se fija (sticky) y el scroll vertical
+  mueve la cinta de derecha a izquierda, 1 px de scroll = 1 px de recorrido. La
+  altura de la sección se calcula a partir del ancho real de la cinta
+  (`ResizeObserver`), así que añadir o quitar recuadros no requiere tocar
+  números. El fondo se desplaza más lento (parallax), la cinta se inclina
+  levemente según la velocidad del scroll y cada recuadro entra desde la
+  derecha la primera vez que aparece. No se secuestra el scroll.
+- **Pantallas menores**: nada se fija. Los recuadros se apilan y entran
+  deslizándose desde la derecha.
+- `FlowNav`: píldora de vidrio flotante para saltar a cualquier industria o
+  avanzar y retroceder. Desplaza la página a la posición de esa industria.
+- El enlace "Cómo funciona" apunta a un ancla invisible colocada a la altura
+  de scroll que centra el recuadro del proceso.
+- `useDemoTimeline`: motor de pasos determinista. Cada demo se reproduce una
+  vez cuando su recuadro está en pantalla; con `prefers-reduced-motion`
+  muestra el estado final y los pasos se recorren a mano. La inclinación y el
+  parallax también se desactivan.
 - Las demos son visuales (`aria-hidden`); los lectores de pantalla reciben la
   lista ordenada de pasos.
+- La página termina en `Contact`: una pantalla completa solo con el formulario.
 
 ### Añadir una industria
 
@@ -80,8 +98,8 @@ de "Cómo funciona" y el pie.
 2. Textos en `es.ts` y `en.ts` (`steps` con la misma cantidad de entradas).
 3. Componente en `src/components/demos/` usando `primitives/` y un `case` en
    `DemoRenderer.tsx`.
-4. El riel usa seis columnas: ajustar `lg:grid-cols-6` en `IndustryRail.tsx` y
-   la altura `420vh` (70 vh × industrias) en `IndustryExperience.tsx`.
+
+La cinta y la navegación se ajustan solas.
 
 ## Formulario
 

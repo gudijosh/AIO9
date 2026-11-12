@@ -42,7 +42,7 @@ export function Connector({
       <path
         d={d}
         fill="none"
-        stroke="rgb(255 255 255 / 0.5)"
+        stroke="rgb(11 20 33 / 0.32)"
         strokeWidth={1.25}
         vectorEffect="non-scaling-stroke"
       />

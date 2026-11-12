@@ -55,7 +55,7 @@ export const en: Dictionary = {
         "Automate appointments, reminders and administrative work, and give more time back to care.",
       from: "Request",
       to: "Confirmed appointment",
-      alt: "Reception of a modern private clinic in natural light",
+      alt: "Illustration of a stethoscope next to a calendar with one day checked",
       steps: [
         "A patient request comes in",
         "The assistant replies",
@@ -87,7 +87,7 @@ export const en: Dictionary = {
         "Answer questions, manage reservations and connect every interaction to your operations.",
       from: "Request",
       to: "Table reserved",
-      alt: "Interior of a contemporary restaurant with tables set for service",
+      alt: "Illustration of a restaurant menu with a fork and spoon",
       steps: [
         "A guest asks about availability",
         "The AI replies",
@@ -119,7 +119,7 @@ export const en: Dictionary = {
         "Reply to buyers, identify opportunities and coordinate visits automatically.",
       from: "Inquiry",
       to: "Visit scheduled",
-      alt: "Contemporary concrete and glass residence at dusk",
+      alt: "Illustration of a small house with a key",
       steps: [
         "An inquiry about a property comes in",
         "Retrieves the relevant details",
@@ -131,11 +131,11 @@ export const en: Dictionary = {
       demo: {
         buyer: "Buyer",
         assistant: "Assistant",
-        ask: "Is the lakefront house still available?",
+        ask: "Is the three-bedroom house still available?",
         reply: "Yes, it is. What budget and timeline are you working with?",
-        answer: "Up to 450k. I'd like to move this year.",
-        property: "Lakefront residence",
-        specs: ["4 bedrooms", "3 baths", "4,520 sq ft"],
+        answer: "Up to 180k. I'd like to move this year.",
+        property: "House in a residential area",
+        specs: ["3 bedrooms", "2 baths", "1,940 sq ft"],
         available: "Available",
         lead: "Lead",
         criteria: ["Budget", "Property type", "Timeline"],
@@ -153,7 +153,7 @@ export const en: Dictionary = {
         "Connect questions, inventory, recommendations and order follow-up.",
       from: "Question",
       to: "Order followed up",
-      alt: "Contemporary store with lit shelves and a stone counter",
+      alt: "Illustration of a shopping bag with a garment",
       steps: [
         "A customer asks about a product",
         "Checks inventory",
@@ -186,7 +186,7 @@ export const en: Dictionary = {
         "Automate repetitive tasks, organize information and help teams focus on higher-value work.",
       from: "Document",
       to: "Organized information",
-      alt: "Boardroom of a professional firm overlooking the city at dusk",
+      alt: "Illustration of a folder with documents and a pen",
       steps: [
         "A request arrives",
         "Identifies the document type",
@@ -219,7 +219,7 @@ export const en: Dictionary = {
         "Connect information, detect issues and speed up operational decisions.",
       from: "Order",
       to: "Action assigned",
-      alt: "Aisle of a modern distribution center with tall racking",
+      alt: "Illustration of a neatly sealed shipping box",
       steps: [
         "An order comes in",
         "Verifies the data",
