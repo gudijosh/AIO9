@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { industryIds } from "@/data/industries";
+import { deviceSectorIds } from "@/data/devices";
 
-export const industryOptions = [...industryIds, "other"] as const;
+export const industryOptions = [...industryIds, ...deviceSectorIds, "other"] as const;
 export type IndustryOption = (typeof industryOptions)[number];
 
 /** Validation messages are codes; the UI maps them to the active language. */
