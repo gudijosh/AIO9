@@ -11,9 +11,11 @@ plan de ElevenLabs para confirmar el uso comercial.
   ElevenLabs) para que se vean nítidas en pantallas de alta densidad. En el
   repo: WebP calidad 82.
 - `next/image` sirve AVIF/WebP redimensionado y un placeholder borroso.
-- El hero reutiliza tres de ellas (salud, hospitalidad, servicios).
-- En el mosaico la imagen ocupa todo el recuadro; el token `paper`
-  (`#E6DED3`) iguala el fondo de estudio.
+- Dónde aparecen: la de salud en el hero; las seis como tarjetas en Sectores;
+  dos sobre la frase central; dos en AIO9 Web; y dentro de las ventanas de
+  Bienes raíces y Comercio.
+- Los cuatro sectores de AIO9 Devices no tienen fotografía: su tarjeta usa un
+  icono sobre fondo oscuro.
 
 ## Dirección
 

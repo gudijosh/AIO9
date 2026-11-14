@@ -15,14 +15,23 @@
   --color-amber-700: #96560a; /* error text on light surfaces */
   --color-amber: #e8a33d; /* exceptions inside demos only */
 
+  /* "Impact" direction: near-black ink, bone, electric blue and a volt accent. */
+  --color-ink: #0a0a12;
+  --color-ink-800: #14162a;
+  --color-bone: #efeae0;
+  --color-bone-300: #e3dccf; /* oversized letters behind light sections */
+  --color-azure: #2f63ff;
+  --color-volt: #d4ff3a;
+  --color-dim: #2b2a3a; /* unlit display type on ink */
+  --color-fog: #a9a7ba; /* secondary text on ink (8.6:1) */
+
+  --font-display: var(--font-league), "Arial Narrow", Impact, sans-serif;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --ease-signal: cubic-bezier(0.16, 1, 0.3, 1);
 
   --shadow-float: 0 26px 50px -26px rgb(11 20 33 / 0.45), 0 2px 6px rgb(11 20 33 / 0.1);
-  /* Glass tiles: inner highlight + soft, wide drop shadow */
-  --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 40px 70px -40px rgb(11 20 33 / 0.28), 0 2px 8px rgb(11 20 33 / 0.04);
 
   --animate-rise: rise 0.8s var(--ease-signal) both;
   --animate-unmask: unmask 1s var(--ease-signal) both;
@@ -46,6 +55,20 @@
       clip-path: inset(0% 0% 0% 0%);
     }
   }
+  @keyframes preload-out {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  @keyframes preload-bar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
   @keyframes blink {
     0%,
     100% {
@@ -59,35 +82,75 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-  background: var(--color-cream);
+  background: var(--color-ink);
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-midnight);
+  background: var(--color-ink);
+  color: var(--color-bone);
   font-family: var(--font-sans);
   font-feature-settings: "ss01", "cv11";
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--color-signal);
+  background: var(--color-azure);
   color: #fff;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-signal);
+  outline: 2px solid var(--color-volt);
+  box-shadow: 0 0 0 4px var(--color-ink);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* Semi-transparent "glass" surface used by the mosaic tiles. */
-@utility glass {
-  border: 1px solid rgb(255 255 255 / 0.75);
-  background: rgb(255 255 255 / 0.52);
-  box-shadow: var(--shadow-glass);
-  backdrop-filter: blur(28px) saturate(1.6);
+/* Condensed display type: always uppercase, tight leading. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+}
+
+/* Type drawn as a grid of dots (halftone). Decorative backgrounds only. */
+@utility dots {
+  mask-image: radial-gradient(circle, #000 46%, transparent 52%);
+  mask-size: 0.02em 0.02em;
+}
+
+/* Fine dot grain over the dark scenes. */
+@utility grain {
+  background-image: radial-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1.2px);
+  background-size: 4px 4px;
+}
+
+/* Primary pill button: a volt sweep fills it from the left on hover. */
+@utility pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background-image: linear-gradient(var(--color-volt), var(--color-volt));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 0.45s var(--ease-signal), color 0.3s, transform 0.2s;
+  &:hover {
+    background-size: 100% 100%;
+    color: var(--color-ink);
+  }
+  &:active {
+    transform: scale(0.96);
+  }
 }
 
 .no-scrollbar {

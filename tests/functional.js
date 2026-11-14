@@ -1,3 +1,5 @@
+// Functional checks against the production build: `npm run build && npx next start -p 3100`,
+// then `node tests/functional.js`.
 const { chromium } = require('playwright');
 const base = 'http://localhost:3100';
 const results = [];
@@ -6,84 +8,97 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   const b = await chromium.launch();
   const errors = [];
   const watch = (p) => { p.on('console', m => m.type() === 'error' && errors.push(m.text())); p.on('pageerror', e => errors.push('PAGEERROR ' + e.message)); };
+  const topOf = (p, id) => p.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, id);
+  // Scroll a pinned scene to one of its panels.
+  const toPanel = async (p, id, index, count) => {
+    await p.evaluate(({ id, index, count }) => { const n = document.getElementById(id); const span = n.offsetHeight - innerHeight; scrollTo({ top: n.getBoundingClientRect().top + scrollY + ((index + 0.5) / count) * span, behavior: 'instant' }); }, { id, index, count });
+    await p.waitForTimeout(900);
+  };
+  const scene = (p, id) => p.locator(`article[aria-labelledby="scene-${id}"]`);
+  const stepText = async (p, id) => (await scene(p, id).locator('span.tabular-nums').first().textContent()).trim();
 
   // ---------- Desktop
   let ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
   let p = await ctx.newPage(); watch(p);
-  let r = await p.goto(base + '/', { waitUntil: 'networkidle' });
+  await p.goto(base + '/', { waitUntil: 'networkidle' }); await p.waitForTimeout(1800);
   check('root redirects to /es', p.url().endsWith('/es'), p.url());
   check('html lang is es', (await p.getAttribute('html', 'lang')) === 'es');
-  check('ES headline', (await p.textContent('h1')).includes('IA y software para que tu empresa trabaje mejor.'));
+  check('ES headline', (await p.getAttribute('h1', 'aria-label')) === 'IA y software para que tu empresa trabaje mejor.');
+  check('one h1 on the page', (await p.locator('h1').count()) === 1);
+  check('preloader has left the screen', await p.evaluate(() => getComputedStyle(document.querySelector('[class*="preload-out"]')).visibility === 'hidden'));
 
-  for (const [label, id] of [['Soluciones', 'industries'], ['Contacto', 'contact']]) {
-    await p.locator('header nav a:visible', { hasText: label }).click();
-    await p.waitForTimeout(3500);
-    const top = await p.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, id);
-    check(`nav anchor "${label}" scrolls to #${id}`, Math.abs(top) < 120, `top=${Math.round(top)}`);
+  // Menu: opens full screen, Escape closes, each link lands on its section
+  await p.getByRole('button', { name: 'Abrir menú' }).click(); await p.waitForTimeout(700);
+  check('menu opens', await p.locator('#site-menu').isVisible());
+  check('focus moves into the menu', await p.evaluate(() => document.getElementById('site-menu').contains(document.activeElement)));
+  await p.keyboard.press('Escape'); await p.waitForTimeout(700);
+  check('menu closes with Escape and returns focus', !(await p.locator('#site-menu').isVisible()) && await p.evaluate(() => document.activeElement?.getAttribute('aria-controls') === 'site-menu'));
+  for (const [label, id] of [['Sectores', 'sectors'], ['Servicios', 'services'], ['AIO9 Devices', 'devices'], ['Cómo funciona', 'process'], ['Contacto', 'contact']]) {
+    await p.getByRole('button', { name: 'Abrir menú' }).click(); await p.waitForTimeout(600);
+    await p.locator('#site-menu nav a', { hasText: label }).first().click(); await p.waitForTimeout(3800);
+    const top = await topOf(p, id);
+    check(`menu link "${label}" scrolls to #${id}`, Math.abs(top) < 260 && !(await p.locator('#site-menu').isVisible()), `top=${Math.round(top)}`);
   }
-  await p.locator('header a:visible', { hasText: 'Hablemos de tu proyecto' }).click();
-  await p.waitForTimeout(1200);
-  check('header CTA goes to contact', Math.abs(await p.evaluate(() => document.getElementById('contact').getBoundingClientRect().top)) < 120);
 
-  // Mosaic flow: floating nav, right-to-left travel, demos
-  const names = ['Salud', 'Hospitalidad y restaurantes', 'Bienes raíces', 'Retail y ecommerce', 'Servicios profesionales', 'Operaciones y logística'];
+  // Sectors rail: pinned, and vertical scroll moves the row sideways
+  const railX = () => p.evaluate(() => document.querySelector('#sectors ul li').getBoundingClientRect().left);
+  await p.evaluate(() => { const n = document.getElementById('sectors'); scrollTo({ top: n.getBoundingClientRect().top + scrollY + 300, behavior: 'instant' }); }); await p.waitForTimeout(600);
+  const r0 = await railX();
+  await p.evaluate(() => scrollBy({ top: 700, behavior: 'instant' })); await p.waitForTimeout(600);
+  const r1 = await railX();
+  check('sectors: scrolling down slides the cards to the left', r0 - r1 > 200, `moved ${Math.round(r0 - r1)}px`);
+  check('sectors: the screen stays pinned meanwhile', Math.abs(await p.evaluate(() => document.querySelector('#sectors > div').getBoundingClientRect().top)) < 1);
+  check('sectors: ten cards (six industries, four device sectors)', (await p.locator('#sectors ul li').count()) === 10);
+
+  // Industries: one panel per screen, pinned
   const ids = ['healthcare', 'hospitality', 'realEstate', 'retail', 'services', 'logistics'];
-  const items = p.locator('nav ol button');
-  const centred = (id) => p.evaluate((id) => { const r = document.getElementById('industry-' + id).closest('article').getBoundingClientRect(); return Math.abs((r.left + r.right) / 2 - innerWidth / 2); }, id);
-  const flow = await p.evaluate(() => { const w = document.querySelector('#industries > div'); return { top: w.getBoundingClientRect().top + scrollY, h: w.offsetHeight }; });
-  await p.evaluate(({ top }) => scrollTo({ top, behavior: 'instant' }), flow); await p.waitForTimeout(500);
-  const x0 = await p.evaluate(() => document.getElementById('industry-healthcare').closest('article').getBoundingClientRect().left);
-  await p.evaluate(({ top }) => scrollTo({ top: top + 600, behavior: 'instant' }), flow); await p.waitForTimeout(500);
-  const x1 = await p.evaluate(() => document.getElementById('industry-healthcare').closest('article').getBoundingClientRect().left);
-  check('scrolling down moves the mosaic right-to-left, 1:1', Math.abs((x0 - x1) - 600) < 4, `moved ${Math.round(x0 - x1)}px for 600px of scroll`);
-  check('section stays pinned while the mosaic travels', await p.evaluate(() => Math.abs(document.querySelector('#industries .lg\\:sticky').getBoundingClientRect().top) < 1));
-  for (const i of [3, 0, 5, 1, 2, 4]) {
-    await items.nth(i).click(); await p.waitForTimeout(2000);
-    const off = await centred(ids[i]);
-    check(`nav item ${i + 1} "${names[i]}" brings its chapter to the centre`, off < 40 && (await items.nth(i).getAttribute('aria-current')) === 'true', `offset ${Math.round(off)}px`);
+  for (const i of [0, 3, 5, 1]) {
+    await toPanel(p, 'industries', i, 6);
+    const active = await p.evaluate(() => [...document.querySelectorAll('#industries [data-active]')].map(n => n.dataset.active).indexOf('true'));
+    check(`industries: scrolling to screen ${i + 1} shows ${ids[i]}`, active === i, `active=${active}`);
   }
-  await p.getByRole('button', { name: 'Industria siguiente' }).click(); await p.waitForTimeout(2000);
-  check('next button → industry 06', (await items.nth(5).getAttribute('aria-current')) === 'true');
-  check('next disabled at the end', await p.getByRole('button', { name: 'Industria siguiente' }).isDisabled());
-  await p.getByRole('button', { name: 'Industria anterior' }).click(); await p.waitForTimeout(2000);
-  check('previous button → industry 05', (await items.nth(4).getAttribute('aria-current')) === 'true');
-  await items.nth(4).focus(); await p.keyboard.press('Shift+Tab'); await p.keyboard.press('Enter'); await p.waitForTimeout(2000);
-  check('keyboard (Tab + Enter) → industry 04', (await items.nth(3).getAttribute('aria-current')) === 'true');
-  await items.nth(0).click(); await p.waitForTimeout(1500);
+  check('industries: the screen stays pinned', Math.abs(await p.evaluate(() => document.querySelector('#industries > div').getBoundingClientRect().top)) < 1);
 
-  // Demo: plays, pause, replay, step jump (healthcare chapter)
-  const chapter = p.locator('article', { has: p.locator('#industry-healthcare') });
-  const stepText = () => chapter.locator('p.font-mono.tabular-nums').textContent();
-  await p.waitForTimeout(8500);
-  check('demo plays to the last step', (await stepText()).trim() === 'Paso 6 de 6', await stepText());
-  await chapter.getByRole('button', { name: /^Repetir/ }).click(); await p.waitForTimeout(400);
-  check('replay restarts at step 1', (await stepText()).trim() === 'Paso 1 de 6', await stepText());
-  await chapter.getByRole('button', { name: /^Pausar/ }).click();
-  const frozen = await stepText(); await p.waitForTimeout(2600);
-  check('pause holds the step', (await stepText()) === frozen, frozen);
-  await chapter.getByRole('button', { name: /^Reproducir/ }).click(); await p.waitForTimeout(2600);
-  check('play resumes', (await stepText()) !== frozen, await stepText());
-  await chapter.getByRole('button', { name: /Ir al paso 2/ }).click(); await p.waitForTimeout(300);
-  check('step segment jumps to step 2', (await stepText()).trim() === 'Paso 2 de 6');
-  // "How it works" anchor lands on the process tile
-  await p.locator('header nav a:visible', { hasText: 'Cómo funciona' }).click(); await p.waitForTimeout(2200);
-  const pr = await p.evaluate(() => { const r = document.getElementById('process-heading').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight; });
-  check('"Cómo funciona" brings the process tile on screen', pr);
-  await items.nth(2).click(); await p.waitForTimeout(1800);
+  // Demo: plays to the end, replay, pause, resume, jump to a step
+  await toPanel(p, 'industries', 0, 6); await p.waitForTimeout(8500);
+  check('demo plays to the last step', (await stepText(p, 'healthcare')) === 'Paso 6 de 6', await stepText(p, 'healthcare'));
+  check('window shows the confirmed appointment at the end', (await scene(p, 'healthcare').innerText()).includes('Cita confirmada'));
+  await scene(p, 'healthcare').getByRole('button', { name: /^Repetir/ }).click(); await p.waitForTimeout(400);
+  check('replay restarts at step 1', (await stepText(p, 'healthcare')) === 'Paso 1 de 6', await stepText(p, 'healthcare'));
+  await scene(p, 'healthcare').getByRole('button', { name: /^Pausar/ }).click();
+  const frozen = await stepText(p, 'healthcare'); await p.waitForTimeout(2600);
+  check('pause holds the step', (await stepText(p, 'healthcare')) === frozen, frozen);
+  await scene(p, 'healthcare').getByRole('button', { name: /^Reproducir/ }).click(); await p.waitForTimeout(2600);
+  check('play resumes', (await stepText(p, 'healthcare')) !== frozen, await stepText(p, 'healthcare'));
+  await scene(p, 'healthcare').getByRole('button', { name: /Ir al paso 2/ }).click(); await p.waitForTimeout(300);
+  check('step segment jumps to step 2', (await stepText(p, 'healthcare')) === 'Paso 2 de 6');
+  check('every window is labelled as a simulation', (await p.locator('main').innerText()).split('Simulación ilustrativa').length - 1 >= 10);
 
-  // "Talk about my sector" preselects industry
-  await p.locator('article', { has: p.locator('#industry-realEstate') }).getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(1500);
-  check('sector link preselects industry in the form', (await p.inputValue('#industry')) === 'realEstate', await p.inputValue('#industry'));
+  // "I want this" preselects the sector in the form (an industry and a device sector)
+  await toPanel(p, 'industries', 2, 6);
+  await scene(p, 'realEstate').getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(3500);
+  check('industry link preselects it in the form', (await p.inputValue('#industry')) === 'realEstate', await p.inputValue('#industry'));
+  await toPanel(p, 'devices', 4, 5); await p.waitForTimeout(7500);
+  check('devices: agro demo plays to its last step', (await stepText(p, 'agro')) === 'Paso 5 de 5', await stepText(p, 'agro'));
+  await scene(p, 'agro').getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(3500);
+  check('device sector link preselects it in the form', (await p.inputValue('#industry')) === 'agro', await p.inputValue('#industry'));
 
-  check('page ends on the contact form (nothing after it but the legal line)', await p.evaluate(() => { const c = document.getElementById('contact'); return !c.nextElementSibling && c.parentElement.id === 'main' && c.offsetHeight >= innerHeight; }));
+  // Services: four products, in order
+  const serviceNames = await p.locator('#services h3').allTextContents();
+  check('services: Automate, Web, Systems, Devices in that order', serviceNames.join('|') === 'AIO9 Automate|AIO9 Web|AIO9 Systems|AIO9 Devices', serviceNames.join('|'));
+
+  // Keyboard: focusing a control in a hidden panel scrolls to that panel
+  await toPanel(p, 'industries', 0, 6);
+  await scene(p, 'retail').getByRole('link', { name: 'Quiero esto en mi negocio' }).focus(); await p.waitForTimeout(1500);
+  check('keyboard focus inside a hidden panel brings that panel on screen', await p.evaluate(() => [...document.querySelectorAll('#industries [data-active]')].map(n => n.dataset.active).indexOf('true')) === 3);
 
   // Form
-  await p.reload({ waitUntil: 'networkidle' }); await p.evaluate(() => document.getElementById('contact').scrollIntoView({ behavior: 'instant' }));
+  await p.reload({ waitUntil: 'networkidle' }); await p.evaluate(() => document.getElementById('contact-heading').scrollIntoView({ behavior: 'instant' })); await p.waitForTimeout(500);
   await p.getByRole('button', { name: 'Enviar mensaje' }).click(); await p.waitForTimeout(300);
   check('empty submit shows 5 field errors', (await p.locator('[id$="-error"]').count()) === 5, String(await p.locator('[id$="-error"]').count()));
   check('focus moves to first invalid field', await p.evaluate(() => document.activeElement?.id === 'name'));
   await p.fill('#name', 'Ana Pérez'); await p.fill('#company', 'Empresa Demo'); await p.fill('#email', 'no-es-correo');
-  await p.selectOption('#industry', 'retail'); await p.fill('#message', 'Queremos automatizar la atención de pedidos en línea.');
+  await p.selectOption('#industry', 'farms'); await p.fill('#message', 'Queremos medir temperatura y humedad en dos galpones.');
   await p.getByRole('button', { name: 'Enviar mensaje' }).click(); await p.waitForTimeout(300);
   check('invalid email is the only error', (await p.locator('[id$="-error"]').count()) === 1 && (await p.textContent('#email-error')).includes('correo válido'));
   await p.fill('#email', 'ana@example.com');
@@ -96,21 +111,23 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   // API contract
   const api = async (body) => (await p.request.post(base + '/api/contact', { data: body, failOnStatusCode: false })).status();
   check('API: invalid fields → 422', (await api({ name: 'A' })) === 422);
-  check('API: honeypot filled → 400', (await api({ name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'retail', message: 'x'.repeat(30), website: 'spam' })) === 400);
+  check('API: unknown industry → 422', (await api({ name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'nope', message: 'x'.repeat(30) })) === 422);
+  check('API: honeypot filled → 400', (await api({ name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'fleet', message: 'x'.repeat(30), website: 'spam' })) === 400);
   check('API: malformed body → 400', (await p.request.post(base + '/api/contact', { data: 'nope', headers: { 'content-type': 'application/json' }, failOnStatusCode: false })).status() === 400);
 
   // Language
+  await p.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
   await p.locator('header a[hreflang=en]').click(); await p.waitForURL('**/en**'); await p.waitForTimeout(800);
   check('EN: url and html lang', p.url().includes('/en') && (await p.getAttribute('html', 'lang')) === 'en');
-  check('EN headline', (await p.textContent('h1')).includes('AI and software that help your business work better.'));
+  check('EN headline', (await p.getAttribute('h1', 'aria-label')) === 'AI and software that help your business work better.');
   const body = (await p.locator('body').innerText());
-  const leaks = ['Soluciones', 'Cómo funciona', 'Hablemos', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificar', 'Mantenimiento', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos'].filter(w => body.includes(w));
+  const leaks = ['Sectores', 'Cómo funciona', 'Hablemos', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificar', 'Mantenimiento', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos', 'Granjas', 'Galpón', 'Válvulas', 'En línea', 'Órdenes', 'Además', 'Cargando'].filter(w => body.includes(w));
   check('EN page has no Spanish strings', leaks.length === 0, leaks.join(', '));
   check('EN <title> and description', (await p.title()).includes('AI and software that help your business work better') && (await p.getAttribute('meta[name=description]', 'content')).startsWith('AIO9 implements'));
   check('hreflang alternates present', (await p.locator('link[rel=alternate][hreflang]').count()) >= 3);
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
   const esBody = await p.locator('body').innerText();
-  const enLeaks = ['Solutions', 'How it works', "Let's talk", 'Healthcare', 'Step ', 'Replay', 'Illustrative', 'Identify', 'Company', 'All rights'].filter(w => esBody.includes(w));
+  const enLeaks = ['Industries', 'How it works', "Let's talk", 'Healthcare', 'Step ', 'Replay', 'Illustrative', 'Identify', 'Company', 'All rights', 'Farms', 'Online', 'Loading', 'Orders', 'Schedule'].filter(w => esBody.includes(w));
   check('ES page has no English strings', enLeaks.length === 0, enLeaks.join(', '));
   check('unknown locale → 404', (await p.request.get(base + '/fr', { failOnStatusCode: false })).status() === 404);
   check('og image renders', (await p.request.get(base + (await p.getAttribute('meta[property="og:image"]', 'content')).replace(/^https?:\/\/[^/]+/, ''))).status() === 200);
@@ -121,33 +138,46 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
   p = await ctx.newPage(); watch(p);
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
-  await p.evaluate(() => document.getElementById('industries').scrollIntoView()); await p.waitForTimeout(500);
-  check('reduced motion: demo shows final state at once', (await p.locator('#industries p.font-mono.tabular-nums').first().textContent()).trim() === 'Paso 6 de 6');
-  check('reduced motion: hero has no rotation control', (await p.getByRole('button', { name: 'Pausar la rotación' }).count()) === 0);
-  await p.getByRole('button', { name: /Ir al paso 3/ }).first().click();
-  check('reduced motion: steps navigable manually', (await p.locator('#industries p.font-mono.tabular-nums').first().textContent()).trim() === 'Paso 3 de 6');
+  check('reduced motion: no preloader', await p.evaluate(() => getComputedStyle(document.querySelector('[class*="preload-out"]')).display === 'none'));
+  check('reduced motion: scenes are not pinned', await p.evaluate(() => ['sectors', 'industries', 'services', 'devices'].every(id => getComputedStyle(document.querySelector(`#${id} > div`)).position !== 'sticky')));
+  await p.evaluate(() => document.getElementById('scene-healthcare').scrollIntoView({ block: 'center' })); await p.waitForTimeout(600);
+  check('reduced motion: demo shows its final state at once', (await stepText(p, 'healthcare')) === 'Paso 6 de 6', await stepText(p, 'healthcare'));
+  await scene(p, 'healthcare').getByRole('button', { name: /Ir al paso 3/ }).click();
+  check('reduced motion: steps navigable by hand', (await stepText(p, 'healthcare')) === 'Paso 3 de 6');
+  check('reduced motion: every panel is visible', await p.evaluate(() => [...document.querySelectorAll('#industries [data-active]')].every(n => getComputedStyle(n).opacity === '1')));
   await ctx.close();
 
   // ---------- Mobile
   ctx = await b.newContext({ viewport: { width: 375, height: 667 }, hasTouch: true, isMobile: true });
   p = await ctx.newPage(); watch(p);
-  await p.goto(base + '/es', { waitUntil: 'networkidle' });
+  await p.goto(base + '/es', { waitUntil: 'networkidle' }); await p.waitForTimeout(1800);
   check('mobile: no horizontal overflow', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-  await p.getByRole('button', { name: 'Abrir menú' }).click();
-  check('mobile menu opens', await p.locator('#mobile-menu').isVisible());
-  await p.keyboard.press('Escape');
-  check('mobile menu closes with Escape', !(await p.locator('#mobile-menu').isVisible()));
-  await p.getByRole('button', { name: 'Abrir menú' }).click();
-  await p.locator('#mobile-menu a', { hasText: 'Cómo funciona' }).click(); await p.waitForTimeout(4000);
-  check('mobile menu link scrolls and closes', !(await p.locator('#mobile-menu').isVisible()) && await p.evaluate(() => { const r = document.getElementById('process-heading').getBoundingClientRect(); return r.top > 0 && r.top < innerHeight; }));
-  check('mobile: mosaic is stacked, not pinned', await p.evaluate(() => { const w = document.querySelector('#industries > div'); return !w.style.height && getComputedStyle(w.querySelector('div')).position !== 'sticky'; }));
-  await p.locator('#industry-hospitality').scrollIntoViewIfNeeded(); await p.waitForTimeout(400);
-  await p.evaluate(() => scrollBy({ top: 420, behavior: 'instant' })); await p.waitForTimeout(9000);
-  check('mobile: demo plays when its tile is on screen', (await p.locator('article', { has: p.locator('#industry-hospitality') }).locator('p.font-mono.tabular-nums').textContent()).trim() === 'Paso 5 de 5');
+  await p.getByRole('button', { name: 'Abrir menú' }).click(); await p.waitForTimeout(700);
+  check('mobile menu opens', await p.locator('#site-menu').isVisible());
+  await p.locator('#site-menu nav a', { hasText: 'Cómo funciona' }).click(); await p.waitForTimeout(4500);
+  check('mobile menu link scrolls and closes', !(await p.locator('#site-menu').isVisible()) && await p.evaluate(() => { const r = document.getElementById('process-heading').getBoundingClientRect(); return r.top > -40 && r.top < innerHeight; }));
+  check('mobile: industries are stacked, not pinned', await p.evaluate(() => getComputedStyle(document.querySelector('#industries > div')).position !== 'sticky' && [...document.querySelectorAll('#industries [data-active]')].every(n => getComputedStyle(n).position !== 'absolute')));
+  check('mobile: sector cards scroll sideways by touch', await p.evaluate(() => { const ul = document.querySelector('#sectors ul'); return ul.scrollWidth > ul.clientWidth + 100 && getComputedStyle(ul).overflowX === 'auto'; }));
+  await p.evaluate(() => document.querySelector('article[aria-labelledby="scene-hospitality"]').scrollIntoView({ block: 'center', behavior: 'instant' })); await p.waitForTimeout(9000);
+  check('mobile: demo plays when its scene is on screen', (await stepText(p, 'hospitality')) === 'Paso 5 de 5', await stepText(p, 'hospitality'));
+  check('mobile: window fits its column', await p.evaluate(() => { const r = document.querySelector('article[aria-labelledby="scene-hospitality"] [style*="aspect-ratio"]').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; }));
   check('mobile: still no horizontal overflow', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-  const small = await p.evaluate(() => [...document.querySelectorAll('main button, main a, header button, header a')].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.height < 24 || r.width < 24); }).map(e => (e.getAttribute('aria-label') || e.textContent).trim().slice(0, 30)));
+  const small = await p.evaluate(() => [...document.querySelectorAll('main button, main a, header button, header a, footer a')].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.height < 24 || r.width < 24); }).map(e => (e.getAttribute('aria-label') || e.textContent).trim().slice(0, 30)));
   check('mobile: touch targets ≥ 24px', small.length === 0, small.join(' | '));
   await ctx.close();
+
+  // ---------- Every size, both languages: no overflow, no errors
+  for (const [w, h] of [[375, 667], [820, 1180], [1280, 720], [1440, 900], [1920, 1080]]) {
+    for (const lang of ['es', 'en']) {
+      ctx = await b.newContext({ viewport: { width: w, height: h } }); p = await ctx.newPage(); watch(p);
+      await p.goto(`${base}/${lang}`, { waitUntil: 'networkidle' });
+      const total = await p.evaluate(() => document.documentElement.scrollHeight);
+      let over = 0;
+      for (let y = 0; y < total; y += h * 2) { await p.evaluate((y) => scrollTo({ top: y, behavior: 'instant' }), y); await p.waitForTimeout(120); over = Math.max(over, await p.evaluate(() => document.documentElement.scrollWidth - innerWidth)); }
+      check(`${w}px ${lang}: no horizontal overflow anywhere`, over <= 0, `overflow ${over}px`);
+      await ctx.close();
+    }
+  }
 
   check('no console errors or page errors', errors.length === 0, errors.slice(0, 3).join(' | '));
   console.log(`\n${results.filter(Boolean).length}/${results.length} passed`);

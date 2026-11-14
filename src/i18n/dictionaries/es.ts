@@ -21,9 +21,15 @@ export const es = {
     menuOpen: "Abrir menú",
     menuClose: "Cerrar menú",
     language: "Idioma",
+    sectors: "Sectores",
+    services: "Servicios",
+    devices: "AIO9 Devices",
+    tagline: "IA + software para empresas",
   },
   hero: {
     title: "IA y software para que tu empresa trabaje mejor.",
+    /** The same title, split into the three lines of the hero. */
+    lines: ["IA y software para", "que tu empresa", "trabaje mejor."],
     subtitle:
       "Implementamos IA y software para que tu empresa atienda mejor, reduzca tareas manuales y conecte sus operaciones.",
     primary: "Hablemos de tu proyecto",
@@ -52,6 +58,8 @@ export const es = {
   industries: {
     healthcare: {
       name: "Salud",
+      /** Short name set in dotted type behind the scene. */
+      word: "Salud",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate",
       title: "Tu clínica, sin llamadas perdidas.",
@@ -92,6 +100,8 @@ export const es = {
     },
     hospitality: {
       name: "Hospitalidad y restaurantes",
+      /** Short name set in dotted type behind the scene. */
+      word: "Restaurantes",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate",
       title: "Cada huésped importa.",
@@ -131,6 +141,8 @@ export const es = {
     },
     realEstate: {
       name: "Bienes raíces",
+      /** Short name set in dotted type behind the scene. */
+      word: "Bienes raíces",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate",
       title: "Del interés a la oportunidad.",
@@ -175,6 +187,8 @@ export const es = {
     },
     retail: {
       name: "Retail y ecommerce",
+      /** Short name set in dotted type behind the scene. */
+      word: "Comercio",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate + Systems",
       title: "Vende sin hacer esperar a nadie.",
@@ -217,6 +231,8 @@ export const es = {
     },
     services: {
       name: "Servicios profesionales",
+      /** Short name set in dotted type behind the scene. */
+      word: "Servicios",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Systems",
       title: "Menos papeleo, más tiempo para tus clientes.",
@@ -255,7 +271,9 @@ export const es = {
       },
     },
     logistics: {
-      name: "Operaciones y logística",
+      name: "Operaciones",
+      /** Short name set in dotted type behind the scene. */
+      word: "Operaciones",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Systems",
       title: "Operaciones que se anticipan.",
@@ -324,10 +342,102 @@ export const es = {
       { name: "AIO9 Automate", text: "Nuestra oferta principal: asistentes de IA, automatizaciones e integración de tus herramientas. Atiende consultas, agenda citas y registra oportunidades en tu CRM." },
       { name: "AIO9 Web", text: "Páginas empresariales y experiencias web hechas para captar solicitudes y conectarlas con tu proceso comercial." },
       { name: "AIO9 Systems", text: "Software a medida para lo que tu operación necesita: seguimiento de pedidos, documentos o tareas internas." },
+      { name: "AIO9 Devices", text: "Sensores y controladores con ESP32 y Raspberry Pi que miden, avisan y actúan, conectados a un software hecho para tu operación." },
       { name: "Mantenimiento y mejoras", text: "Seguimos contigo después de la entrega: ajustes, soporte y nuevas funciones." },
       { name: "Tecnología creativa", text: "Imágenes, video y experiencias interactivas con IA." },
       { name: "Conexión y capacitación", text: "Conectamos la solución con tus herramientas y enseñamos a tu equipo a usarla." },
     ],
+  },
+  ui: {
+    loading: "Cargando",
+    sectors: "Sectores",
+    mainOffer: "Oferta principal",
+    also: "Además",
+    online: "En línea",
+    statement: "Empezamos por un proceso concreto y medible.",
+    statementNote: "La web y el software a medida amplían la solución cuando los necesitas.",
+    serviceWords: ["Automate", "Web", "Systems", "Devices"],
+  },
+  devices: {
+    word: "Dispositivos",
+    label: "AIO9 Devices · ESP32 + Raspberry Pi",
+    title: "Automatización que toca el mundo físico.",
+    description:
+      "Sensores y controladores que miden, avisan y actúan, conectados a un software hecho para tu operación.",
+    tags: ["Sensores", "Válvulas y relés", "Lectores RFID", "GPS"],
+    sectors: {
+      farms: {
+        name: "Granjas",
+        word: "Granjas",
+        hardware: "ESP32 · sensores de clima y gases",
+        title: "Tu galpón te avisa antes de que sea un problema.",
+        description:
+          "Sensores de temperatura, humedad y amoníaco; control de ventilación y registro de agua y alimento.",
+        from: "Lectura",
+        to: "Ventilación ajustada",
+        steps: [
+          "Llegan las lecturas de los sensores",
+          "Compara con el rango objetivo",
+          "Detecta amoníaco en aumento",
+          "Avisa al encargado",
+          "Sube la ventilación",
+          "Registra el evento",
+        ],
+      },
+      inventory: {
+        name: "Inventarios físicos",
+        word: "Inventarios",
+        hardware: "Raspberry Pi · lectores RFID y de barras",
+        title: "Cuenta tu bodega sin cerrarla.",
+        description:
+          "Lectores RFID y de código de barras que comparan lo contado con tu sistema y marcan las diferencias.",
+        from: "Lectura",
+        to: "Diferencia detectada",
+        steps: [
+          "Empieza el conteo del pasillo",
+          "Los lectores registran cada ubicación",
+          "Compara con el sistema",
+          "Detecta una diferencia",
+          "Pide un segundo conteo",
+          "Deja el ajuste listo para aprobar",
+        ],
+      },
+      fleet: {
+        name: "Flota y cadena de frío",
+        word: "Flota",
+        hardware: "Raspberry Pi · GPS, temperatura y puertas",
+        title: "Sabes dónde va y a qué temperatura.",
+        description:
+          "GPS, temperatura y apertura de puertas en cada unidad, con alertas por ruta y geocerca.",
+        from: "Evento en ruta",
+        to: "Aviso al supervisor",
+        steps: [
+          "La unidad sale a ruta",
+          "Reporta posición y temperatura",
+          "Se abre una puerta fuera de geocerca",
+          "La temperatura pasa el límite",
+          "Avisa al supervisor",
+          "La temperatura vuelve a la normalidad",
+        ],
+      },
+      agro: {
+        name: "Agro",
+        word: "Agro",
+        hardware: "ESP32 · humedad de suelo y válvulas",
+        title: "Riega cuando la tierra lo pide.",
+        description:
+          "Humedad de suelo por zona, válvulas a distancia y riego programado según el clima.",
+        from: "Suelo seco",
+        to: "Riego programado",
+        steps: [
+          "Los sensores miden la humedad",
+          "Detecta una zona seca",
+          "Revisa el clima",
+          "Sugiere un riego",
+          "Programa la válvula",
+        ],
+      },
+    },
   },
   contact: {
     title: "Tu negocio. Reinventado.",

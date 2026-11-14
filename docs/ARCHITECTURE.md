@@ -9,22 +9,20 @@ Motion (única librería de animación) · Lucide · zod.
 src/
   app/
     [lang]/layout.tsx        Layout raíz por idioma, metadata bilingüe, fuentes
-    [lang]/page.tsx          Composición de la landing
+    [lang]/page.tsx          Composición de la página, en orden de lectura
     [lang]/opengraph-image   Imagen Open Graph generada por idioma
     api/contact/route.ts     Recepción del formulario
-    globals.css              Tokens de diseño (@theme) y estilos base
-    icon.svg · robots.ts · sitemap.ts
+    globals.css              Tokens de diseño (@theme) y utilidades propias
   components/
-    brand/        Wordmark, Signal (motivo de marca)
-    layout/       Header (menú móvil), LanguageSwitch, Footer
-    hero/         Hero, HeroStack (tres fotografías en capas)
-    flow/         ServicesFlow (mosaico horizontal), IndustryChapter, Tile, FlowNav
-    industries/   StepTrack, DemoControls, WipeStack (hero)
-    demos/        Una demostración por industria + primitives/
+    layout/       Header (menú a pantalla completa), LanguageSwitch, Footer
     sections/     Contact, ContactForm
-  data/industries.ts         Modelo tipado de las industrias
-  i18n/                      config + diccionarios es.ts / en.ts
-  lib/                       motion, useDemoTimeline, contact-*, site-config, analytics
+    impact/       Las escenas de la página (ver abajo)
+      scroll/     SteppedScene, Fit, useIsDesktop / usePinned
+      windows/    kit.tsx + diez ventanas de software + index.ts
+  data/           industries.ts (seis rubros) · devices.ts (cuatro sectores de AIO9 Devices)
+  fonts/          League Gothic (SIL OFL), servida desde el propio sitio
+  i18n/           config + diccionarios es.ts / en.ts
+  lib/            useDemoTimeline, usePrefersReducedMotion, contact-*, site-config, analytics
 ```
 
 ## Idiomas
@@ -34,129 +32,108 @@ src/
   su forma: si falta o sobra una clave, no compila.
 - Ningún componente contiene texto visible; todo llega desde el diccionario.
 
-## Sistema de diseño
+- Excepción: los rótulos internos de cada ventana de software viven en su
+  propio archivo, en un objeto `copy = { es, en }` tipado con la forma del
+  español. Son muchos y solo los usa esa ventana.
 
-Tokens en `src/app/globals.css` (`@theme`), disponibles como utilidades Tailwind:
+## Sistema de diseño ("Impacto")
+
+Tokens en `src/app/globals.css` (`@theme`):
 
 | Token | Valor | Uso |
 |---|---|---|
-| `cream` | `#F6F3EC` | Fondo de página (predominante) |
-| `midnight` | `#0B1421` | Texto, botones y paneles de las demos |
-| `navy` | `#182D46` | Hover de superficies oscuras, color de fondo difuso |
-| `signal` | `#2558DC` | Acento: acciones, progreso y estados confirmados |
-| `signal-300` | `#86A8FF` | Azul sobre superficies oscuras (dentro de las demos) |
-| `slate` / `slate-600` | `#8997A8` / `#4D5C70` | Texto secundario sobre oscuro / claro |
-| `amber` / `amber-700` | `#E8A33D` / `#96560A` | Solo excepciones y errores |
+| `ink` / `ink-800` | `#0A0A12` / `#14162A` | Fondo de las escenas oscuras |
+| `bone` / `bone-300` | `#EFEAE0` / `#E3DCCF` | Fondo claro (hero, contacto, pie) y sus letras gigantes |
+| `azure` | `#2F63FF` | Acento: palabras clave, botón de envío, palabras punteadas |
+| `volt` | `#D4FF3A` | Acento secundario: etiquetas, progreso, hover de botones |
+| `fog` | `#A9A7BA` | Texto secundario sobre `ink` |
+| `dim` | `#2B2A3A` | Tipografía "apagada" y líneas sobre `ink` (solo decorativo) |
+| `midnight`, `signal`, `slate-600`, `amber*` | — | Se conservan para el formulario |
 
-**Vidrio**: la utilidad `glass` (borde blanco, fondo blanco al 52 %,
-`backdrop-filter: blur + saturate`, brillo interior) define los recuadros
-semitransparentes. Detrás de ellos hay manchas de color difuminadas para que
-el vidrio tenga algo que refractar.
+Tipografía: **League Gothic** (titulares, utilidad `display`: mayúsculas,
+interlineado 0.88), Geist (texto) y Geist Mono (etiquetas, contadores).
 
-Tipografía: Geist (texto y titulares) y Geist Mono (horas, contadores, IDs).
-Movimiento: `--ease-signal` y `src/lib/motion.ts` (micro 0.28 s, escena 0.8 s).
+Utilidades propias: `display`, `dots` (texto dibujado con puntos, mediante una
+máscara CSS), `grain` (grano fino sobre las escenas), `pill` (botón con barrido
+lima al pasar el cursor).
 
-### AIO9 Signal
-
-Motivo de marca: **punto → línea → cuadrado** (Input → Intelligence → Action).
-Aparece en el wordmark (el cuadrado), el panel del hero, el indicador de pasos
-de cada demo (`StepTrack`), los conectores entre paneles (`Connector`), la línea
-del proceso y la tarjeta de contacto.
+El azul sobre `bone` o `ink` da 4.0:1, así que solo se usa en titulares
+grandes (≥ 3:1) y como fondo de botón con texto blanco (4.8:1); nunca en texto
+de lectura.
 
 ## Mensaje y oferta
 
-La página presenta **tres servicios** y dos complementos; los sectores son
-ejemplos de aplicación, no el producto.
+Cuatro productos y tres complementos; los sectores son ejemplos de aplicación.
 
-- Los seis recuadros intercalados entre rubros (`capabilities.items` en los
-  diccionarios) son, en orden: AIO9 Automate (oferta principal), AIO9 Web, AIO9
-  Systems, Mantenimiento y mejoras, Tecnología creativa, y Conexión y
-  capacitación. Sus iconos están en `CAPABILITY_ICONS` (`ServicesFlow.tsx`), en
-  el mismo orden.
-- Cada industria tiene una clave `service` ("Ejemplo de AIO9 Automate"…) que se
-  muestra en su recuadro de título.
-- `capabilities.title` es la frase que precede al proceso (por dónde empezamos).
+- `capabilities.items` en los diccionarios, en orden: AIO9 Automate (oferta
+  principal), AIO9 Web, AIO9 Systems, AIO9 Devices, y después Mantenimiento y
+  mejoras, Tecnología creativa, Conexión y capacitación. Los cuatro primeros
+  son las pantallas de `ServiceScenes`; el resto, la lista de `Extras`.
+- **AIO9 Devices** es la automatización con ESP32 y Raspberry Pi. Sus textos
+  están en `devices` (diccionarios) y sus sectores en `src/data/devices.ts`:
+  Granjas, Inventarios físicos, Flota y cadena de frío, Agro.
+- Cada industria tiene `service` ("Ejemplo de AIO9 Automate"…) y `word`, el
+  nombre corto que se dibuja con puntos al fondo de su pantalla.
 
-## El mosaico (ServicesFlow)
+## La página, de arriba abajo
 
-Todo lo que ofrece AIO9 vive en una sola cinta de recuadros: seis industrias
-(bodegón fotográfico con su demo + recuadro de vidrio con el problema + recuadro de
-pasos), seis capacidades intercaladas en columnas de dos, y el proceso en tres
-pasos.
+| Sección | Componente | Comportamiento en escritorio |
+|---|---|---|
+| Carga | `Preloader` | Cortina de un segundo, solo CSS. No bloquea la página. |
+| Hero | `Hero` | Fondo claro; la ventana y la foto suben más rápido que el texto. |
+| Sectores | `SectorsRail` | Corte diagonal sobre el hero. Pantalla fija: el scroll vertical desliza las diez tarjetas en horizontal. |
+| Rubros | `IndustryScenes` | Pantalla fija, una por rubro, con su ventana animada. |
+| Frase | `Statement` | Pantalla fija: puntos gigantes → se ilumina palabra por palabra → caen dos fotos. |
+| Servicios | `ServiceScenes` | Pantalla fija, una por producto. |
+| AIO9 Devices | `DevicesScenes` | Pantalla fija: entrada con las dos placas y una pantalla por sector. |
+| Complementos | `Extras` | Lista; cada renglón reacciona al cursor. |
+| Proceso | `Process` | La línea lima se llena al bajar. |
+| Contacto y pie | `Contact`, `Footer` | Corte diagonal de vuelta al fondo claro. |
 
-- **Pantallas ≥ 1024 px**: la sección se fija (sticky) y el scroll vertical
-  mueve la cinta de derecha a izquierda, 1 px de scroll = 1 px de recorrido. La
-  altura de la sección se calcula a partir del ancho real de la cinta
-  (`ResizeObserver`), así que añadir o quitar recuadros no requiere tocar
-  números. El fondo se desplaza más lento. No se secuestra el scroll.
-- **Pantallas menores**: nada se fija. Los recuadros se apilan y se recorren
-  con scroll vertical.
-- **Armado al hacer scroll** (`src/components/flow/parallax.tsx`): cada rubro
-  llega deslizándose con su fotografía y sus ventanas de software, y sus
-  recuadros (título, pasos) entran dispersos desde lados distintos, girados en
-  3D y transparentes, hasta encajar en la cuadrícula cuando el rubro llega al
-  centro. Las capacidades y el proceso hacen lo mismo. Cada pieza calcula su
-  progreso `p` por el viewport (−1 entra, 0 centrado) sobre el eje en que se
-  mueve la página: horizontal en escritorio, vertical en móvil (donde entran
-  desde los costados). `from` define de dónde viene cada recuadro y `progress`
-  lo ata a su rubro. Está ligado al scroll, sin temporizadores: al volver
-  atrás se reproduce al revés. `Drift` mueve levemente las capas del hero y
-  `Arrive` hace crecer la tarjeta de contacto.
-- `FlowNav`: píldora de vidrio flotante para saltar a cualquier industria o
-  avanzar y retroceder. Desplaza la página a la posición de esa industria.
-- El enlace "Cómo funciona" apunta a un ancla invisible colocada a la altura
-  de scroll que centra el recuadro del proceso.
-- `useDemoTimeline`: motor de pasos determinista. Cada demo se reproduce una
-  vez cuando su recuadro está en pantalla; con `prefers-reduced-motion`
-  muestra el estado final y los pasos se recorren a mano. El armado también
-  se desactiva (`p` queda en 0 y todo está en su sitio).
-- Las demos son visuales (`aria-hidden`); los lectores de pantalla reciben la
-  lista ordenada de pasos.
-- La página termina en `Contact`: una pantalla completa solo con el formulario.
+### Escenas fijas (`SteppedScene`)
 
-### Seis productos, seis identidades
+La sección mide (pantallas + 1) × 100 svh y su contenido es `sticky`. El
+progreso del scroll decide qué pantalla está activa; el cambio entre pantallas
+es una transición CSS, no una animación por fotograma. No hay WebGL ni
+librerías de scroll: es `position: sticky`, `useScroll` de Motion,
+`clip-path` para los cortes y transformaciones CSS para el 3D.
 
-Cada rubro es un producto de software distinto, con colores propios fuera de
-la paleta AIO9 (definidos en `src/data/themes.ts`) y una estructura distinta:
+Tres reglas que no se deben romper:
 
-| Rubro | Producto | Color | Forma |
-|---|---|---|---|
-| Salud | Agenda clínica | Verde azulado | Clara, menú lateral, agenda por horas |
-| Restaurantes | Reservas | Terracota sobre café oscuro | App oscura con plano del salón y turnos |
-| Bienes raíces | CRM inmobiliario | Verde bosque y dorado | Marco verde oscuro, tablero por etapas |
-| Retail | Tienda | Frambuesa | Pestañas superiores, tabla de inventario, pedido tipo recibo |
-| Servicios | Documentos | Índigo | Riel de iconos, visor y extracción con confianza |
-| Logística | Operaciones | Ámbar sobre carbón | Consola oscura, indicadores y tabla monoespaciada |
+1. **La fijación es CSS, no JavaScript.** Las clases usan `lg:motion-safe:`,
+   así que el diseño es correcto antes de hidratar. `usePinned()` solo activa
+   el comportamiento (qué pantalla está viva).
+2. **Todo el contenido está siempre en el HTML**, en orden de lectura. Las
+   pantallas no activas se ocultan con opacidad, no se desmontan. Si el foco
+   del teclado entra en una pantalla oculta, la escena se desplaza hasta ella.
+3. **Por debajo de 1024 px, y con "reducir movimiento", nada se fija**: las
+   pantallas quedan apiladas, las tarjetas de sectores se deslizan con el dedo
+   y cada demostración arranca cuando entra en pantalla.
 
-`IndustryChapter` expone el tema como variables CSS (`themeVars`) en su
-`<article>`; las piezas de `demos/primitives/AppWindow.tsx` (`AppWindow`,
-`SideNav`, `IconRail`, `Tabs`, `Avatar`, `SearchField`, `Toast`) y `Bubble` /
-`Chip` las leen, así que ningún componente lleva colores fijos. Los recuadros
-que acompañan a cada rubro (título con la insignia del producto, pasos y el par
-de capacidades que le sigue) y la píldora activa de la navegación usan el mismo
-tema. Cada par texto/fondo de los seis temas se verificó a 4.5:1 o más.
+### Ventanas de software (`windows/`)
 
-Para cambiar los colores de un producto basta editar su entrada en
-`src/data/themes.ts`.
+Diez productos distintos, cada uno con sus colores y opciones. Todas:
 
-### El software en el hero
+- Se dibujan a un tamaño fijo de 760 × 480 px y `Fit` las escala al ancho
+  disponible, como una captura. Su diseño interno es idéntico en cualquier
+  pantalla.
+- Son funciones puras de `step`: sin estado ni efectos. `useDemoTimeline`
+  (en `DemoScene`) avanza los pasos una sola vez y se detiene; `DemoBar` da
+  reproducir, pausar, repetir y saltar a un paso.
+- Usan `Step` (de `kit.tsx`) para lo que aparece: el elemento siempre ocupa
+  su lugar, así que nada salta.
+- Llevan la etiqueta "Simulación ilustrativa" en su barra de título. Los datos
+  son de ejemplo. La de Salud se limita a agenda y recordatorios.
 
-`hero/HeroApp.tsx` muestra, junto a las fotografías, una ventana compacta del
-producto del rubro activo (agenda clínica, reservas, documentos), con su tema.
-Las ventanas se relevan con el mismo barrido de `clip-path` que las fotos. Los
-rubros del hero se eligen en `heroIndustryIds` (`src/data/industries.ts`); uno
-sin vista compacta propia cae a una línea "de → a".
+### Añadir un rubro o un sector
 
-### Añadir una industria
-
-1. Imagen en `public/images/industries/` y entrada en `src/data/industries.ts`
-   (`stepDurations` define cuántos pasos tiene).
-2. Textos en `es.ts` y `en.ts` (`steps` con la misma cantidad de entradas).
-3. Componente en `src/components/demos/` usando `primitives/` y un `case` en
-   `DemoRenderer.tsx`.
-4. Su tema en `src/data/themes.ts` y su icono en `src/data/industries.ts`.
-
-La cinta y la navegación se ajustan solas.
+1. Añade su entrada en `src/data/industries.ts` o `src/data/devices.ts`
+   (color y duración de cada paso).
+2. Añade sus textos en `es.ts` y `en.ts`; `steps` debe tener tantas entradas
+   como `stepDurations`.
+3. Crea su ventana en `windows/` y regístrala en `windows/index.ts`.
+4. Si es de Devices, añade su id a la lista de opciones del formulario (ya se
+   toma de `deviceSectorIds`) y su icono en `SectorsRail.tsx`.
 
 ## Formulario
 

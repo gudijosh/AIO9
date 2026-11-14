@@ -19,9 +19,14 @@ export const en: Dictionary = {
     menuOpen: "Open menu",
     menuClose: "Close menu",
     language: "Language",
+    sectors: "Industries",
+    services: "Services",
+    devices: "AIO9 Devices",
+    tagline: "AI + software for business",
   },
   hero: {
     title: "AI and software that help your business work better.",
+    lines: ["AI and software that", "help your business", "work better."],
     subtitle:
       "We implement AI and software so your business serves customers better, cuts manual work and connects its operations.",
     primary: "Let's talk",
@@ -50,6 +55,8 @@ export const en: Dictionary = {
   industries: {
     healthcare: {
       name: "Healthcare",
+      /** Short name set in dotted type behind the scene. */
+      word: "Health",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate",
       title: "Your clinic, without missed calls.",
@@ -90,6 +97,8 @@ export const en: Dictionary = {
     },
     hospitality: {
       name: "Hospitality & restaurants",
+      /** Short name set in dotted type behind the scene. */
+      word: "Restaurants",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate",
       title: "Every guest matters.",
@@ -129,6 +138,8 @@ export const en: Dictionary = {
     },
     realEstate: {
       name: "Real estate",
+      /** Short name set in dotted type behind the scene. */
+      word: "Real estate",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate",
       title: "From interest to opportunity.",
@@ -173,6 +184,8 @@ export const en: Dictionary = {
     },
     retail: {
       name: "Retail & ecommerce",
+      /** Short name set in dotted type behind the scene. */
+      word: "Retail",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate + Systems",
       title: "Sell without keeping anyone waiting.",
@@ -215,6 +228,8 @@ export const en: Dictionary = {
     },
     services: {
       name: "Professional services",
+      /** Short name set in dotted type behind the scene. */
+      word: "Services",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Systems",
       title: "Less paperwork, more time for your clients.",
@@ -253,7 +268,9 @@ export const en: Dictionary = {
       },
     },
     logistics: {
-      name: "Operations & logistics",
+      name: "Operations",
+      /** Short name set in dotted type behind the scene. */
+      word: "Operations",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Systems",
       title: "Operations that think ahead.",
@@ -322,10 +339,102 @@ export const en: Dictionary = {
       { name: "AIO9 Automate", text: "Our core offer: AI assistants, automations and tool integration. Answer inquiries, book appointments and log opportunities in your CRM." },
       { name: "AIO9 Web", text: "Business websites and web experiences built to capture requests and connect them to your sales process." },
       { name: "AIO9 Systems", text: "Custom software for what your operation needs: tracking orders, documents or internal tasks." },
+      { name: "AIO9 Devices", text: "Sensors and controllers on ESP32 and Raspberry Pi that measure, alert and act, connected to software built for your operation." },
       { name: "Maintenance and improvements", text: "We stay with you after delivery: adjustments, support and new features." },
       { name: "Creative technology", text: "Images, video and interactive experiences with AI." },
       { name: "Connection and training", text: "We connect the solution to your tools and teach your team to use it." },
     ],
+  },
+  ui: {
+    loading: "Loading",
+    sectors: "Industries",
+    mainOffer: "Core offer",
+    also: "Also",
+    online: "Online",
+    statement: "We start with one concrete, measurable process.",
+    statementNote: "Web and custom software extend the solution when you need them.",
+    serviceWords: ["Automate", "Web", "Systems", "Devices"],
+  },
+  devices: {
+    word: "Devices",
+    label: "AIO9 Devices · ESP32 + Raspberry Pi",
+    title: "Automation that reaches the physical world.",
+    description:
+      "Sensors and controllers that measure, alert and act, connected to software built for your operation.",
+    tags: ["Sensors", "Valves and relays", "RFID readers", "GPS"],
+    sectors: {
+      farms: {
+        name: "Farms",
+        word: "Farms",
+        hardware: "ESP32 · climate and gas sensors",
+        title: "Your barn warns you before it becomes a problem.",
+        description:
+          "Temperature, humidity and ammonia sensors; ventilation control and a log of water and feed.",
+        from: "Reading",
+        to: "Ventilation adjusted",
+        steps: [
+          "Sensor readings come in",
+          "Compares them with the target range",
+          "Detects rising ammonia",
+          "Alerts the person in charge",
+          "Raises the ventilation",
+          "Logs the event",
+        ],
+      },
+      inventory: {
+        name: "Physical inventory",
+        word: "Inventory",
+        hardware: "Raspberry Pi · RFID and barcode readers",
+        title: "Count your warehouse without closing it.",
+        description:
+          "RFID and barcode readers that compare what was counted with your system and flag the differences.",
+        from: "Scan",
+        to: "Difference detected",
+        steps: [
+          "The aisle count starts",
+          "Readers record each location",
+          "Compares with the system",
+          "Detects a difference",
+          "Asks for a second count",
+          "Leaves the adjustment ready to approve",
+        ],
+      },
+      fleet: {
+        name: "Fleet and cold chain",
+        word: "Fleet",
+        hardware: "Raspberry Pi · GPS, temperature and doors",
+        title: "Know where it is and how cold it is.",
+        description:
+          "GPS, temperature and door openings on every unit, with alerts by route and geofence.",
+        from: "Event on the road",
+        to: "Supervisor alerted",
+        steps: [
+          "The unit leaves on its route",
+          "Reports position and temperature",
+          "A door opens outside the geofence",
+          "Temperature goes over the limit",
+          "Alerts the supervisor",
+          "Temperature returns to normal",
+        ],
+      },
+      agro: {
+        name: "Agriculture",
+        word: "Agro",
+        hardware: "ESP32 · soil moisture and valves",
+        title: "Water when the soil asks for it.",
+        description:
+          "Soil moisture by zone, remote valves and irrigation scheduled around the weather.",
+        from: "Dry soil",
+        to: "Irrigation scheduled",
+        steps: [
+          "Sensors measure the moisture",
+          "Detects a dry zone",
+          "Checks the weather",
+          "Suggests an irrigation",
+          "Schedules the valve",
+        ],
+      },
+    },
   },
   contact: {
     title: "Your business. Reimagined.",
