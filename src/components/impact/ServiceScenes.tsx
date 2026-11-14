@@ -1,29 +1,27 @@
-"use client";
-
 import Image from "next/image";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { industryById } from "@/data/industries";
 import { cn } from "@/lib/cn";
 import { Boards } from "./Boards";
-import { DotWord } from "./DotWord";
+import { Pairs } from "./DemoScene";
+import { Reveal } from "./Reveal";
 import { Fit } from "./scroll/Fit";
-import { SteppedScene } from "./scroll/SteppedScene";
 import { HealthcareWindow } from "./windows/HealthcareWindow";
 import { OperationsWindow } from "./windows/OperationsWindow";
 import { ServicesWindow } from "./windows/ServicesWindow";
 
-const SERVICES = 4;
+const COLORS = ["var(--color-azure)", "#FF7A52", "#B79CFF", "var(--color-volt)"];
 
 function Polaroid({ id, className }: { id: "retail" | "realEstate"; className?: string }) {
   const industry = industryById[id];
   return (
-    <div className={cn("bg-bone p-2.5 shadow-[0_40px_80px_-20px_#000]", className)}>
+    <div className={cn("bg-bone p-2 shadow-[0_40px_80px_-20px_#000]", className)}>
       <Image
         src={industry.image}
         alt=""
-        sizes="(min-width: 1024px) 24vw, 46vw"
+        sizes="(min-width: 1024px) 20vw, 46vw"
         className="aspect-[4/5] w-full object-cover"
         style={{ objectPosition: industry.focus }}
       />
@@ -32,87 +30,85 @@ function Polaroid({ id, className }: { id: "retail" | "realEstate"; className?: 
 }
 
 /**
- * The four products, one per screen: the name in dotted type, one object in
- * the middle that stands for it, and what it does in plain words.
+ * The four products, two to a row: the name lit like a sign, one object that
+ * stands for it, and what it does in plain words.
  */
 export function ServiceScenes({ dict, locale }: { dict: Dictionary; locale: Locale }) {
-  const items = dict.capabilities.items;
-  const simulation = dict.experience.simulation;
-  const done = { locale, simulation } as const;
+  const items = dict.capabilities.items.slice(0, 4);
+  const done = { locale, simulation: dict.experience.simulation } as const;
+  const frame = "rounded-[12px] shadow-[0_50px_90px_-30px_#000]";
 
   const objects: ReactNode[] = [
-    <div key="automate" className="mx-auto w-full max-w-[640px] rounded-[16px] shadow-[0_80px_130px_-30px_#000,0_0_120px_-20px_var(--color-azure)] motion-safe:[transform:rotateY(-18deg)_rotateX(8deg)_rotateZ(-5deg)]">
+    <div key="automate" className={cn(frame, "shadow-[0_50px_90px_-30px_#000,0_0_110px_-30px_var(--color-azure)]")}>
       <Fit className="overflow-hidden rounded-[inherit]">
         <HealthcareWindow step={5} {...done} />
       </Fit>
     </div>,
-    <div key="web" className="relative mx-auto aspect-[6/5] w-full max-w-[600px]">
-      <Polaroid id="retail" className="absolute top-0 left-[4%] w-[52%] motion-safe:-rotate-7" />
-      <Polaroid id="realEstate" className="absolute top-[8%] right-[4%] w-[50%] motion-safe:rotate-6" />
+    <div key="web" className="relative mx-auto aspect-[760/480] w-full">
+      <Polaroid id="retail" className="absolute top-0 left-[12%] w-[36%] motion-safe:-rotate-7" />
+      <Polaroid id="realEstate" className="absolute top-[4%] right-[12%] w-[36%] motion-safe:rotate-6" />
     </div>,
-    <div key="systems" className="relative mx-auto aspect-[760/560] w-full max-w-[640px]">
-      <div className="absolute top-0 left-0 w-[78%] rounded-[14px] shadow-[0_60px_100px_-30px_#000] motion-safe:[transform:rotateY(14deg)_rotateX(6deg)_rotateZ(3deg)]">
+    <div key="systems" className="relative aspect-[760/480] w-full">
+      <div className={cn(frame, "absolute top-0 left-0 w-[70%]")}>
         <Fit className="overflow-hidden rounded-[inherit]">
           <ServicesWindow step={5} {...done} />
         </Fit>
       </div>
-      <div className="absolute right-0 bottom-0 w-[82%] rounded-[14px] shadow-[0_80px_130px_-30px_#000,0_0_120px_-30px_#F5A524] motion-safe:[transform:rotateY(-12deg)_rotateX(6deg)_rotateZ(-3deg)]">
+      <div className={cn(frame, "absolute right-0 bottom-0 w-[72%]")}>
         <Fit className="overflow-hidden rounded-[inherit]">
           <OperationsWindow step={5} {...done} />
         </Fit>
       </div>
     </div>,
-    <Boards key="devices" className="mx-auto w-full max-w-[600px]" />,
+    <div key="devices" className="grid aspect-[760/480] w-full place-items-center">
+      <Boards className="w-[78%]" />
+    </div>,
   ];
 
   return (
-    <SteppedScene id="services" count={SERVICES} label={dict.nav.services}>
-      {(i) => {
-        const item = items[i];
-        return (
-          <article
-            aria-labelledby={`service-${i}`}
-            className="relative isolate flex min-h-svh flex-col justify-end gap-10 px-5 pt-[34svh] pb-12 lg:h-full lg:min-h-0 lg:px-10 lg:pt-0 lg:pb-[13svh]"
-          >
-            <div aria-hidden className="grain absolute inset-0 -z-10" />
-            <DotWord word={dict.ui.serviceWords[i]} color="var(--color-azure)" className="-z-10 top-[11svh] lg:top-[5svh]" />
-
-            <div aria-hidden={i !== 3 ? true : undefined} className="[perspective:1500px] lg:absolute lg:inset-x-[26vw] lg:top-[24svh]">
-              {objects[i]}
-            </div>
-
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div className="flex gap-5 lg:max-w-[23rem]">
-                <div aria-hidden className="flex flex-col gap-1.5 pt-1.5">
-                  {Array.from({ length: SERVICES }, (_, k) => (
-                    <i key={k} className={cn("block w-[3px]", k === i ? "h-8 bg-volt" : "h-3 bg-dim")} />
-                  ))}
-                </div>
-                <div>
-                  <h3 id={`service-${i}`} className="text-[1.375rem] leading-tight font-semibold">
-                    {item.name}
-                  </h3>
-                  {i === 0 && (
-                    <p className="mt-1.5 font-mono text-[10.5px] tracking-[0.14em] text-volt uppercase">{dict.ui.mainOffer}</p>
-                  )}
-                  <p className="mt-3 text-[0.9688rem] leading-relaxed text-fog">{item.text}</p>
-                </div>
-              </div>
-              <a href="#contact" className="pill self-start bg-bone text-ink lg:self-auto">
-                {dict.nav.cta}
-              </a>
-            </div>
-
-            <p aria-hidden className="display pointer-events-none absolute bottom-[3svh] left-10 hidden text-[2.875rem] whitespace-nowrap text-[#5b5a70] lg:block">
-              {items.map((entry, k) => (
-                <span key={entry.name} className={cn("mr-[4.5vw]", k === i && "text-bone")}>
-                  {entry.name}
-                </span>
-              ))}
-            </p>
-          </article>
-        );
-      }}
-    </SteppedScene>
+    <section id="services" aria-labelledby="services-heading" className="relative isolate overflow-x-clip bg-ink">
+      <div aria-hidden className="grain absolute inset-0 -z-10" />
+      <h2 id="services-heading" className="sr-only">
+        {dict.nav.services}
+      </h2>
+      <Pairs>
+        {items.map((item, i) => {
+          const side = i % 2 ? "right" : "left";
+          const wait = i % 2 ? 160 : 0;
+          return (
+            <article
+              key={item.name}
+              aria-labelledby={`service-${i}`}
+              style={{ "--neon": COLORS[i] } as CSSProperties}
+              className="flex min-w-0 flex-col px-5 py-16 lg:px-10 lg:py-20 xl:px-14"
+            >
+              <Reveal from={side} delay={wait}>
+                <p
+                  aria-hidden
+                  className="display neon text-[clamp(3rem,8.6vw,8.5rem)] whitespace-nowrap motion-safe:[[data-reveal=shown]_&]:animate-[neon-on_1.1s_linear_both]"
+                >
+                  {dict.ui.serviceWords[i]}
+                </p>
+              </Reveal>
+              <Reveal from={side === "left" ? "right" : "left"} delay={wait + 140} className="mt-8">
+                <div aria-hidden>{objects[i]}</div>
+              </Reveal>
+              <Reveal delay={wait + 240} className="mt-9 flex flex-1 flex-col">
+                <h3 id={`service-${i}`} className="display text-[clamp(2.5rem,3.9vw,4rem)]">
+                  {item.name}
+                </h3>
+                {i === 0 && (
+                  <p className="mt-2 font-mono text-[11px] tracking-[0.14em] text-volt uppercase">{dict.ui.mainOffer}</p>
+                )}
+                <p className="mt-4 max-w-[48ch] text-base leading-relaxed text-fog">{item.text}</p>
+                <a href={i === 3 ? "#devices" : "#contact"} className="pill mt-7 self-start bg-bone text-ink">
+                  {i === 3 ? dict.nav.devices : dict.nav.cta} <span aria-hidden>→</span>
+                </a>
+              </Reveal>
+            </article>
+          );
+        })}
+      </Pairs>
+    </section>
   );
 }

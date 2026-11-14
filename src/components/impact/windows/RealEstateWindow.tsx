@@ -72,7 +72,7 @@ const copy = {
 const c: WindowTheme = {
   bg: "#FFFFFF",
   ink: "#16291F",
-  muted: "#6F8478",
+  muted: "#536A5D",
   line: "#E1EAE4",
   chrome: "#F6FAF7",
   side: "#123B2A",
@@ -183,7 +183,7 @@ export function RealEstateWindow({ step, locale, simulation }: WindowProps) {
                     borderRadius: 8,
                     padding: "6px 7px",
                     background: on ? "#1F6B4A" : "#F2F6F3",
-                    color: on ? "#fff" : "#6F8478",
+                    color: on ? "#fff" : "#536A5D",
                     whiteSpace: "nowrap",
                     transition: "background-color 350ms, color 350ms",
                   }}

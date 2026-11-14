@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 import { LanguageSwitch } from "./LanguageSwitch";
 
 const links = [
-  { href: "#sectors", key: "sectors" },
+  { href: "#industries", key: "sectors" },
   { href: "#services", key: "services" },
   { href: "#devices", key: "devices" },
   { href: "#process", key: "process" },

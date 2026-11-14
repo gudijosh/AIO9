@@ -52,7 +52,7 @@ const copy = {
   },
 } satisfies Record<Locale, typeof es>;
 
-const c: WindowTheme = { bg: "#FFFFFF", ink: "#0E2233", muted: "#6B8194", line: "#E1EAF1", chrome: "#F5F9FC", side: "#0E2233", sideText: "#A9C0D3", sideLine: "#24405a", app: "#1EA7E8", on: "#fff", ok: "#5FE0A5" };
+const c: WindowTheme = { bg: "#FFFFFF", ink: "#0E2233", muted: "#51687B", line: "#E1EAF1", chrome: "#F5F9FC", side: "#0E2233", sideText: "#A9C0D3", sideLine: "#24405a", app: "#1EA7E8", on: "#06202F", ok: "#5FE0A5" };
 
 /** 0 pending · 1 counted · 2 difference · 3 being read. */
 const cells = [1, 1, 1, 2, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0];
@@ -220,7 +220,7 @@ export function InventoryWindow({ step, locale, simulation }: WindowProps) {
                     key={label}
                     style={{
                       background: strong ? c.app : "transparent",
-                      color: strong ? "#fff" : c.ink,
+                      color: strong ? c.on : c.ink,
                       boxShadow: `inset 0 0 0 1px ${strong ? c.app : "#E4CFA6"}`,
                       borderRadius: 7,
                       padding: "6px 8px",

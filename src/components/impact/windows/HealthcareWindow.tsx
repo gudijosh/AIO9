@@ -58,7 +58,7 @@ const copy = {
 const c: WindowTheme = {
   bg: "#FFFFFF",
   ink: "#12302c",
-  muted: "#6b837f",
+  muted: "#51706B",
   line: "#DDEAE7",
   chrome: "#F3FAF8",
   side: "#0D2F2B",

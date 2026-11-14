@@ -9,11 +9,9 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   const errors = [];
   const watch = (p) => { p.on('console', m => m.type() === 'error' && errors.push(m.text())); p.on('pageerror', e => errors.push('PAGEERROR ' + e.message)); };
   const topOf = (p, id) => p.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, id);
-  // Scroll a pinned scene to one of its panels.
-  const toPanel = async (p, id, index, count) => {
-    await p.evaluate(({ id, index, count }) => { const n = document.getElementById(id); const span = n.offsetHeight - innerHeight; scrollTo({ top: n.getBoundingClientRect().top + scrollY + ((index + 0.5) / count) * span, behavior: 'instant' }); }, { id, index, count });
-    await p.waitForTimeout(900);
-  };
+  // Bring one sector's column to the middle of the screen.
+  const show = async (p, id) => { await p.evaluate((id) => document.querySelector(`article[aria-labelledby="scene-${id}"]`).scrollIntoView({ block: 'center', behavior: 'instant' }), id); await p.waitForTimeout(900); };
+  const box = (p, id) => p.evaluate((id) => { const r = document.querySelector(`article[aria-labelledby="scene-${id}"]`).getBoundingClientRect(); return { top: Math.round(r.top + scrollY), left: Math.round(r.left), width: Math.round(r.width) }; }, id);
   const scene = (p, id) => p.locator(`article[aria-labelledby="scene-${id}"]`);
   const stepText = async (p, id) => (await scene(p, id).locator('span.tabular-nums').first().textContent()).trim();
 
@@ -33,34 +31,36 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('focus moves into the menu', await p.evaluate(() => document.getElementById('site-menu').contains(document.activeElement)));
   await p.keyboard.press('Escape'); await p.waitForTimeout(700);
   check('menu closes with Escape and returns focus', !(await p.locator('#site-menu').isVisible()) && await p.evaluate(() => document.activeElement?.getAttribute('aria-controls') === 'site-menu'));
-  for (const [label, id] of [['Sectores', 'sectors'], ['Servicios', 'services'], ['AIO9 Devices', 'devices'], ['Cómo funciona', 'process'], ['Contacto', 'contact']]) {
+  for (const [label, id] of [['Sectores', 'industries'], ['Servicios', 'services'], ['AIO9 Devices', 'devices'], ['Cómo funciona', 'process'], ['Contacto', 'contact']]) {
     await p.getByRole('button', { name: 'Abrir menú' }).click(); await p.waitForTimeout(600);
     await p.locator('#site-menu nav a', { hasText: label }).first().click(); await p.waitForTimeout(3800);
     const top = await topOf(p, id);
     check(`menu link "${label}" scrolls to #${id}`, Math.abs(top) < 260 && !(await p.locator('#site-menu').isVisible()), `top=${Math.round(top)}`);
   }
 
-  // Sectors rail: pinned, and vertical scroll moves the row sideways
-  const railX = () => p.evaluate(() => document.querySelector('#sectors ul li').getBoundingClientRect().left);
-  await p.evaluate(() => { const n = document.getElementById('sectors'); scrollTo({ top: n.getBoundingClientRect().top + scrollY + 300, behavior: 'instant' }); }); await p.waitForTimeout(600);
-  const r0 = await railX();
-  await p.evaluate(() => scrollBy({ top: 700, behavior: 'instant' })); await p.waitForTimeout(600);
-  const r1 = await railX();
-  check('sectors: scrolling down slides the cards to the left', r0 - r1 > 200, `moved ${Math.round(r0 - r1)}px`);
-  check('sectors: the screen stays pinned meanwhile', Math.abs(await p.evaluate(() => document.querySelector('#sectors > div').getBoundingClientRect().top)) < 1);
-  check('sectors: ten cards (six industries, four device sectors)', (await p.locator('#sectors ul li').count()) === 10);
-
-  // Industries: one panel per screen, pinned
-  const ids = ['healthcare', 'hospitality', 'realEstate', 'retail', 'services', 'logistics'];
-  for (const i of [0, 3, 5, 1]) {
-    await toPanel(p, 'industries', i, 6);
-    const active = await p.evaluate(() => [...document.querySelectorAll('#industries [data-active]')].map(n => n.dataset.active).indexOf('true'));
-    check(`industries: scrolling to screen ${i + 1} shows ${ids[i]}`, active === i, `active=${active}`);
+  // Layout: nothing is pinned, sectors sit two to a row
+  check('no section is pinned', await p.evaluate(() => [...document.querySelectorAll('main *')].every(n => getComputedStyle(n).position !== 'sticky')));
+  check('the page is under 20 screens tall', await p.evaluate(() => document.documentElement.scrollHeight / innerHeight) < 20, (await p.evaluate(() => document.documentElement.scrollHeight / innerHeight)).toFixed(1) + ' screens');
+  check('the old sectors rail is gone', (await p.locator('#sectors').count()) === 0);
+  for (const [a, c] of [['healthcare', 'hospitality'], ['realEstate', 'retail'], ['services', 'logistics'], ['farms', 'inventory'], ['fleet', 'agro']]) {
+    const l = await box(p, a), r = await box(p, c);
+    check(`${a} and ${c} sit side by side`, l.top === r.top && r.left >= l.left + l.width - 2 && Math.abs(l.width - r.width) < 3, `tops ${l.top}/${r.top}, lefts ${l.left}/${r.left}`);
   }
-  check('industries: the screen stays pinned', Math.abs(await p.evaluate(() => document.querySelector('#industries > div').getBoundingClientRect().top)) < 1);
+  const rows = await Promise.all(['healthcare', 'realEstate', 'services'].map((id) => box(p, id)));
+  check('industry pairs follow each other down the page', rows[0].top < rows[1].top && rows[1].top < rows[2].top);
+  const sv = await p.evaluate(() => [...document.querySelectorAll('#services article')].map(n => { const r = n.getBoundingClientRect(); return [Math.round(r.top + scrollY), Math.round(r.left)]; }));
+  check('services sit two to a row', sv.length === 4 && sv[0][0] === sv[1][0] && sv[2][0] === sv[3][0] && sv[0][0] < sv[2][0] && sv[0][1] < sv[1][1], JSON.stringify(sv));
+
+  // Entrances: a column below the fold is hidden until it scrolls in, then shown for good
+  await p.goto('about:blank'); await p.goto(base + '/es', { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
+  const revealState = () => p.evaluate(() => document.querySelector('article[aria-labelledby="scene-logistics"] [data-reveal]').dataset.reveal);
+  check('a sector below the fold waits for its entrance', (await revealState()) === 'hidden');
+  await show(p, 'logistics'); await p.waitForTimeout(1300);
+  check('it enters when scrolled to', (await revealState()) === 'shown' && await p.evaluate(() => getComputedStyle(document.querySelector('article[aria-labelledby="scene-logistics"] [data-reveal]')).opacity === '1'));
+  check('statement is a plain section with the whole sentence', (await p.locator('#statement-heading').innerText()).replace(/\s+/g, ' ').trim().toUpperCase() === 'EMPEZAMOS POR UN PROCESO CONCRETO Y MEDIBLE.');
 
   // Demo: plays to the end, replay, pause, resume, jump to a step
-  await toPanel(p, 'industries', 0, 6); await p.waitForTimeout(8500);
+  await show(p, 'healthcare'); await p.waitForTimeout(8500);
   check('demo plays to the last step', (await stepText(p, 'healthcare')) === 'Paso 6 de 6', await stepText(p, 'healthcare'));
   check('window shows the confirmed appointment at the end', (await scene(p, 'healthcare').innerText()).includes('Cita confirmada'));
   await scene(p, 'healthcare').getByRole('button', { name: /^Repetir/ }).click(); await p.waitForTimeout(400);
@@ -75,10 +75,10 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('every window is labelled as a simulation', (await p.locator('main').innerText()).split('Simulación ilustrativa').length - 1 >= 10);
 
   // "I want this" preselects the sector in the form (an industry and a device sector)
-  await toPanel(p, 'industries', 2, 6);
+  await show(p, 'realEstate');
   await scene(p, 'realEstate').getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(3500);
   check('industry link preselects it in the form', (await p.inputValue('#industry')) === 'realEstate', await p.inputValue('#industry'));
-  await toPanel(p, 'devices', 4, 5); await p.waitForTimeout(7500);
+  await show(p, 'agro'); await p.waitForTimeout(7500);
   check('devices: agro demo plays to its last step', (await stepText(p, 'agro')) === 'Paso 5 de 5', await stepText(p, 'agro'));
   await scene(p, 'agro').getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(3500);
   check('device sector link preselects it in the form', (await p.inputValue('#industry')) === 'agro', await p.inputValue('#industry'));
@@ -86,11 +86,6 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   // Services: four products, in order
   const serviceNames = await p.locator('#services h3').allTextContents();
   check('services: Automate, Web, Systems, Devices in that order', serviceNames.join('|') === 'AIO9 Automate|AIO9 Web|AIO9 Systems|AIO9 Devices', serviceNames.join('|'));
-
-  // Keyboard: focusing a control in a hidden panel scrolls to that panel
-  await toPanel(p, 'industries', 0, 6);
-  await scene(p, 'retail').getByRole('link', { name: 'Quiero esto en mi negocio' }).focus(); await p.waitForTimeout(1500);
-  check('keyboard focus inside a hidden panel brings that panel on screen', await p.evaluate(() => [...document.querySelectorAll('#industries [data-active]')].map(n => n.dataset.active).indexOf('true')) === 3);
 
   // Form
   await p.reload({ waitUntil: 'networkidle' }); await p.evaluate(() => document.getElementById('contact-heading').scrollIntoView({ behavior: 'instant' })); await p.waitForTimeout(500);
@@ -139,12 +134,11 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   p = await ctx.newPage(); watch(p);
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
   check('reduced motion: no preloader', await p.evaluate(() => getComputedStyle(document.querySelector('[class*="preload-out"]')).display === 'none'));
-  check('reduced motion: scenes are not pinned', await p.evaluate(() => ['sectors', 'industries', 'services', 'devices'].every(id => getComputedStyle(document.querySelector(`#${id} > div`)).position !== 'sticky')));
   await p.evaluate(() => document.getElementById('scene-healthcare').scrollIntoView({ block: 'center' })); await p.waitForTimeout(600);
   check('reduced motion: demo shows its final state at once', (await stepText(p, 'healthcare')) === 'Paso 6 de 6', await stepText(p, 'healthcare'));
   await scene(p, 'healthcare').getByRole('button', { name: /Ir al paso 3/ }).click();
   check('reduced motion: steps navigable by hand', (await stepText(p, 'healthcare')) === 'Paso 3 de 6');
-  check('reduced motion: every panel is visible', await p.evaluate(() => [...document.querySelectorAll('#industries [data-active]')].every(n => getComputedStyle(n).opacity === '1')));
+  check('reduced motion: nothing waits for an entrance', await p.evaluate(() => [...document.querySelectorAll('[data-reveal]')].every(n => getComputedStyle(n).opacity === '1' && getComputedStyle(n).transform === 'none')));
   await ctx.close();
 
   // ---------- Mobile
@@ -156,8 +150,8 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('mobile menu opens', await p.locator('#site-menu').isVisible());
   await p.locator('#site-menu nav a', { hasText: 'Cómo funciona' }).click(); await p.waitForTimeout(4500);
   check('mobile menu link scrolls and closes', !(await p.locator('#site-menu').isVisible()) && await p.evaluate(() => { const r = document.getElementById('process-heading').getBoundingClientRect(); return r.top > -40 && r.top < innerHeight; }));
-  check('mobile: industries are stacked, not pinned', await p.evaluate(() => getComputedStyle(document.querySelector('#industries > div')).position !== 'sticky' && [...document.querySelectorAll('#industries [data-active]')].every(n => getComputedStyle(n).position !== 'absolute')));
-  check('mobile: sector cards scroll sideways by touch', await p.evaluate(() => { const ul = document.querySelector('#sectors ul'); return ul.scrollWidth > ul.clientWidth + 100 && getComputedStyle(ul).overflowX === 'auto'; }));
+  const mh = await box(p, 'healthcare'), mr = await box(p, 'hospitality');
+  check('mobile: sectors are stacked in one column', mr.top > mh.top && mr.left === mh.left && mh.width > 300, `tops ${mh.top}/${mr.top}`);
   await p.evaluate(() => document.querySelector('article[aria-labelledby="scene-hospitality"]').scrollIntoView({ block: 'center', behavior: 'instant' })); await p.waitForTimeout(9000);
   check('mobile: demo plays when its scene is on screen', (await stepText(p, 'hospitality')) === 'Paso 5 de 5', await stepText(p, 'hospitality'));
   check('mobile: window fits its column', await p.evaluate(() => { const r = document.querySelector('article[aria-labelledby="scene-hospitality"] [style*="aspect-ratio"]').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; }));

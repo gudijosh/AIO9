@@ -11,11 +11,8 @@ plan de ElevenLabs para confirmar el uso comercial.
   ElevenLabs) para que se vean nítidas en pantallas de alta densidad. En el
   repo: WebP calidad 82.
 - `next/image` sirve AVIF/WebP redimensionado y un placeholder borroso.
-- Dónde aparecen: la de salud en el hero; las seis como tarjetas en Sectores;
-  dos sobre la frase central; dos en AIO9 Web; y dentro de las ventanas de
-  Bienes raíces y Comercio.
-- Los cuatro sectores de AIO9 Devices no tienen fotografía: su tarjeta usa un
-  icono sobre fondo oscuro.
+- Dónde aparecen ahora: dos en AIO9 Web y dentro de las ventanas de Bienes
+  raíces y Comercio. Las demás siguen en el repositorio sin uso.
 
 ## Dirección
 
@@ -52,3 +49,12 @@ fotografiados, ilustraciones monocromas en azul y renders 3D a color.)
 Reemplaza el archivo conservando el nombre (16:9, idealmente 2560×1440), con
 los objetos centrados, fondo de estudio crema y sin texto. Los paneles de la
 demo flotan en las esquinas, así que lo importante debe quedar al centro.
+
+## Objetos del hero
+
+`public/images/hero/`: `board.webp`, `phone.webp`, `ribbon.webp`,
+`bubble.webp`. Renders 3D generados con Seedream 5.5 en ElevenLabs (98
+créditos cada uno), sin texto ni interfaces. Tres llegaron con fondo blanco y
+se recortaron con un script (relleno desde los bordes más los huecos blancos
+grandes), después se ajustaron a 1100 px de ancho en WebP con transparencia.
+Son decorativos: van con `alt=""` dentro de un bloque `aria-hidden`.

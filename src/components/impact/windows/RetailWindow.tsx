@@ -57,13 +57,13 @@ const copy = {
 const c: WindowTheme = {
   bg: "#FFFFFF",
   ink: "#2B1420",
-  muted: "#8A6F7B",
+  muted: "#765B67",
   line: "#F0DFE6",
   chrome: "#FFF9FB",
   side: "#3A0F22",
   sideText: "#E6BECD",
   sideLine: "#5c2239",
-  app: "#F0457E",
+  app: "#C42B5C",
   on: "#fff",
   ok: "#FFB3CC",
 };

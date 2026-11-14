@@ -78,7 +78,7 @@ const copy = {
   },
 } satisfies Record<Locale, typeof es>;
 
-const c: WindowTheme = { bg: "#FBF8EF", ink: "#2A2412", muted: "#857B5C", line: "#EAE3CC", chrome: "#F5F0DF", side: "#2A2412", sideText: "#D9CFA8", sideLine: "#4a4124", app: "#F2B705", on: "#2A2412", ok: "#9BD46A" };
+const c: WindowTheme = { bg: "#FBF8EF", ink: "#2A2412", muted: "#6B6247", line: "#EAE3CC", chrome: "#F5F0DF", side: "#2A2412", sideText: "#D9CFA8", sideLine: "#4a4124", app: "#F2B705", on: "#2A2412", ok: "#9BD46A" };
 const GREEN = "#6FA83A";
 const ORANGE = "#E2731C";
 const temps = [26.2, 26.0, 25.8, 26.1, 26.9, 27.6, 28.4, 28.9, 28.2, 27.7, 27.3, 27.4];

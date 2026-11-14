@@ -7,7 +7,7 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es` y `/en` prerenderizadas) |
-| Pruebas funcionales (`tests/functional.js`) | 75 de 75 |
+| Pruebas funcionales (`tests/functional.js`) | 77 de 77 |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
 | Scroll horizontal accidental | Ninguno (375, 820, 1280, 1440, 1920 px) |
 
@@ -17,45 +17,45 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   un solo `h1`; la cortina de carga desaparece.
 - Menú: abre a pantalla completa, recibe el foco, Escape lo cierra y devuelve
   el foco; cada uno de sus cinco enlaces lleva a su sección.
-- Sectores: la pantalla queda fija y el scroll vertical desliza las diez
-  tarjetas hacia la izquierda.
-- Rubros: la pantalla queda fija y cada tramo de scroll muestra el rubro que
-  corresponde.
+- Diseño: ninguna sección queda fija; la página mide menos de 20 pantallas;
+  cada pareja (cinco de sectores, dos de servicios) aparece lado a lado.
+- Entradas: una columna por debajo de la pantalla espera oculta y se muestra
+  al llegar a ella; la frase central muestra la oración completa.
 - Demostración: reproduce hasta el último paso, repetir, pausar, reanudar y
   saltar a un paso; la ventana muestra el resultado; las diez llevan la
   etiqueta "Simulación ilustrativa".
 - "Quiero esto en mi negocio" preselecciona el rubro en el formulario, tanto
   para una industria como para un sector de AIO9 Devices.
 - Servicios en orden: Automate, Web, Systems, Devices.
-- Teclado: al enfocar un control de una pantalla oculta, la escena se desplaza
-  hasta ella.
 - Formulario: 5 errores con envío vacío, foco en el primer campo inválido,
   correo inválido, y respuesta 503 con mensaje claro cuando no hay entrega
   configurada (nunca un éxito simulado). API: 422 (campos e industria
   desconocida), 400 (honeypot), 400 (cuerpo).
 - Idiomas: la página en inglés no contiene textos en español y viceversa,
   incluidos los rótulos de las ventanas.
-- Movimiento reducido: sin cortina de carga, ninguna escena fija, todas las
-  pantallas visibles, la demo muestra su estado final y los pasos se recorren a mano.
-- Móvil: sin desborde, menú, rubros apilados, tarjetas de sectores deslizables
-  con el dedo, la demo arranca al entrar en pantalla, la ventana cabe en su
-  columna, objetivos táctiles de al menos 24 px.
+- Movimiento reducido: sin cortina de carga, ninguna entrada pendiente, la
+  demo muestra su estado final y los pasos se recorren a mano.
+- Móvil: sin desborde, menú, sectores en una sola columna, la demo arranca al
+  entrar en pantalla, la ventana cabe en su columna, objetivos táctiles de al
+  menos 24 px.
 - Sin desborde horizontal en ningún punto del scroll a 375, 820, 1280, 1440 y
   1920 px, en ambos idiomas; sin errores de consola.
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
 
-Sin prueba automática (revisado en capturas): el aspecto de cada pantalla, el
-corte diagonal, la frase que se ilumina y la suavidad de las transiciones.
+Sin prueba automática (revisado en capturas): el aspecto de cada sección, el
+corte diagonal, el vuelo de las piezas del hero, el efecto neón y la suavidad
+de las entradas.
 
 ## Lighthouse (local, última ejecución)
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 93 | 97 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 92 | 97 | 100 | 100 |
 | Escritorio | 99 | 97 | 100 | 100 |
 
-LCP 0.9 s en móvil emulado y 0.3 s en escritorio; bloqueo total 310 ms y 0 ms;
-CLS 0 en ambos. Las cifras varían entre ejecuciones.
+LCP 1.1 s en móvil emulado y 0.3 s en escritorio; bloqueo total 310 ms y 0 ms;
+CLS 0 en ambos. Las cifras varían entre ejecuciones: en móvil se midieron 86 y
+92 con el mismo código.
 
 Accesibilidad no llega a 100 por un solo aviso, de contraste, en la cabecera.
 La cabecera se dibuja en modo "diferencia" (blanco que se invierte según lo que
@@ -69,7 +69,8 @@ se corrigió para la herramienta.
 paleta y de las etiquetas de color de los diez sectores, y falla si alguno
 baja de su mínimo (4.5:1 para texto, 3:1 para titulares grandes). Sus valores
 deben mantenerse iguales a `globals.css`, `industries.ts` y `devices.ts`. Los
-colores internos de cada ventana no están en este script.
+colores internos de cada ventana no están en este script; su texto secundario
+se revisó aparte y da al menos 4.5:1.
 
 ## Repetir las pruebas
 

@@ -8,9 +8,9 @@ automatizaciones e integración de herramientas), **AIO9 Web**, **AIO9 Systems**
 y **AIO9 Devices** (automatización con ESP32 y Raspberry Pi), más
 mantenimiento, tecnología creativa y capacitación como complementos. Los diez
 sectores de la página son ejemplos de aplicación: cada uno tiene su propia
-ventana de software que reproduce, paso a paso, cómo se vería la solución. La
-página es un recorrido vertical de escenas que quedan fijas mientras el scroll
-las hace avanzar, y termina en el formulario de contacto.
+ventana de software que reproduce, paso a paso, cómo se vería la solución. Los
+sectores y los productos se presentan de dos en dos, cada uno con su propia
+entrada al aparecer, y la página termina en el formulario de contacto.
 
 > Las demostraciones son **simulaciones locales y deterministas**, identificadas
 > como ilustrativas en la interfaz: muestran posibilidades, y cada implementación

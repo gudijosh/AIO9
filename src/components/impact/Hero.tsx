@@ -1,44 +1,33 @@
-"use client";
-
-import Image from "next/image";
-import { useRef } from "react";
-import { useScroll, useTransform } from "motion/react";
-import * as m from "motion/react-m";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { industryById } from "@/data/industries";
-import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
-import { Fit } from "./scroll/Fit";
-import { HealthcareWindow } from "./windows/HealthcareWindow";
+import { HeroCollage } from "./HeroCollage";
+
+/* Fourteen 1.5px steps, down and to the right, in a darker bone. */
+const EXTRUDE = Array.from({ length: 14 }, (_, i) => `${(i + 1) * 1.5}px ${(i + 1) * 1.5}px 0 #cfc6b3`).join(", ");
 
 /**
- * Opening screen: the promise set in oversized condensed type on a light
- * ground, with one finished product window and a product photo leaning in.
- * The dark Sectors scene cuts across its bottom edge on a diagonal.
+ * Opening screen: the promise in oversized condensed type on a light ground,
+ * the wordmark behind it as dotted letters with real depth, and a collage of
+ * our software and a few rendered objects flying in. The first dark section
+ * cuts across its bottom edge on a diagonal.
  */
 export function Hero({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const t = dict.hero;
-  const ref = useRef<HTMLElement>(null);
-  const reduced = usePrefersReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const lettersY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
-  const windowY = useTransform(scrollYProgress, [0, 1], [0, -220]);
-  const photoY = useTransform(scrollYProgress, [0, 1], [0, -110]);
-  const health = industryById.healthcare;
-  const last = health.stepDurations.length - 1;
-
   return (
-    <section ref={ref} id="top" className="relative isolate overflow-hidden bg-bone pb-[16vw] text-ink lg:min-h-svh">
-      <m.div
-        aria-hidden
-        style={reduced ? undefined : { y: lettersY }}
-        className="display pointer-events-none absolute -top-[6vw] -left-[4vw] -z-10 text-[86vw] whitespace-nowrap text-bone-300 select-none"
-      >
-        AIO9
-      </m.div>
+    <section id="top" className="relative isolate overflow-hidden bg-bone pb-[18vw] text-ink">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 [perspective:1200px]">
+        <div className="display absolute -top-[3vw] left-[1vw] origin-[35%_45%] text-[60vw] leading-[0.8] whitespace-nowrap select-none [transform:rotateX(20deg)_rotateY(-16deg)_rotateZ(2deg)]">
+          {/* Solid letters with a stepped shadow give the volume… */}
+          <span style={{ textShadow: EXTRUDE }} className="block text-bone-300">
+            AIO9
+          </span>
+          {/* …and a dotted face on top ties them to the dotted words further down. */}
+          <span className="dots absolute inset-0 block text-[#c3b9a4] [mask-size:10px_10px]">AIO9</span>
+        </div>
+      </div>
 
-      <div className="mx-auto max-w-[1600px] px-5 pt-24 lg:px-10 lg:pt-[7.5rem]">
-        <h1 aria-label={t.title} className="display text-[clamp(2.75rem,12.6vw,13rem)]">
+      <div className="mx-auto max-w-[1700px] px-5 pt-24 lg:px-10 lg:pt-[7.5rem] xl:px-14">
+        <h1 aria-label={t.title} className="display relative z-10 text-[clamp(2.75rem,12.6vw,13rem)]">
           {t.lines.map((line, i) => (
             <span key={line} aria-hidden className={i === t.lines.length - 1 ? "block text-azure" : "block"}>
               {line}
@@ -46,41 +35,20 @@ export function Hero({ dict, locale }: { dict: Dictionary; locale: Locale }) {
           ))}
         </h1>
 
-        <div className="mt-8 grid gap-12 lg:mt-10 lg:grid-cols-[minmax(0,24rem)_1fr] lg:items-start">
-          <div>
+        <div className="mt-8 grid gap-10 lg:mt-6 lg:grid-cols-[minmax(0,24rem)_1fr] lg:items-end">
+          <div className="relative z-10 lg:pb-[6vw]">
             <p className="max-w-[36ch] text-[1.0625rem] leading-relaxed">{t.subtitle}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#contact" className="pill bg-ink text-bone">
                 {t.primary} <span aria-hidden>→</span>
               </a>
-              <a href="#sectors" className="pill border border-ink/30 text-ink">
+              <a href="#industries" className="pill border border-ink/30 text-ink">
                 {t.secondary}
               </a>
             </div>
           </div>
-
-          <div className="relative lg:-mt-[2vw] lg:ml-auto lg:w-[min(40vw,620px)] [perspective:1500px]">
-            <m.div
-              style={reduced ? undefined : { y: photoY }}
-              className="absolute -top-[18%] right-[2%] z-0 w-[36%] bg-bone p-[1.2%] shadow-[0_40px_80px_-20px_rgba(10,10,18,0.55)] motion-safe:[transform:rotateZ(7deg)_rotateY(-14deg)] lg:-top-[58%]"
-            >
-              <Image
-                src={health.image}
-                alt={dict.industries.healthcare.alt}
-                sizes="(min-width: 1024px) 18vw, 34vw"
-                preload
-                className="aspect-[4/5] w-full object-cover"
-                style={{ objectPosition: health.heroFocus ?? health.focus }}
-              />
-            </m.div>
-            <m.div
-              style={reduced ? undefined : { y: windowY }}
-              className="relative z-10 rounded-[14px] shadow-[0_70px_110px_-30px_rgba(10,10,18,0.6)] motion-safe:[transform:rotateY(-18deg)_rotateX(7deg)_rotateZ(-4deg)] lg:rounded-[18px]"
-            >
-              <Fit className="overflow-hidden rounded-[inherit]">
-                <HealthcareWindow step={last} locale={locale} simulation={dict.experience.simulation} />
-              </Fit>
-            </m.div>
+          <div className="lg:-mt-[3vw] lg:ml-auto lg:w-[min(54vw,860px)]">
+            <HeroCollage locale={locale} simulation={dict.experience.simulation} />
           </div>
         </div>
       </div>

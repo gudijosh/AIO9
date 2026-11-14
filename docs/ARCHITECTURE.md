@@ -17,7 +17,7 @@ src/
     layout/       Header (menú a pantalla completa), LanguageSwitch, Footer
     sections/     Contact, ContactForm
     impact/       Las escenas de la página (ver abajo)
-      scroll/     SteppedScene, Fit, useIsDesktop / usePinned
+      scroll/     Fit (escala las ventanas)
       windows/    kit.tsx + diez ventanas de software + index.ts
   data/           industries.ts (seis rubros) · devices.ts (cuatro sectores de AIO9 Devices)
   fonts/          League Gothic (SIL OFL), servida desde el propio sitio
@@ -54,8 +54,8 @@ Tipografía: **League Gothic** (titulares, utilidad `display`: mayúsculas,
 interlineado 0.88), Geist (texto) y Geist Mono (etiquetas, contadores).
 
 Utilidades propias: `display`, `dots` (texto dibujado con puntos, mediante una
-máscara CSS), `grain` (grano fino sobre las escenas), `pill` (botón con barrido
-lima al pasar el cursor).
+máscara CSS), `neon` (rótulo encendido en el color de `--neon`), `grain` (grano
+fino sobre las secciones oscuras), `pill` (botón con barrido lima al pasar el cursor).
 
 El azul sobre `bone` o `ink` da 4.0:1, así que solo se usa en titulares
 grandes (≥ 3:1) y como fondo de botón con texto blanco (4.8:1); nunca en texto
@@ -77,38 +77,42 @@ Cuatro productos y tres complementos; los sectores son ejemplos de aplicación.
 
 ## La página, de arriba abajo
 
-| Sección | Componente | Comportamiento en escritorio |
+Nada queda fijo: es una página de scroll normal, de unas 16 pantallas en
+escritorio. El movimiento son entradas que ocurren una sola vez.
+
+| Sección | Componente | Qué hace |
 |---|---|---|
 | Carga | `Preloader` | Cortina de un segundo, solo CSS. No bloquea la página. |
-| Hero | `Hero` | Fondo claro; la ventana y la foto suben más rápido que el texto. |
-| Sectores | `SectorsRail` | Corte diagonal sobre el hero. Pantalla fija: el scroll vertical desliza las diez tarjetas en horizontal. |
-| Rubros | `IndustryScenes` | Pantalla fija, una por rubro, con su ventana animada. |
-| Frase | `Statement` | Pantalla fija: puntos gigantes → se ilumina palabra por palabra → caen dos fotos. |
-| Servicios | `ServiceScenes` | Pantalla fija, una por producto. |
-| AIO9 Devices | `DevicesScenes` | Pantalla fija: entrada con las dos placas y una pantalla por sector. |
+| Hero | `Hero`, `HeroCollage` | Fondo claro; "AIO9" de fondo con volumen (sombra escalonada + cara punteada); collage de tres ventanas y cuatro objetos que entran volando al levantarse la cortina y luego flotan. |
+| Rubros | `IndustryScenes` | Corte diagonal sobre el hero. Seis rubros, de dos en dos, con línea divisoria. |
+| Frase | `Statement` | Una frase que entra girando en 3D. |
+| Servicios | `ServiceScenes` | Cuatro productos, de dos en dos. |
+| AIO9 Devices | `DevicesScenes` | Entrada con las dos placas y sus cuatro sectores, de dos en dos. |
 | Complementos | `Extras` | Lista; cada renglón reacciona al cursor. |
 | Proceso | `Process` | La línea lima se llena al bajar. |
 | Contacto y pie | `Contact`, `Footer` | Corte diagonal de vuelta al fondo claro. |
 
-### Escenas fijas (`SteppedScene`)
+### Parejas y entradas
 
-La sección mide (pantallas + 1) × 100 svh y su contenido es `sticky`. El
-progreso del scroll decide qué pantalla está activa; el cambio entre pantallas
-es una transición CSS, no una animación por fotograma. No hay WebGL ni
-librerías de scroll: es `position: sticky`, `useScroll` de Motion,
-`clip-path` para los cortes y transformaciones CSS para el 3D.
+- `Pairs` (en `DemoScene.tsx`) es la rejilla de dos columnas con línea
+  divisoria; una sola columna por debajo de 1024 px.
+- `DemoScene` es la columna de un sector: su nombre encendido como un rótulo
+  de neón en su color (utilidad `neon`, animación `neon-on`), título, texto,
+  ventana y controles. La demostración arranca cuando la columna está en
+  pantalla (`useInView`) y se detiene al terminar.
+- `Reveal` hace la entrada: el contenido llega desde un lado girando en 3D la
+  primera vez que entra en pantalla. La columna derecha espera 160 ms más que
+  la izquierda, y dentro de cada columna el texto y la ventana entran desde
+  lados opuestos.
 
-Tres reglas que no se deben romper:
+Reglas de `Reveal` que no se deben romper:
 
-1. **La fijación es CSS, no JavaScript.** Las clases usan `lg:motion-safe:`,
-   así que el diseño es correcto antes de hidratar. `usePinned()` solo activa
-   el comportamiento (qué pantalla está viva).
-2. **Todo el contenido está siempre en el HTML**, en orden de lectura. Las
-   pantallas no activas se ocultan con opacidad, no se desmontan. Si el foco
-   del teclado entra en una pantalla oculta, la escena se desplaza hasta ella.
-3. **Por debajo de 1024 px, y con "reducir movimiento", nada se fija**: las
-   pantallas quedan apiladas, las tarjetas de sectores se deslizan con el dedo
-   y cada demostración arranca cuando entra en pantalla.
+1. **Visible por defecto.** Solo se oculta, ya en el navegador, lo que está
+   por debajo de la pantalla al cargar. Sin JavaScript todo se ve.
+2. **Una sola vez.** Al mostrarse deja de observar; no se repite al subir.
+3. **Con "reducir movimiento" no hay entrada**: las clases son `motion-safe:`.
+4. Las secciones que lo usan llevan `overflow-x-clip`, porque el estado
+   oculto desplaza el contenido hacia un lado.
 
 ### Ventanas de software (`windows/`)
 
@@ -120,6 +124,8 @@ Diez productos distintos, cada uno con sus colores y opciones. Todas:
 - Son funciones puras de `step`: sin estado ni efectos. `useDemoTimeline`
   (en `DemoScene`) avanza los pasos una sola vez y se detiene; `DemoBar` da
   reproducir, pausar, repetir y saltar a un paso.
+- El texto secundario (`muted`) de cada ventana da al menos 4.5:1 sobre su
+  fondo y sobre su barra de título.
 - Usan `Step` (de `kit.tsx`) para lo que aparece: el elemento siempre ocupa
   su lugar, así que nada salta.
 - Llevan la etiqueta "Simulación ilustrativa" en su barra de título. Los datos
@@ -132,8 +138,7 @@ Diez productos distintos, cada uno con sus colores y opciones. Todas:
 2. Añade sus textos en `es.ts` y `en.ts`; `steps` debe tener tantas entradas
    como `stepDurations`.
 3. Crea su ventana en `windows/` y regístrala en `windows/index.ts`.
-4. Si es de Devices, añade su id a la lista de opciones del formulario (ya se
-   toma de `deviceSectorIds`) y su icono en `SectorsRail.tsx`.
+4. Los sectores van de dos en dos: conviene mantener un número par.
 
 ## Formulario
 

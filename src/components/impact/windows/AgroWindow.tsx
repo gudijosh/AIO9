@@ -62,7 +62,7 @@ const copy = {
   },
 } satisfies Record<Locale, typeof es>;
 
-const c: WindowTheme = { bg: "#F6FAF2", ink: "#152A17", muted: "#6C8468", line: "#DDE9D5", chrome: "#EEF5E8", side: "#17361C", sideText: "#B9D6B4", sideLine: "#2f5535", app: "#8BD450", on: "#122414", ok: "#B6F27C" };
+const c: WindowTheme = { bg: "#F6FAF2", ink: "#152A17", muted: "#526B4E", line: "#DDE9D5", chrome: "#EEF5E8", side: "#17361C", sideText: "#B9D6B4", sideLine: "#2f5535", app: "#8BD450", on: "#122414", ok: "#B6F27C" };
 
 /** Moisture %, outline on the map, colour, label position. Zone 3 (index 2) is the dry one. */
 const zones = [

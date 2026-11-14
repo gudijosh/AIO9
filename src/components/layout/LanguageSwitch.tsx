@@ -27,7 +27,7 @@ export function LanguageSwitch({ current, label }: { current: Locale; label: str
             }}
             className={cn(
               "rounded px-1.5 py-2 uppercase transition-opacity duration-200",
-              locale === current ? "opacity-100" : "opacity-55 hover:opacity-100",
+              locale === current ? "opacity-100" : "opacity-70 hover:opacity-100",
             )}
           >
             {locale}

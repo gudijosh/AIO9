@@ -6,7 +6,6 @@ import { Footer } from "@/components/layout/Footer";
 import { Contact } from "@/components/sections/Contact";
 import { Preloader } from "@/components/impact/Preloader";
 import { Hero } from "@/components/impact/Hero";
-import { SectorsRail } from "@/components/impact/SectorsRail";
 import { IndustryScenes } from "@/components/impact/IndustryScenes";
 import { Statement } from "@/components/impact/Statement";
 import { ServiceScenes } from "@/components/impact/ServiceScenes";
@@ -31,7 +30,6 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
       <Header locale={lang} t={dict.nav} />
       <main id="main">
         <Hero dict={dict} locale={lang} />
-        <SectorsRail dict={dict} />
         <IndustryScenes dict={dict} locale={lang} />
         <Statement dict={dict} />
         <ServiceScenes dict={dict} locale={lang} />

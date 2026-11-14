@@ -69,6 +69,46 @@
       transform: scaleX(1);
     }
   }
+  /* A neon sign catching: two short flickers, then steady. */
+  @keyframes neon-on {
+    0%,
+    18%,
+    26%,
+    38% {
+      opacity: 0.15;
+      text-shadow: none;
+    }
+    10%,
+    22%,
+    32%,
+    46%,
+    100% {
+      opacity: 1;
+    }
+  }
+  /* Hero pieces fly in from (--fx, --fy), turning in 3D, then settle. */
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      translate: var(--fx, 0) var(--fy, 12vh);
+      rotate: var(--fr, 0deg);
+      scale: 0.7;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      rotate: 0deg;
+      scale: 1;
+    }
+  }
+  @keyframes hero-float {
+    from {
+      transform: translateY(-1.1%);
+    }
+    to {
+      transform: translateY(1.1%);
+    }
+  }
   @keyframes blink {
     0%,
     100% {
@@ -118,6 +158,15 @@ body {
 @utility dots {
   mask-image: radial-gradient(circle, #000 46%, transparent 52%);
   mask-size: 0.02em 0.02em;
+}
+
+/* A sector name lit like a neon sign, in its own colour (--neon). */
+@utility neon {
+  color: var(--neon);
+  text-shadow:
+    0 0 0.03em rgb(255 255 255 / 0.55),
+    0 0 0.16em var(--neon),
+    0 0 0.55em color-mix(in srgb, var(--neon) 55%, transparent);
 }
 
 /* Fine dot grain over the dark scenes. */
