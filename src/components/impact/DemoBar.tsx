@@ -41,11 +41,17 @@ export function DemoBar({
       </button>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[13px] leading-5 text-bone" aria-live="off">
-          <span className="font-mono text-[11px] text-fog tabular-nums">{fill(t.stepOf, { n: step + 1, total })}</span>
+          <span className="font-mono text-[11px] text-fog tabular-nums">
+            {fill(t.stepOf, { n: step + 1, total })}
+          </span>
           <span className="mx-2 text-fog">·</span>
           {steps[step]}
         </p>
-        <div role="group" aria-label={`${t.stepsLabel}: ${name}`} className="mt-1 flex gap-1">
+        <div
+          role="group"
+          aria-label={`${t.stepsLabel}: ${name}`}
+          className="mt-1 flex gap-1"
+        >
           {steps.map((text, i) => (
             <button
               key={text}
@@ -57,7 +63,10 @@ export function DemoBar({
             >
               <span
                 style={i <= step ? { background: color } : undefined}
-                className={cn("h-[3px] w-full rounded-full transition-colors duration-300", i <= step ? "" : "bg-bone/20 group-hover:bg-bone/45")}
+                className={cn(
+                  "h-[3px] w-full rounded-full transition-colors duration-300",
+                  i <= step ? "" : "bg-bone/20 group-hover:bg-bone/45",
+                )}
               />
             </button>
           ))}

@@ -365,6 +365,7 @@ export const es = {
     description:
       "Sensores y controladores que miden, avisan y actúan, conectados a un software hecho para tu operación.",
     tags: ["Sensores", "Válvulas y relés", "Lectores RFID", "GPS"],
+    photoAlt: "Una placa ESP32 y una Raspberry Pi conectadas a sensores sobre una mesa de trabajo",
     sectors: {
       farms: {
         name: "Granjas",

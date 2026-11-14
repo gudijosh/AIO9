@@ -1,44 +1,77 @@
+"use client";
+
+import { useRef } from "react";
+import { useScroll, useTransform } from "motion/react";
+import * as m from "motion/react-m";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { HeroCollage } from "./HeroCollage";
+import { useMotionReady } from "./Parallax";
 
 /* Fourteen 1.5px steps, down and to the right, in a darker bone. */
 const EXTRUDE = Array.from({ length: 14 }, (_, i) => `${(i + 1) * 1.5}px ${(i + 1) * 1.5}px 0 #cfc6b3`).join(", ");
 
+/** One headline line: rises from behind its baseline, then slides sideways on scroll. */
+function Line({ text, index, last, progress }: { text: string; index: number; last: boolean; progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
+  const ready = useMotionReady();
+  const x = useTransform(progress, [0, 1], ["0vw", `${(index % 2 ? 1 : -1) * 16}vw`]);
+  return (
+    <m.span aria-hidden style={ready ? { x } : undefined} className="block overflow-hidden pt-[0.06em] -mt-[0.06em]">
+      <span
+        style={{ animationDelay: `${0.95 + index * 0.14}s` }}
+        className={last ? "block text-azure motion-safe:animate-[line-up_0.95s_var(--ease-signal)_both]" : "block motion-safe:animate-[line-up_0.95s_var(--ease-signal)_both]"}
+      >
+        {text}
+      </span>
+    </m.span>
+  );
+}
+
 /**
- * Opening screen: the promise in oversized condensed type on a light ground,
- * the wordmark behind it as dotted letters with real depth, and a collage of
- * our software and a few rendered objects flying in. The first dark section
- * cuts across its bottom edge on a diagonal.
+ * Opening screen. When the curtain lifts, the headline rises line by line
+ * and the collage flies in piece by piece. On scroll everything separates
+ * into layers: the lines slide apart, the wordmark behind them turns and
+ * sinks, and each piece of the collage climbs at its own speed. The first
+ * dark section cuts across the bottom edge on a diagonal.
  */
 export function Hero({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const t = dict.hero;
+  const ref = useRef<HTMLElement>(null);
+  const ready = useMotionReady();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const lettersY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+  const lettersTurn = useTransform(scrollYProgress, [0, 1], [-16, 14]);
+  const lettersTilt = useTransform(scrollYProgress, [0, 1], [20, 34]);
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const copyFade = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   return (
-    <section id="top" className="relative isolate overflow-hidden bg-bone pb-[18vw] text-ink">
+    <section ref={ref} id="top" className="relative isolate overflow-hidden bg-bone pb-[18vw] text-ink">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 [perspective:1200px]">
-        <div className="display absolute -top-[3vw] left-[1vw] origin-[35%_45%] text-[60vw] leading-[0.8] whitespace-nowrap select-none [transform:rotateX(20deg)_rotateY(-16deg)_rotateZ(2deg)]">
+        <m.div
+          style={ready ? { y: lettersY, rotateY: lettersTurn, rotateX: lettersTilt, rotateZ: 2 } : { transform: "rotateX(20deg) rotateY(-16deg) rotateZ(2deg)" }}
+          className="display absolute -top-[3vw] left-[1vw] origin-[35%_45%] text-[60vw] leading-[0.8] whitespace-nowrap select-none motion-safe:animate-[rise_1.4s_var(--ease-signal)_0.8s_both]"
+        >
           {/* Solid letters with a stepped shadow give the volume… */}
           <span style={{ textShadow: EXTRUDE }} className="block text-bone-300">
             AIO9
           </span>
           {/* …and a dotted face on top ties them to the dotted words further down. */}
           <span className="dots absolute inset-0 block text-[#c3b9a4] [mask-size:10px_10px]">AIO9</span>
-        </div>
+        </m.div>
       </div>
 
       <div className="mx-auto max-w-[1700px] px-5 pt-24 lg:px-10 lg:pt-[7.5rem] xl:px-14">
         <h1 aria-label={t.title} className="display relative z-10 text-[clamp(2.75rem,12.6vw,13rem)]">
           {t.lines.map((line, i) => (
-            <span key={line} aria-hidden className={i === t.lines.length - 1 ? "block text-azure" : "block"}>
-              {line}
-            </span>
+            <Line key={line} text={line} index={i} last={i === t.lines.length - 1} progress={scrollYProgress} />
           ))}
         </h1>
 
         <div className="mt-8 grid gap-10 lg:mt-6 lg:grid-cols-[minmax(0,24rem)_1fr] lg:items-end">
-          <div className="relative z-10 lg:pb-[6vw]">
-            <p className="max-w-[36ch] text-[1.0625rem] leading-relaxed">{t.subtitle}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
+          <m.div style={ready ? { y: copyY, opacity: copyFade } : undefined} className="relative z-10 lg:pb-[6vw]">
+            <p className="max-w-[36ch] text-[1.0625rem] leading-relaxed motion-safe:animate-[rise_0.9s_var(--ease-signal)_1.45s_both]">{t.subtitle}</p>
+            <div className="mt-6 flex flex-wrap gap-3 motion-safe:animate-[rise_0.9s_var(--ease-signal)_1.6s_both]">
               <a href="#contact" className="pill bg-ink text-bone">
                 {t.primary} <span aria-hidden>→</span>
               </a>
@@ -46,7 +79,7 @@ export function Hero({ dict, locale }: { dict: Dictionary; locale: Locale }) {
                 {t.secondary}
               </a>
             </div>
-          </div>
+          </m.div>
           <div className="lg:-mt-[3vw] lg:ml-auto lg:w-[min(54vw,860px)]">
             <HeroCollage locale={locale} simulation={dict.experience.simulation} />
           </div>

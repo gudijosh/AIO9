@@ -84,6 +84,15 @@
       scale: 1;
     }
   }
+  /* A headline line rising from behind its own baseline. */
+  @keyframes line-up {
+    from {
+      transform: translateY(112%) rotate(4deg);
+    }
+    to {
+      transform: none;
+    }
+  }
   @keyframes hero-float {
     from {
       transform: translateY(-1.1%);

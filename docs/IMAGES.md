@@ -11,8 +11,8 @@ plan de ElevenLabs para confirmar el uso comercial.
   ElevenLabs) para que se vean nítidas en pantallas de alta densidad. En el
   repo: WebP calidad 82.
 - `next/image` sirve AVIF/WebP redimensionado y un placeholder borroso.
-- Dónde aparecen ahora: dos en AIO9 Web y dentro de las ventanas de Bienes
-  raíces y Comercio. Las demás siguen en el repositorio sin uso.
+- Dónde aparecen ahora: la de salud en AIO9 Automate y dentro de las ventanas
+  de Bienes raíces y Comercio. Las demás siguen en el repositorio sin uso.
 
 ## Dirección
 
@@ -58,3 +58,8 @@ créditos cada uno), sin texto ni interfaces. Tres llegaron con fondo blanco y
 se recortaron con un script (relleno desde los bordes más los huecos blancos
 grandes), después se ajustaron a 1100 px de ancho en WebP con transparencia.
 Son decorativos: van con `alt=""` dentro de un bloque `aria-hidden`.
+
+`devices.webp` es una fotografía generada (Seedream 5 Pro, 818 créditos) de una
+placa ESP32 y una Raspberry Pi con sensores. Se usa en AIO9 Devices y en su
+tarjeta de servicio. La tarjeta de AIO9 Web no usa fotos: muestra `SiteWindow`,
+una miniatura de este mismo sitio dentro de una ventana de navegador.

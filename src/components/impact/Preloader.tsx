@@ -16,7 +16,9 @@ export function Preloader({ label }: { label: string }) {
         <div className="mx-auto mt-5 h-[3px] w-52 bg-dim">
           <div className="h-full origin-left animate-[preload-bar_0.9s_var(--ease-signal)_forwards] bg-volt" />
         </div>
-        <div className="mt-3 font-mono text-[11px] tracking-[0.14em] text-fog uppercase">{label}</div>
+        <div className="mt-3 font-mono text-[11px] tracking-[0.14em] text-fog uppercase">
+          {label}
+        </div>
       </div>
     </div>
   );

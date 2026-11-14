@@ -362,6 +362,7 @@ export const en: Dictionary = {
     description:
       "Sensors and controllers that measure, alert and act, connected to software built for your operation.",
     tags: ["Sensors", "Valves and relays", "RFID readers", "GPS"],
+    photoAlt: "An ESP32 board and a Raspberry Pi wired to sensors on a workbench",
     sectors: {
       farms: {
         name: "Farms",

@@ -43,17 +43,17 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
 
 Sin prueba automática (revisado en capturas): el aspecto de cada sección, el
-corte diagonal, el vuelo de las piezas del hero, el brillo de los nombres LED y la suavidad
-de las entradas.
+corte diagonal, el vuelo de las piezas del hero, el brillo de los nombres LED, las cortinas
+entre secciones, el giro 3D de las ventanas y la suavidad del parallax.
 
 ## Lighthouse (local, última ejecución)
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 92 | 97 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 87 | 97 | 100 | 100 |
 | Escritorio | 99 | 97 | 100 | 100 |
 
-LCP 1.1 s en móvil emulado y 0.3 s en escritorio; bloqueo total 310 ms y 0 ms;
+LCP 1.1 s en móvil emulado y 0.3 s en escritorio; bloqueo total 450 ms y 0 ms;
 CLS 0 en ambos. Las cifras varían entre ejecuciones: en móvil se midieron 86 y
 92 con el mismo código.
 

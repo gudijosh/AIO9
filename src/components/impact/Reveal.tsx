@@ -5,7 +5,8 @@ import { cn } from "@/lib/cn";
 
 const FROM = {
   left: "motion-safe:[transform:perspective(1400px)_translate3d(-9%,0,0)_rotateY(22deg)]",
-  right: "motion-safe:[transform:perspective(1400px)_translate3d(9%,0,0)_rotateY(-22deg)]",
+  right:
+    "motion-safe:[transform:perspective(1400px)_translate3d(9%,0,0)_rotateY(-22deg)]",
   up: "motion-safe:[transform:perspective(1400px)_translate3d(0,48px,0)_rotateX(-18deg)]",
 } as const;
 

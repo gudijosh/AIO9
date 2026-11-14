@@ -92,29 +92,34 @@ escritorio. El movimiento son entradas que ocurren una sola vez.
 | Proceso | `Process` | La línea lima se llena al bajar. |
 | Contacto y pie | `Contact`, `Footer` | Corte diagonal de vuelta al fondo claro. |
 
-### Parejas y entradas
+### Parejas, entradas y parallax
 
 - `Pairs` (en `DemoScene.tsx`) es la rejilla de dos columnas con línea
   divisoria; una sola columna por debajo de 1024 px.
-- `DemoScene` es la columna de un sector: su nombre en puntos LED en su color
-  (`LedWord`: al subir por la pantalla un brillo blanco recorre los puntos, el
-  resplandor crece hacia el centro y la palabra se desplaza apenas de lado;
-  todo ligado al scroll con `useScroll`, quieto con "reducir movimiento"), título, texto,
-  ventana y controles. La demostración arranca cuando la columna está en
-  pantalla (`useInView`) y se detiene al terminar.
-- `Reveal` hace la entrada: el contenido llega desde un lado girando en 3D la
-  primera vez que entra en pantalla. La columna derecha espera 160 ms más que
-  la izquierda, y dentro de cada columna el texto y la ventana entran desde
-  lados opuestos.
+- `DemoScene` es la columna de un sector: su nombre en puntos LED
+  (`LedWord`: un brillo blanco recorre los puntos y el resplandor crece al
+  cruzar la pantalla), título, texto, ventana y controles. La demostración
+  arranca cuando la columna está en pantalla y se detiene al terminar.
 
-Reglas de `Reveal` que no se deben romper:
+Efectos, todos en `Parallax.tsx` y `Reveal.tsx`:
 
-1. **Visible por defecto.** Solo se oculta, ya en el navegador, lo que está
-   por debajo de la pantalla al cargar. Sin JavaScript todo se ve.
-2. **Una sola vez.** Al mostrarse deja de observar; no se repite al subir.
-3. **Con "reducir movimiento" no hay entrada**: las clases son `motion-safe:`.
-4. Las secciones que lo usan llevan `overflow-x-clip`, porque el estado
-   oculto desplaza el contenido hacia un lado.
+| Pieza | Qué hace | Ligado a |
+|---|---|---|
+| `Reveal` | Entrada única: el texto llega desde un lado girando en 3D. Etiqueta, título y descripción entran escalonados. | Entrar en pantalla |
+| `Fly` | La ventana o imagen gira en 3D desde su lado hacia el centro; si subes, vuelve. | Scroll |
+| `Drift` | El bloque se mueve algo más lento o más rápido que la página. | Scroll |
+| `Curtain` | Transición entre secciones: dos paneles de color que cubren la sección se deslizan de lado, uno tras otro. Alterna izquierda y derecha. | Scroll |
+| Hero | El titular sube línea por línea al levantarse la cortina; al bajar, las líneas se separan en sentidos opuestos, "AIO9" gira y se hunde, y cada pieza del collage sube a su propia velocidad. El collage se inclina hacia el cursor. | Carga, scroll y cursor |
+
+Reglas que no se deben romper:
+
+1. **Visible por defecto.** `useMotionReady()` es falso en el servidor y con
+   "reducir movimiento": hasta entonces ningún efecto aplica estilos y
+   `Curtain` no se dibuja. Sin JavaScript todo se ve.
+2. `Reveal` ocurre una sola vez; `Fly`, `Drift` y `Curtain` siguen al scroll
+   en ambos sentidos, suavizados con un resorte.
+3. Las secciones que los usan llevan `overflow-x-clip`, porque el contenido
+   entra desde fuera de la pantalla.
 
 ### Ventanas de software (`windows/`)
 
