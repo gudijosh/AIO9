@@ -27,15 +27,25 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = "hidden";
-    // The panel becomes focusable one frame after it is un-hidden.
-    const focusTimer = window.setTimeout(() => closeRef.current?.focus(), 60);
+    // The panel only becomes focusable once it is un-hidden and no longer
+    // inert, which can take a few frames: keep trying for up to a second.
+    let frame = 0;
+    const started = performance.now();
+    const moveFocus = () => {
+      const target = closeRef.current;
+      target?.focus();
+      if (document.activeElement !== target && performance.now() - started < 1000) {
+        frame = window.requestAnimationFrame(moveFocus);
+      }
+    };
+    frame = window.requestAnimationFrame(moveFocus);
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     const toggle = toggleRef.current;
     return () => {
-      window.clearTimeout(focusTimer);
+      window.cancelAnimationFrame(frame);
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
       toggle?.focus();
