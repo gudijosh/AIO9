@@ -43,7 +43,7 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
 
 Sin prueba automática (revisado en capturas): el aspecto de cada sección, el
-corte diagonal, el vuelo de las piezas del hero, el efecto neón y la suavidad
+corte diagonal, el vuelo de las piezas del hero, el brillo de los nombres LED y la suavidad
 de las entradas.
 
 ## Lighthouse (local, última ejecución)

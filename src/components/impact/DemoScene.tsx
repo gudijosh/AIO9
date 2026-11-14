@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, type CSSProperties, type ComponentType } from "react";
+import { useRef, type ComponentType } from "react";
 import { useInView } from "motion/react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { useDemoTimeline } from "@/lib/useDemoTimeline";
 import { DemoBar } from "./DemoBar";
+import { LedWord } from "./LedWord";
 import { Reveal } from "./Reveal";
 import { Fit } from "./scroll/Fit";
 import type { WindowProps } from "./windows/kit";
@@ -14,7 +15,7 @@ export interface DemoSceneData {
   /** Value sent to the contact form when the visitor asks for this. */
   id: string;
   color: string;
-  /** Short name, set as a neon sign above the card. */
+  /** Short name, drawn in LED dots above the card. */
   word: string;
   name: string;
   /** Small line above the title: which product or hardware this shows. */
@@ -29,7 +30,7 @@ export interface DemoSceneData {
 }
 
 /**
- * One sector as a column: its name lit in its own colour, what the solution
+ * One sector as a column: its name in LED dots in its own colour, what the solution
  * does, and its software window playing the demonstration step by step.
  * Sectors sit two to a row; each column makes its own entrance.
  */
@@ -60,16 +61,10 @@ export function DemoScene({
     <article
       ref={ref}
       aria-labelledby={`scene-${data.id}`}
-      style={{ "--neon": data.color } as CSSProperties}
       className="relative flex min-w-0 flex-col px-5 py-16 lg:px-10 lg:py-20 xl:px-14"
     >
       <Reveal from={side} delay={wait}>
-        <p
-          aria-hidden
-          className="display neon text-[clamp(3rem,8.6vw,8.5rem)] whitespace-nowrap motion-safe:[[data-reveal=shown]_&]:animate-[neon-on_1.1s_linear_both]"
-        >
-          {data.word}
-        </p>
+        <LedWord word={data.word} color={data.color} />
         <p className="mt-5 font-mono text-[11px] tracking-[0.14em] text-volt uppercase">
           {count} · {data.label}
         </p>

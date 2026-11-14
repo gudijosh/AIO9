@@ -54,7 +54,7 @@ Tipografía: **League Gothic** (titulares, utilidad `display`: mayúsculas,
 interlineado 0.88), Geist (texto) y Geist Mono (etiquetas, contadores).
 
 Utilidades propias: `display`, `dots` (texto dibujado con puntos, mediante una
-máscara CSS), `neon` (rótulo encendido en el color de `--neon`), `grain` (grano
+máscara CSS), `grain` (grano
 fino sobre las secciones oscuras), `pill` (botón con barrido lima al pasar el cursor).
 
 El azul sobre `bone` o `ink` da 4.0:1, así que solo se usa en titulares
@@ -96,8 +96,10 @@ escritorio. El movimiento son entradas que ocurren una sola vez.
 
 - `Pairs` (en `DemoScene.tsx`) es la rejilla de dos columnas con línea
   divisoria; una sola columna por debajo de 1024 px.
-- `DemoScene` es la columna de un sector: su nombre encendido como un rótulo
-  de neón en su color (utilidad `neon`, animación `neon-on`), título, texto,
+- `DemoScene` es la columna de un sector: su nombre en puntos LED en su color
+  (`LedWord`: al subir por la pantalla un brillo blanco recorre los puntos, el
+  resplandor crece hacia el centro y la palabra se desplaza apenas de lado;
+  todo ligado al scroll con `useScroll`, quieto con "reducir movimiento"), título, texto,
   ventana y controles. La demostración arranca cuando la columna está en
   pantalla (`useInView`) y se detiene al terminar.
 - `Reveal` hace la entrada: el contenido llega desde un lado girando en 3D la

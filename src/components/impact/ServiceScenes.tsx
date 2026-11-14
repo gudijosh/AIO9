@@ -1,18 +1,19 @@
 import Image from "next/image";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { industryById } from "@/data/industries";
 import { cn } from "@/lib/cn";
 import { Boards } from "./Boards";
 import { Pairs } from "./DemoScene";
+import { LedWord } from "./LedWord";
 import { Reveal } from "./Reveal";
 import { Fit } from "./scroll/Fit";
 import { HealthcareWindow } from "./windows/HealthcareWindow";
 import { OperationsWindow } from "./windows/OperationsWindow";
 import { ServicesWindow } from "./windows/ServicesWindow";
 
-const COLORS = ["var(--color-azure)", "#FF7A52", "#B79CFF", "var(--color-volt)"];
+const COLORS = ["#2F63FF", "#FF7A52", "#B79CFF", "#D4FF3A"];
 
 function Polaroid({ id, className }: { id: "retail" | "realEstate"; className?: string }) {
   const industry = industryById[id];
@@ -30,7 +31,7 @@ function Polaroid({ id, className }: { id: "retail" | "realEstate"; className?: 
 }
 
 /**
- * The four products, two to a row: the name lit like a sign, one object that
+ * The four products, two to a row: the name in LED dots, one object that
  * stands for it, and what it does in plain words.
  */
 export function ServiceScenes({ dict, locale }: { dict: Dictionary; locale: Locale }) {
@@ -79,16 +80,10 @@ export function ServiceScenes({ dict, locale }: { dict: Dictionary; locale: Loca
             <article
               key={item.name}
               aria-labelledby={`service-${i}`}
-              style={{ "--neon": COLORS[i] } as CSSProperties}
               className="flex min-w-0 flex-col px-5 py-16 lg:px-10 lg:py-20 xl:px-14"
             >
               <Reveal from={side} delay={wait}>
-                <p
-                  aria-hidden
-                  className="display neon text-[clamp(3rem,8.6vw,8.5rem)] whitespace-nowrap motion-safe:[[data-reveal=shown]_&]:animate-[neon-on_1.1s_linear_both]"
-                >
-                  {dict.ui.serviceWords[i]}
-                </p>
+                <LedWord word={dict.ui.serviceWords[i]} color={COLORS[i]} />
               </Reveal>
               <Reveal from={side === "left" ? "right" : "left"} delay={wait + 140} className="mt-8">
                 <div aria-hidden>{objects[i]}</div>
