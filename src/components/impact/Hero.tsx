@@ -8,9 +8,6 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { HeroCollage } from "./HeroCollage";
 import { useMotionReady } from "./Parallax";
 
-/* Fourteen 1.5px steps, down and to the right, in a darker bone. */
-const EXTRUDE = Array.from({ length: 14 }, (_, i) => `${(i + 1) * 1.5}px ${(i + 1) * 1.5}px 0 #cfc6b3`).join(", ");
-
 /** One headline line: rises from behind its baseline, then slides sideways on scroll. */
 function Line({ text, index, last, progress }: { text: string; index: number; last: boolean; progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   const ready = useMotionReady();
@@ -30,7 +27,7 @@ function Line({ text, index, last, progress }: { text: string; index: number; la
 /**
  * Opening screen. When the curtain lifts, the headline rises line by line
  * and the collage flies in piece by piece. On scroll everything separates
- * into layers: the lines slide apart, the wordmark behind them turns and
+ * into layers: the lines slide apart, the LED wordmark behind them turns and
  * sinks, and each piece of the collage climbs at its own speed. The first
  * dark section cuts across the bottom edge on a diagonal.
  */
@@ -50,14 +47,25 @@ export function Hero({ dict, locale }: { dict: Dictionary; locale: Locale }) {
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 [perspective:1200px]">
         <m.div
           style={ready ? { y: lettersY, rotateY: lettersTurn, rotateX: lettersTilt, rotateZ: 2 } : { transform: "rotateX(20deg) rotateY(-16deg) rotateZ(2deg)" }}
-          className="display absolute -top-[3vw] left-[1vw] origin-[35%_45%] text-[60vw] leading-[0.8] whitespace-nowrap select-none motion-safe:animate-[rise_1.4s_var(--ease-signal)_0.8s_both]"
+          className="display absolute -top-[3vw] left-[1vw] origin-[35%_45%] text-[60vw] leading-[0.8] whitespace-nowrap select-none [transform-style:preserve-3d]"
         >
-          {/* Solid letters with a stepped shadow give the volume… */}
-          <span style={{ textShadow: EXTRUDE }} className="block text-bone-300">
+          {/* Two fainter copies set back and offset give the LED panel its depth… */}
+          {[2, 1].map((n) => (
+            <span
+              key={n}
+              style={{ transform: `translate3d(${n * 0.7}vw, ${n * 0.7}vw, ${-n * 60}px)`, opacity: 0.1 * (3 - n) }}
+              className="dots absolute inset-0 block text-azure [mask-size:10px_10px]"
+            >
+              AIO9
+            </span>
+          ))}
+          {/* …and the front face switches on with a flicker while a band of light sweeps across it. */}
+          <span
+            style={{ backgroundImage: "linear-gradient(105deg, #2f63ff 40%, #cfe0ff 50%, #2f63ff 60%)", backgroundSize: "300% 100%" }}
+            className="dots relative block bg-clip-text text-transparent opacity-35 drop-shadow-[0_0_0.012em_#2f63ff] [mask-size:10px_10px] [background-position:-40%_0] motion-safe:animate-[led-on_1.3s_linear_0.9s_both,led-sweep_2.2s_var(--ease-signal)_1.3s_both]"
+          >
             AIO9
           </span>
-          {/* …and a dotted face on top ties them to the dotted words further down. */}
-          <span className="dots absolute inset-0 block text-[#c3b9a4] [mask-size:10px_10px]">AIO9</span>
         </m.div>
       </div>
 
