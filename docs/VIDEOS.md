@@ -28,10 +28,35 @@ idioma no tiene videos, la sección no aparece en esa página.
    aparecer, y cambia cada `title` por un título real y corto: es el nombre
    del botón que lo reproduce y el texto bajo la tarjeta.
 
+Si la portada sale a mitad de una animación, saca otra en el segundo que
+prefieras (aquí, el 22):
+
+```bash
+ffmpeg -y -ss 22 -i original.mp4 -frames:v 1 -vf "scale=720:-2" -quality 82 public/videos/es/<id>.webp
+```
+
+## Videos actuales
+
+| Idioma | id | Título | Duración | Peso |
+|---|---|---|---|---|
+| es | `ya-respondio` | Ya respondió | 39 s | 1,9 MB |
+| es | `modulos` | ¿Qué es AIO9? | 39 s | 1,9 MB |
+| en | `ya-respondio` | Already answered | 39 s | 1,9 MB |
+| en | `modulos` | What is AIO9? | 38 s | 1,9 MB |
+
+Los originales (1080×1920, 10–14 MB) se comprimieron a 720×1280 sin pérdida
+visible. Las portadas de `ya-respondio` son el fotograma de los 22 s
+("Atienden. Agendan. Responden." / "Answer. Book. Reply."); las de `modulos`,
+el del primer segundo.
+
 ## Cómo se comportan
 
 - Fila de tarjetas verticales (9:16) que se desliza con el dedo, con la
-  rueda, arrastrando con el ratón o con las flechas (escritorio).
+  rueda o arrastrando con el ratón. En móvil se ve una tarjeta y el borde de
+  la siguiente.
+- Con hasta tres videos, en escritorio el título va a la izquierda y los
+  videos a su lado. Con más, la fila ocupa todo el ancho debajo del título.
+- Las flechas (escritorio) solo aparecen cuando la fila no cabe en pantalla.
 - Cada tarjeta muestra su portada. Al tocarla se reproduce con sonido y
   controles; si había otro sonando, se detiene. Los videos no se descargan
   hasta que se tocan.

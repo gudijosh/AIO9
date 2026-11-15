@@ -24,6 +24,22 @@ export interface Video {
 }
 
 export const videos: Record<Locale, readonly Video[]> = {
-  es: [],
-  en: [],
+  es: [
+    { id: "ya-respondio", src: "/videos/es/ya-respondio.mp4", poster: "/videos/es/ya-respondio.webp", title: "Ya respondió" },
+    { id: "modulos", src: "/videos/es/modulos.mp4", poster: "/videos/es/modulos.webp", title: "¿Qué es AIO9?" },
+  ],
+  en: [
+    {
+      id: "ya-respondio",
+      src: "/videos/en/ya-respondio.mp4",
+      poster: "/videos/en/ya-respondio.webp",
+      title: "Already answered",
+    },
+    {
+      id: "modulos",
+      src: "/videos/en/modulos.mp4",
+      poster: "/videos/en/modulos.webp",
+      title: "What is AIO9?",
+    },
+  ],
 };

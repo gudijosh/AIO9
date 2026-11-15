@@ -113,12 +113,19 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
     check('no video downloads before one is played', mediaRequests.length === 0, mediaRequests.join(' '));
     const srcs = await p.evaluate(() => [...document.querySelectorAll('#videos-row img')].map((i) => decodeURIComponent(i.currentSrc || i.src)));
     check('/es shows only Spanish videos', srcs.length > 0 && srcs.every((x) => x.includes('/videos/es/')), srcs.slice(0, 2).join(' '));
-    const left0 = await p.evaluate(() => document.getElementById('videos-row').scrollLeft);
-    await p.getByRole('button', { name: 'Video siguiente' }).click(); await p.waitForTimeout(900);
-    const left1 = await p.evaluate(() => document.getElementById('videos-row').scrollLeft);
-    check('next arrow slides the row', left1 > left0 + 100, `${left0} -> ${left1}`);
-    await p.getByRole('button', { name: 'Video anterior' }).click(); await p.waitForTimeout(900);
-    check('previous arrow slides it back', (await p.evaluate(() => document.getElementById('videos-row').scrollLeft)) < 5);
+    // Arrows only make sense when the row is wider than the screen.
+    const overflows = await p.evaluate(() => { const r = document.getElementById('videos-row'); return r.scrollWidth > r.clientWidth + 2; });
+    const nextArrow = p.getByRole('button', { name: 'Video siguiente' });
+    if (!overflows) {
+      check('arrows stay hidden while every video fits on screen', !(await nextArrow.isVisible()) && !(await p.getByRole('button', { name: 'Video anterior' }).isVisible()));
+    } else {
+      const left0 = await p.evaluate(() => document.getElementById('videos-row').scrollLeft);
+      await nextArrow.click(); await p.waitForTimeout(900);
+      const left1 = await p.evaluate(() => document.getElementById('videos-row').scrollLeft);
+      check('next arrow slides the row', left1 > left0 + 100, `${left0} -> ${left1}`);
+      await p.getByRole('button', { name: 'Video anterior' }).click(); await p.waitForTimeout(900);
+      check('previous arrow slides it back', (await p.evaluate(() => document.getElementById('videos-row').scrollLeft)) < 5);
+    }
     const cards = p.locator('#videos-row li button');
     await cards.nth(0).click(); await p.waitForTimeout(1500);
     const first = await p.evaluate(() => { const v = document.querySelector('#videos-row video'); return v && { src: v.currentSrc, paused: v.paused }; });
@@ -129,6 +136,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
     await p.goto(base + '/en', { waitUntil: 'networkidle' });
     const enSrcs = await p.evaluate(() => [...document.querySelectorAll('#videos-row img')].map((i) => decodeURIComponent(i.currentSrc || i.src)));
     check('/en shows only English videos', enSrcs.length > 0 && enSrcs.every((x) => x.includes('/videos/en/')), enSrcs.slice(0, 2).join(' '));
+    check('/en reel has English titles', (await p.locator('#videos-heading').textContent()).includes('on video') && (await p.locator('#videos-row li button').first().getAttribute('aria-label')).startsWith('Play: '));
     await p.goto(base + '/es', { waitUntil: 'networkidle' });
   }
 
@@ -202,6 +210,14 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   for (let i = 0; i < 12 && !moved; i++) { await p.waitForTimeout(500); moved = (await stepOf(p, 'hospitality')) !== first; }
   check('mobile: window animates when on screen', moved);
   check('mobile: still no horizontal overflow', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  if (await p.locator('#videos').count()) {
+    await p.evaluate(() => document.getElementById('videos').scrollIntoView({ behavior: 'instant' })); await p.waitForTimeout(1200);
+    const reelM = await p.evaluate(() => { const r = document.getElementById('videos-row'); const cards = [...r.children].map((li) => li.getBoundingClientRect()); return { overflows: r.scrollWidth > r.clientWidth + 2, cardW: Math.round(cards[0].width), peek: cards.length > 1 && cards[1].left < innerWidth }; });
+    check('mobile: reel shows one card and a peek of the next', reelM.overflows && reelM.peek && reelM.cardW > 200, JSON.stringify(reelM));
+    await p.evaluate(() => document.getElementById('videos-row').scrollBy({ left: 160 })); await p.waitForTimeout(1000);
+    const next = await p.evaluate(() => { const li = document.getElementById('videos-row').children[1].getBoundingClientRect(); return { left: Math.round(li.left), right: Math.round(li.right), screen: innerWidth }; });
+    check('mobile: swiping brings the next card fully into view', next.left >= 0 && next.right <= next.screen, JSON.stringify(next));
+  }
   const small = await p.evaluate(() => [...document.querySelectorAll('main button, main a, header button, header a, footer a')].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.height < 24 || r.width < 24); }).map(e => (e.getAttribute('aria-label') || e.textContent).trim().slice(0, 30)));
   check('mobile: touch targets ≥ 24px', small.length === 0, small.join(' | '));
   await ctx.close();

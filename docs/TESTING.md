@@ -30,10 +30,13 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 - La sección "Además" ya no existe; el proceso muestra tres pasos sin texto.
 - Videos: la frase central ya no existe. Si hay videos, la fila está justo
   antes del formulario, no descarga ningún video al cargar, `/es` muestra solo
-  los de español y `/en` solo los de inglés, las flechas la desplazan, tocar
-  una tarjeta reproduce su video y tocar otra detiene el anterior. Si no hay,
-  la sección no aparece. (Las pruebas con videos se corrieron con clips de
-  prueba generados localmente, que no se suben.)
+  los de español y `/en` solo los de inglés (con títulos en inglés), tocar
+  una tarjeta reproduce su video y tocar otra detiene el anterior. En
+  escritorio, con los dos videos actuales la fila cabe entera y se comprueba
+  que no haya flechas; si la fila desborda (más videos), se comprueba que las
+  flechas la desplacen. En móvil se ve una tarjeta y el borde de la siguiente,
+  y al deslizar la siguiente queda entera en pantalla. Si un idioma no tiene
+  videos, la sección no aparece.
 - "Quiero esto" preselecciona el sector en el formulario (industria y Devices).
 - Servicios en orden: Automate, Web, Systems, Devices.
 - Formulario: 5 errores con envío vacío, foco en el primer campo inválido,
