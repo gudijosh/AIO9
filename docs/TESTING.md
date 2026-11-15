@@ -9,7 +9,7 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es`, `/en` y `/faq` se generan por visita por la CSP con nonce) |
-| Pruebas funcionales (`tests/functional.js`) | 156 de 156 |
+| Pruebas funcionales (`tests/functional.js`) | 160 de 160 |
 | Bot (`node tests/bot.test.mjs`) | ES 91,7 % y EN 93,7 % de aciertos; 100 % de "no sé" fuera de tema |
 | Violaciones de CSP | Ninguna (todas las páginas, videos, formulario y bot) |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
@@ -71,8 +71,11 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
   HTML; canónica y versiones de idioma; abre y cierra con teclado; enlaces de
   vuelta a las secciones; el cambio de idioma conserva la página; sin textos
   del otro idioma; 404 para idiomas desconocidos.
-- Bot: el botón está en el inicio y en `/faq`; su código se descarga solo al
-  abrirlo; dice que da respuestas predefinidas; el foco va al campo; responde
+- Bot (Io): el botón está en el inicio y en `/faq` y muestra solo el robot,
+  sin texto; su código se descarga solo al abrirlo; la cabecera muestra solo
+  "Io" y el saludo es "Soy Io", sin "respuestas predefinidas" ni "no soy una
+  IA"; a "are you human?" responde que es el asistente virtual de AIO9; el
+  foco va al campo; responde
   precio y "no diagnostica"; ante lo desconocido y los intentos de
   manipulación responde "no tengo esa respuesta" con el botón al formulario;
   el HTML que escribe el visitante queda como texto; campo de 200 caracteres

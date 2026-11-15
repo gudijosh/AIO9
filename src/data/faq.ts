@@ -171,7 +171,7 @@ const es: readonly FaqGroup[] = [
       {
         id: "person",
         q: "¿Hablo con una persona o con un bot?",
-        a: "El formulario llega a nuestro equipo y te escribimos nosotros. El bot de esta página solo da respuestas predefinidas: no es una IA ni una persona.",
+        a: "En el chat te responde Io, el asistente virtual de AIO9, al instante. Si prefieres que te escriba alguien del equipo, usa el formulario: llega a nuestro equipo y te respondemos nosotros.",
       },
       {
         id: "languages",
@@ -335,7 +335,7 @@ const en: readonly FaqGroup[] = [
       {
         id: "person",
         q: "Am I talking to a person or a bot?",
-        a: "The form reaches our team and we write back ourselves. The bot on this site only gives preset answers: it is neither an AI nor a person.",
+        a: "In the chat, Io, AIO9's virtual assistant, answers right away. If you'd rather hear from someone on the team, use the form: it reaches our team and we write back ourselves.",
       },
       {
         id: "languages",

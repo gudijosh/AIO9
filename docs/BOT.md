@@ -1,15 +1,27 @@
-# Bot de preguntas
+# Io, el asistente del sitio
 
-Botón flotante, abajo a la derecha, en la página principal y en la de
-preguntas. Abre un panel que responde preguntas sobre AIO9 en el idioma de la
-página. Si no sabe algo, lo dice y manda al formulario de contacto.
+Botón flotante redondo con un robot propio (Io), abajo a la derecha, en la
+página principal y en la de preguntas. Al tocarlo se abre el chat, que
+responde preguntas sobre AIO9 en el idioma de la página. Si no sabe algo, lo
+dice y manda al formulario de contacto.
 
-## No es una IA
+- **Nombre:** Io, igual en los dos idiomas (sale de las letras de AIO9).
+- **Ícono:** `src/components/bot/IoMark.tsx`, un robot en SVG con los colores
+  del sitio. Parpadea de vez en cuando y la antena brilla; con "reducir
+  movimiento" queda quieto (`.io-eye` y `.io-antenna` en `globals.css`).
+- **Lo que ve el visitante:** solo el nombre en la cabecera, sin
+  explicaciones técnicas. Saluda con "¡Hola! Soy Io. ¿En qué te ayudo?". Si le
+  preguntan si es una persona, responde que es el asistente virtual de AIO9 y
+  ofrece el formulario para hablar con el equipo. Nunca dice ser una persona
+  ni una IA.
 
-El bot **no usa ningún modelo de lenguaje**:
+## Cómo funciona por dentro (no es una IA)
+
+Esto es para el equipo; el sitio no lo explica. Io **no usa ningún modelo de
+lenguaje**:
 
 1. Compara lo que escribe el visitante con un catálogo fijo de temas
-   (57 por idioma).
+   (58 por idioma).
 2. Responde con textos fijos escritos de antemano.
 
 Por eso:
@@ -27,15 +39,12 @@ Por eso:
 - **No pesa en la carga.** El código del panel, el motor y el catálogo se
   descargan solo al abrir el bot (o al pasar el cursor por el botón).
 
-La cabecera del panel dice "Respuestas predefinidas" / "Preset answers",
-para que nadie crea que habla con una IA o con una persona.
-
 ## Archivos
 
 | Archivo | Qué es |
 |---|---|
 | `src/lib/bot/types.ts` | Contrato: intención, catálogo, acciones, respuesta |
-| `src/lib/bot/intents.ts` | Los 57 temas y qué puede decir cada respuesta |
+| `src/lib/bot/intents.ts` | Los 58 temas y qué puede decir cada respuesta |
 | `src/lib/bot/engine.ts` | Motor: normaliza, compara y decide (`respond`, `replyFor`) |
 | `src/data/bot/es.ts`, `en.ts` | Catálogo por idioma: frases, palabras clave, respuestas y botones |
 | `src/data/faq.ts` | Preguntas de la página `/faq`; el bot reutiliza esas respuestas con `faqAnswer()` |

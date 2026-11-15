@@ -215,6 +215,36 @@ body {
   }
 }
 
+/* Io, the site's assistant (src/components/bot/IoMark.tsx): eyes blink now
+   and then, the antenna tip glows. Stopped under reduced motion below. */
+@keyframes io-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  94% {
+    transform: scaleY(0.12);
+  }
+}
+@keyframes io-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.io-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: io-blink 5s ease-in-out infinite;
+}
+.io-antenna {
+  animation: io-glow 2.6s ease-in-out infinite;
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }
@@ -225,6 +255,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .io-eye,
+  .io-antenna {
+    animation: none;
   }
   *,
   *::before,

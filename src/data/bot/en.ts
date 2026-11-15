@@ -27,7 +27,7 @@ const faq = (id: string) => faqAnswer("en", id);
 export const kb: BotKnowledge = {
   locale: "en",
   greeting: [
-    "Hi! I'm the AIO9 bot and I give preset answers; I'm not an AI. I can tell you what we do, which industries we work with and how to get started.",
+    "Hi! I'm Io. How can I help?",
   ],
   starters: ["about", "products", "sectors", "price", "start", "devices"],
   clarify: "Did you mean one of these?",
@@ -310,16 +310,17 @@ export const kb: BotKnowledge = {
     },
     {
       id: "bot_identity",
-      label: "Are you a bot?",
+      label: "Who is Io?",
       patterns: [
         "are you a bot", "is this a bot", "are you an ai", "am i talking to a robot", "are you real",
         "are you chatgpt", "r u a bot", "is this a real person or a bot", "are you a machine",
-        "is this ai", "bot or human?", "is someone typing or is it a bot",
+        "is this ai", "bot or human?", "is someone typing or is it a bot", "who is io", "who are you",
+        "what's your name", "what is io",
       ],
-      keywords: [["bot", 3], ["preset", 3], ["machine", 2], ["real", 2], ["ai", 2]],
+      keywords: [["bot", 3], ["io", 3], ["machine", 2], ["real", 2], ["ai", 2], ["name", 2]],
       answer: [
-        "I'm a bot with preset answers: not an AI and not a person. I look up your question in a fixed list of topics and I don't keep the conversation.",
-        "If you'd rather hear from the team, write to us through the form.",
+        "I'm Io, AIO9's virtual assistant. I answer questions about what we do.",
+        "If you'd rather talk to the team, write to us through the form.",
       ],
       actions: [toForm],
       related: ["human", "privacy", "faq"],
@@ -825,7 +826,7 @@ export const kb: BotKnowledge = {
       ],
       keywords: [["error", 4], ["send", 4], ["stuck", 3], ["form", 2], ["not working", 2], ["button", 2], ["nothing", 1]],
       answer: [
-        "If the form says your message wasn't sent, it wasn't: the page says so clearly so you're not left waiting. Please try again later. This bot can't send messages for you.",
+        "If the form says your message wasn't sent, it wasn't: the page says so clearly so you're not left waiting. Please try again later. Io can't send messages for you.",
       ],
       actions: [toForm],
       related: ["form", "contact_channels"],
@@ -916,7 +917,7 @@ export const kb: BotKnowledge = {
       ],
       keywords: [["support", 5], ["maintenance", 3], ["problem", 3], ["broken", 3], ["stopped", 4], ["customer", 3], ["down", 3], ["client", 2], ["report", 2], ["help", 1]],
       answer: [
-        "If you already work with us and need help, write to us through the form with your company name and what's happening. This bot has no access to your project.",
+        "If you already work with us and need help, write to us through the form with your company name and what's happening. Io has no access to your project.",
       ],
       actions: [toForm],
       related: ["form_failed", "human"],
@@ -931,7 +932,7 @@ export const kb: BotKnowledge = {
       ],
       keywords: [["privacy", 5], ["data", 3], ["save", 3], ["security", 3], ["confidential", 3], ["protection", 3], ["recorded", 3], ["share", 2], ["personal", 2], ["cookies", 2], ["store", 1]],
       answer: [
-        "This bot doesn't keep or send anything: it runs only in your browser. The form asks only for name, company, email, industry and message.",
+        "Io doesn't keep or send anything: it runs only in your browser. The form asks only for name, company, email, industry and message.",
         "If you have a more specific question about your data, ask it through the form.",
       ],
       actions: [toForm],

@@ -27,7 +27,7 @@ const faq = (id: string) => faqAnswer("es", id);
 export const kb: BotKnowledge = {
   locale: "es",
   greeting: [
-    "¡Hola! Soy el bot de AIO9 y doy respuestas predefinidas; no soy una IA. Te puedo contar qué hacemos, con qué sectores trabajamos y cómo empezar.",
+    "¡Hola! Soy Io. ¿En qué te ayudo?",
   ],
   starters: ["about", "products", "sectors", "price", "start", "devices"],
   clarify: "¿Te refieres a alguno de estos temas?",
@@ -341,16 +341,17 @@ export const kb: BotKnowledge = {
     },
     {
       id: "bot_identity",
-      label: "¿Eres un bot?",
+      label: "¿Quién es Io?",
       patterns: [
         "eres un bot", "eres una ia", "eres humano o maquina", "eres real", "con quien hablo",
         "estoy hablando con un robot", "eres chatgpt", "sos un bot vos", "eres inteligencia artificial",
-        "eres un robot?", "eres persona o bot", "eres persona de verdad",
+        "eres un robot?", "eres persona o bot", "eres persona de verdad", "quien es io", "quien eres",
+        "como te llamas", "que es io",
       ],
-      keywords: [["eres", 2], ["bot", 2], ["maquina", 2], ["predefinidas", 3], ["real", 2], ["ia", 1], ["quien", 1]],
+      keywords: [["eres", 2], ["bot", 2], ["io", 3], ["maquina", 2], ["real", 2], ["ia", 1], ["quien", 1], ["llamas", 2]],
       answer: [
-        "Soy un bot con respuestas predefinidas: no soy una IA ni una persona. Busco tu pregunta en una lista fija de temas y no guardo la conversación.",
-        "Si prefieres que te responda el equipo, escríbenos en el formulario.",
+        "Soy Io, el asistente virtual de AIO9. Respondo dudas sobre lo que hacemos.",
+        "Si prefieres hablar con el equipo, escríbenos en el formulario.",
       ],
       actions: [toForm],
       related: ["human", "privacy", "faq"],
@@ -862,7 +863,7 @@ export const kb: BotKnowledge = {
       ],
       keywords: [["error", 4], ["enviar", 4], ["trabo", 3], ["formulario", 2], ["no funciona", 2], ["boton", 2], ["deja", 1]],
       answer: [
-        "Si el formulario dice que tu mensaje no se envió, es que no se envió: la página lo indica con claridad para que no quedes esperando. Inténtalo de nuevo más tarde. Este bot no puede enviar mensajes por ti.",
+        "Si el formulario dice que tu mensaje no se envió, es que no se envió: la página lo indica con claridad para que no quedes esperando. Inténtalo de nuevo más tarde. Io no puede enviar mensajes por ti.",
       ],
       actions: [toForm],
       related: ["form", "contact_channels"],
@@ -952,7 +953,7 @@ export const kb: BotKnowledge = {
       ],
       keywords: [["soporte", 5], ["mantenimiento", 3], ["problema", 3], ["reportar", 3], ["cayo", 3], ["dejo", 3], ["hicieron", 3], ["cliente", 2], ["tecnico", 2], ["ayuda", 1]],
       answer: [
-        "Si ya trabajas con nosotros y necesitas ayuda, escríbenos en el formulario con el nombre de tu empresa y lo que está pasando. Este bot no tiene acceso a tu proyecto.",
+        "Si ya trabajas con nosotros y necesitas ayuda, escríbenos en el formulario con el nombre de tu empresa y lo que está pasando. Io no tiene acceso a tu proyecto.",
       ],
       actions: [toForm],
       related: ["form_failed", "human"],
@@ -968,7 +969,7 @@ export const kb: BotKnowledge = {
       ],
       keywords: [["privacidad", 5], ["guardan", 3], ["seguridad", 3], ["confidencial", 3], ["proteccion", 3], ["graba", 3], ["comparten", 3], ["datos", 2], ["personales", 2], ["conversacion", 1]],
       answer: [
-        "Este bot no guarda ni envía nada: funciona solo en tu navegador. El formulario pide solo nombre, empresa, correo, industria y mensaje.",
+        "Io no guarda ni envía nada: funciona solo en tu navegador. El formulario pide solo nombre, empresa, correo, industria y mensaje.",
         "Si tienes una pregunta más específica sobre tus datos, escríbela en el formulario.",
       ],
       actions: [toForm],

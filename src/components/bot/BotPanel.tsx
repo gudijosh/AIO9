@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEven
 import { useRouter } from "next/navigation";
 import * as m from "motion/react-m";
 import { ArrowRight, ArrowUpRight, RotateCcw, SendHorizontal, X } from "lucide-react";
+import { IoMark } from "./IoMark";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { IndustryOption } from "@/lib/contact-schema";
@@ -169,7 +170,6 @@ export function BotPanel({ id, locale, t, homeHref, faqHref, open, onClose }: Bo
   const smooth = useRef(false);
 
   const titleId = `${id}-title`;
-  const subtitleId = `${id}-subtitle`;
 
   const labels = useMemo(
     () => new Map<IntentId, string>(kb ? kb.intents.map((intent) => [intent.id, intent.label] as const) : []),
@@ -336,7 +336,6 @@ export function BotPanel({ id, locale, t, homeHref, faqHref, open, onClose }: Bo
       id={id}
       role="dialog"
       aria-labelledby={titleId}
-      aria-describedby={subtitleId}
       tabIndex={-1}
       onKeyDown={onKeyDown}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 24 }}
@@ -353,15 +352,14 @@ export function BotPanel({ id, locale, t, homeHref, faqHref, open, onClose }: Bo
     >
       <div aria-hidden className="grain pointer-events-none absolute inset-0" />
 
-      <div className="relative flex items-start gap-1 border-b border-bone/10 py-3 pr-2 pl-5">
-        <div className="min-w-0 flex-1 pt-2.5">
-          <h2 id={titleId} className="display text-[1.875rem] text-bone">
+      <div className="relative flex items-center gap-1 border-b border-bone/10 py-3 pr-2 pl-4">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <IoMark className="size-10" />
+          {/* Mono, not the display face: in League Gothic capitals "IO" reads as
+              "10", and in the sans the capital I looks like an l. */}
+          <h2 id={titleId} className="font-mono text-[1.5rem] leading-none font-semibold text-bone">
             {t.title}
           </h2>
-          <p id={subtitleId} className="mt-2 flex items-center gap-2 font-mono text-[10.5px] tracking-[0.14em] text-fog uppercase">
-            <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-volt" />
-            {t.subtitle}
-          </p>
         </div>
         <button type="button" onClick={restart} aria-label={t.restart} title={t.restart} className={iconButton}>
           <RotateCcw aria-hidden className="size-[18px]" />

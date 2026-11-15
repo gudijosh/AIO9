@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
-import { LoaderCircle, MessageCircleQuestionMark, X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
+import { IoMark } from "./IoMark";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { cn } from "@/lib/cn";
@@ -13,7 +14,8 @@ const PANEL_ID = "aio9-bot";
 type PanelComponent = ComponentType<BotPanelProps>;
 
 /**
- * Floating button that opens the AIO9 bot (preset answers, not an AI). The
+ * Floating button with Io, the site's assistant: a rule-based bot that
+ * answers from a fixed catalogue (no AI model, see docs/BOT.md). The
  * panel's code, the engine and this language's knowledge are separate chunks
  * fetched on the first open, or a moment earlier when the visitor points at
  * or focuses the button. Nothing is stored and nothing is sent anywhere.
@@ -95,7 +97,7 @@ export function BotLauncher({
           if (event.key === "Escape" && open) close(true);
         }}
         className={cn(
-          "group fixed z-[60] inline-flex h-14 min-w-14 items-center justify-center gap-2.5 rounded-full! bg-azure px-4 text-bone sm:pr-6 sm:pl-5",
+          "group fixed z-[60] grid size-[60px] place-items-center rounded-full! bg-azure text-bone",
           "right-[calc(1rem_+_env(safe-area-inset-right))] bottom-[calc(1rem_+_env(safe-area-inset-bottom))]",
           "lg:right-[calc(2rem_+_env(safe-area-inset-right))] lg:bottom-[calc(2rem_+_env(safe-area-inset-bottom))]",
           "shadow-[0_18px_40px_-16px_rgb(47_99_255/0.75),inset_0_0_0_1px_rgb(239_234_224/0.14)] transition-[background-color,color,scale] duration-300 ease-(--ease-signal) hover:bg-volt hover:text-ink active:scale-95",
@@ -107,11 +109,8 @@ export function BotLauncher({
         ) : open ? (
           <X aria-hidden className="size-6 shrink-0" />
         ) : (
-          <MessageCircleQuestionMark aria-hidden className="size-6 shrink-0" />
+          <IoMark className="size-10 transition-transform duration-300 ease-(--ease-signal) group-hover:-rotate-[10deg] group-active:scale-90" />
         )}
-        <span className="hidden text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-colors duration-300 group-hover:text-ink sm:inline">
-          {t.launcher}
-        </span>
       </button>
       {Panel && (
         <Panel
