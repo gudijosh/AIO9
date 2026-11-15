@@ -60,10 +60,12 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
 2. **Datos de contacto reales**: correo y número de WhatsApp.
 3. **Dominio** y `NEXT_PUBLIC_SITE_URL`.
 4. **Analítica**: no hay ninguna instalada. El punto de conexión es
-   `src/lib/analytics.ts` (`track()` ya se llama en los eventos clave).
-5. **Protección anti-spam**: hay honeypot y validación en servidor, pero no
-   límite de peticiones. Añadirlo (p. ej. en el proveedor de hosting) antes de
-   recibir tráfico real.
+   `src/lib/analytics.ts` (`track()` ya se llama en los eventos clave). Si se
+   añade un script de terceros, la CSP lo bloqueará hasta cargarlo con el
+   nonce (ver `docs/SECURITY.md`).
+5. **Límite de envíos en Vercel**: el código ya limita por IP (honeypot,
+   validación, origen, tamaño y frecuencia), pero el límite definitivo es una
+   regla del Firewall de Vercel. Pasos en `docs/SECURITY.md`.
 6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
 ## Despliegue en Vercel
 
@@ -98,4 +100,7 @@ servidor; no es un export estático.
 - `docs/screenshots/`: capturas de escritorio y móvil.
 - `.claude/skills/`: guías de buenas prácticas usadas durante el desarrollo.
 - [`docs/VIDEOS.md`](docs/VIDEOS.md): cómo añadir y preparar los videos.
+- [`docs/SECURITY.md`](docs/SECURITY.md): CSP, cabeceras, protección de la API y lo que hay que configurar en Vercel.
+- [`docs/BOT.md`](docs/BOT.md): cómo funciona el bot de preguntas y cómo ampliar sus respuestas.
+- [`docs/SEO.md`](docs/SEO.md): página de preguntas, datos estructurados, `llms.txt` y rastreadores de IA.
 

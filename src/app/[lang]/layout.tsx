@@ -6,6 +6,7 @@ import { isLocale, locales, ogLocales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { siteConfig } from "@/lib/site-config";
 import { Providers } from "@/components/Providers";
+import { BotLauncher } from "@/components/bot/BotLauncher";
 import "../globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -56,11 +57,16 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
 export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
+  const dict = getDictionary(lang);
 
   return (
     <html lang={lang} className={`${geistSans.variable} ${geistMono.variable} ${league.variable} antialiased`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          {/* Rule-based bot (not an AI): loads its code and answers on first use. */}
+          <BotLauncher locale={lang} t={dict.bot} homeHref={`/${lang}`} faqHref={`/${lang}/faq`} />
+        </Providers>
       </body>
     </html>
   );

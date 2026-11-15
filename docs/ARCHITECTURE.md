@@ -10,19 +10,27 @@ src/
   app/
     [lang]/layout.tsx        Layout raíz por idioma, metadata bilingüe, fuentes
     [lang]/page.tsx          Composición de la página, en orden de lectura
+    [lang]/faq/page.tsx      Preguntas y respuestas (enlazada solo desde el pie)
     [lang]/opengraph-image   Imagen Open Graph generada por idioma
-    api/contact/route.ts     Recepción del formulario
+    api/contact/route.ts     Recepción del formulario (origen, tipo, tamaño, límite por IP)
+    llms.txt, llms-full.txt  Resumen del sitio para agentes de IA (src/lib/llms.ts)
+    robots.ts, sitemap.ts    Rastreadores (incluidos los de IA) y mapa del sitio
     globals.css              Tokens de diseño (@theme) y utilidades propias
   components/
     layout/       Header (menú a pantalla completa), LanguageSwitch, Footer
+    bot/          Botón flotante y panel del bot de preguntas (docs/BOT.md)
+    seo/          JsonLd (datos estructurados con el nonce de la CSP)
     sections/     Contact, ContactForm
     impact/       Las escenas de la página (ver abajo)
       scroll/     Fit (escala las ventanas)
       windows/    kit.tsx + diez ventanas de software + index.ts
   data/           industries.ts (seis rubros) · devices.ts (sectores de AIO9 Devices) · videos.ts
+                  faq.ts (preguntas ES/EN) · bot/es.ts, bot/en.ts (catálogo del bot)
   fonts/          League Gothic (SIL OFL), servida desde el propio sitio
   i18n/           config + diccionarios es.ts / en.ts
-  lib/            useDemoTimeline, usePrefersReducedMotion, contact-*, site-config, analytics
+  lib/            useDemoTimeline, usePrefersReducedMotion, contact-*, site-config, analytics,
+                  rate-limit, structured-data, llms, bot/ (tipos, intenciones y motor)
+  proxy.ts        CSP con nonce por visita (docs/SECURITY.md)
 ```
 
 ## Idiomas
