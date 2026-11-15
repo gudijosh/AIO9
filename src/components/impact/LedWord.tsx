@@ -9,7 +9,8 @@ import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
  * A sector name drawn as a panel of LED dots in its own colour. As it
  * travels up the screen a band of light sweeps across the dots, they glow
  * brighter around the middle, and the word drifts slightly sideways.
- * Decorative: the real name is always in the text next to it.
+ * Every name is set at the same size, chosen so the longest one fits its
+ * column. Decorative: the real name is always in the text next to it.
  */
 export function LedWord({ word, color }: { word: string; color: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -31,20 +32,17 @@ export function LedWord({ word, color }: { word: string; color: string }) {
       `drop-shadow(0 0 ${(v * 0.09).toFixed(3)}em ${color}) drop-shadow(0 0 ${(v * 0.3).toFixed(3)}em ${color})`,
   );
   const x = useTransform(scrollYProgress, [0, 1], ["3%", "-3%"]);
-  // As large as the design allows, but never wider than its column.
-  const fontSize = `min(clamp(1.75rem, 11vw, 8.5rem), ${(41 / (word.length * 0.4)).toFixed(2)}vw)`;
 
   return (
     <m.p
       ref={ref}
       aria-hidden
       style={{
-        fontSize,
         ...(reduced
           ? { filter: `drop-shadow(0 0 0.12em ${color})` }
           : { filter, x }),
       }}
-      className="display flex min-h-[10vw] items-end whitespace-nowrap select-none lg:min-h-0"
+      className="display text-[9.4vw] whitespace-nowrap select-none lg:text-[min(9.6vw,9.75rem)]"
     >
       <m.span
         style={{

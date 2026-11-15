@@ -131,13 +131,13 @@ export function DemoScene({
         <Reveal from={side} delay={wait + 160}>
           <h3
             id={`scene-${data.id}`}
-            className="display mt-3 pr-3 text-[clamp(1.5rem,3.9vw,4rem)] text-balance lg:mt-5"
+            className="display mt-3 min-h-[2lh] pr-3 text-[clamp(1.5rem,3.9vw,4rem)] text-balance lg:mt-5"
           >
             {data.title}
           </h3>
         </Reveal>
         <Reveal from="up" delay={wait + 280}>
-          <p className="mt-2 max-w-[46ch] pr-3 text-[13px] leading-snug text-fog lg:mt-4 lg:text-base lg:leading-relaxed">
+          <p className="mt-2 min-h-[2lh] max-w-[46ch] pr-3 text-[13px] leading-snug text-fog lg:mt-4 lg:min-h-[1lh] lg:text-base lg:leading-relaxed">
             {data.description}
           </p>
         </Reveal>
@@ -179,7 +179,7 @@ export function DemoScene({
 /** Rows of two columns with a hairline between them, on every screen size. */
 export function Pairs({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto grid max-w-[1700px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] [&>*]:border-t [&>*]:border-dim [&>*:nth-child(even)]:border-l">
+    <div className="mx-auto grid max-w-[1700px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] [&>*]:border-t [&>*]:border-dim [&>*:nth-child(even)]:shadow-[inset_1px_0_0_var(--color-dim)]">
       {children}
     </div>
   );

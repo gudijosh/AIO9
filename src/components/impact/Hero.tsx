@@ -90,20 +90,13 @@ export function Hero({ dict, locale }: { dict: Dictionary; locale: Locale }) {
           }
           className="display absolute -top-[3vw] left-[1vw] origin-[35%_45%] text-[60vw] leading-[0.8] whitespace-nowrap select-none [transform-style:preserve-3d]"
         >
-          {/* A soft blue halo that follows the outline of each letter… */}
-          <span
-            style={{ textShadow: "0 0 0.03em rgb(47 99 255 / 0.32), 0 0 0.08em rgb(47 99 255 / 0.16)" }}
-            className="absolute inset-0 block text-transparent motion-safe:animate-[rise_1.6s_ease-out_1.2s_both]"
-          >
-            AIO9
-          </span>
-          {/* …around one layer of blue LED dots, which switches on with a flicker while a band of light sweeps across. */}
+          {/* One faint layer of blue LED dots: it switches on with a flicker while a band of light sweeps across. */}
           <span
             style={{
               backgroundImage: "linear-gradient(105deg, #2f63ff 40%, #cfe0ff 50%, #2f63ff 60%)",
               backgroundSize: "300% 100%",
             }}
-            className="dots relative block bg-clip-text text-transparent opacity-35 [mask-size:10px_10px] [background-position:-40%_0] motion-safe:animate-[led-on_1.3s_linear_0.9s_both,led-sweep_2.2s_var(--ease-signal)_1.3s_both]"
+            className="dots relative block bg-clip-text text-transparent opacity-[0.18] [mask-size:10px_10px] [background-position:-40%_0] motion-safe:animate-[led-on_1.3s_linear_0.9s_both,led-sweep_2.2s_var(--ease-signal)_1.3s_both]"
           >
             AIO9
           </span>

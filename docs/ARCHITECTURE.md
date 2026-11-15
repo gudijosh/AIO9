@@ -95,8 +95,16 @@ escritorio y 11 en móvil.
 
 - `Pairs` (en `DemoScene.tsx`) es la rejilla de dos columnas con línea
   divisoria, **en todos los tamaños de pantalla**.
-- `DemoScene` es la columna de un sector: nombre en puntos LED (`LedWord`, que
-  se ajusta al ancho de su columna), título, una línea y su ventana.
+- `DemoScene` es la columna de un sector: nombre en puntos LED (`LedWord`),
+  título, una línea y su ventana.
+- **Un solo estándar de tamaños.** Todos los nombres LED usan el mismo tamaño
+  de letra (9.4vw en móvil, 9.6vw en escritorio con tope), elegido para que el
+  más largo quepa en su columna; no se ajusta por palabra. Título y línea
+  reservan dos renglones, así las ventanas de cada pareja arrancan a la misma
+  altura. Todas las ventanas miden lo mismo. La línea divisoria es una sombra
+  interior, no un borde, para no quitar 1 px a la columna derecha. Las pruebas
+  lo comprueban en cinco combinaciones de ancho e idioma: si se añade un
+  nombre más largo que "Bienes raíces", fallarán.
 - `LiveWindow` hace que la ventana funcione sola: reproduce sus pasos mientras
   está en pantalla, mantiene el resultado un momento y vuelve a empezar
   (`useDemoTimeline` con `loopAfter`). No hay texto de pasos ni controles. Con

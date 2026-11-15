@@ -52,6 +52,19 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   const sv = await p.evaluate(() => [...document.querySelectorAll('#services article')].map(n => { const r = n.getBoundingClientRect(); return [Math.round(r.top + scrollY), Math.round(r.left)]; }));
   check('services sit two to a row', sv.length === 4 && sv[0][0] === sv[1][0] && sv[2][0] === sv[3][0] && sv[0][0] < sv[2][0] && sv[0][1] < sv[1][1], JSON.stringify(sv));
 
+  // One standard of sizes for every sector and product
+  const sizes = (pg) => pg.evaluate(() => [...document.querySelectorAll('#industries article, #devices article, #services article')].map((a) => { const led = a.querySelector('p[aria-hidden] span'); const st = getComputedStyle(a); const ar = a.getBoundingClientRect(); const fr = a.querySelector('[style*="box-shadow"]').getBoundingClientRect(); return { name: parseFloat(getComputedStyle(led).fontSize), title: parseFloat(getComputedStyle(a.querySelector('h3')).fontSize), room: ar.right - parseFloat(st.paddingRight) - led.getBoundingClientRect().right, row: Math.round(ar.top + scrollY), win: [Math.round(fr.top + scrollY), Math.round(fr.width), Math.round(fr.height)].join('/') }; }));
+  const consistent = (list) => { const rows = {}; for (const x of list) (rows[x.row] = rows[x.row] || []).push(x.win); return { names: new Set(list.map((x) => x.name)).size, titles: new Set(list.map((x) => x.title)).size, room: Math.min(...list.map((x) => x.room)), wins: new Set(list.map((x) => x.win.split('/').slice(1).join('x'))).size, rows: Object.values(rows).every((v) => v.length === 2 && v[0] === v[1]) }; };
+  for (const [w, h, lang] of [[1440, 900, 'es'], [375, 667, 'es'], [820, 1180, 'es'], [1440, 900, 'en'], [375, 667, 'en']]) {
+    const c2 = await b.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' }); const q = await c2.newPage(); watch(q);
+    await q.goto(`${base}/${lang}`, { waitUntil: 'networkidle' }); await q.waitForTimeout(500);
+    const k = consistent(await sizes(q));
+    check(`${w}px ${lang}: every LED name is the same size and fits its column`, k.names === 1 && k.room >= 0, `sizes ${k.names}, tightest fit ${Math.round(k.room)}px`);
+    check(`${w}px ${lang}: every title is the same size`, k.titles === 1);
+    check(`${w}px ${lang}: every window is the same size and each pair lines up`, k.wins === 1 && k.rows, `window sizes ${k.wins}`);
+    await c2.close();
+  }
+
   // Entrances: a column below the fold is hidden until it scrolls in, then shown for good
   await p.goto('about:blank'); await p.goto(base + '/es', { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
   const revealState = () => p.evaluate(() => document.querySelector('article[aria-labelledby="scene-logistics"] [data-reveal]').dataset.reveal);

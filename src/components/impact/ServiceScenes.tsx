@@ -116,7 +116,7 @@ export function ServiceScenes({
                   >
                     {item.name}
                   </h3>
-                  <p className="mt-2 max-w-[48ch] text-[13px] leading-snug text-fog lg:mt-4 lg:text-base lg:leading-relaxed">
+                  <p className="mt-2 min-h-[3lh] max-w-[48ch] text-[13px] leading-snug text-fog lg:mt-4 lg:min-h-[1lh] lg:text-base lg:leading-relaxed">
                     {item.text}
                   </p>
                   <a

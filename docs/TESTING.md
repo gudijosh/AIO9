@@ -7,7 +7,7 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es` y `/en` prerenderizadas) |
-| Pruebas funcionales (`tests/functional.js`) | 75 de 75 |
+| Pruebas funcionales (`tests/functional.js`) | 90 de 90 |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
 | Scroll horizontal accidental | Ninguno (375, 820, 1280, 1440, 1920 px) |
 
@@ -19,6 +19,9 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   el foco; cada uno de sus cinco enlaces lleva a su sección.
 - Diseño: ninguna sección queda fija; la página mide menos de 16 pantallas;
   cada pareja aparece lado a lado, en escritorio y en móvil.
+- Tamaños: todos los nombres LED tienen el mismo tamaño y caben en su columna;
+  todos los títulos tienen el mismo tamaño; todas las ventanas miden lo mismo
+  y cada pareja queda alineada (1440, 820 y 375 px; español e inglés).
 - Entradas: una columna por debajo de la pantalla espera oculta y se muestra
   al llegar a ella.
 - Ventanas: recorren todos sus pasos solas y vuelven a empezar; no hay texto
