@@ -22,6 +22,9 @@ export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
+/** Only /es and /en exist; anything else is a 404 without rendering. */
+export const dynamicParams = false;
+
 export const viewport: Viewport = { themeColor: "#0a0a12", colorScheme: "dark light" };
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {

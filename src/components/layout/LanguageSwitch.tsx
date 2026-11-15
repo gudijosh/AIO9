@@ -1,20 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { cn } from "@/lib/cn";
 
-/** ES / EN switch. Keeps the scroll position and the current anchor. */
+/**
+ * ES / EN switch. Stays on the same page in the other language (/es/faq ↔
+ * /en/faq) and keeps the scroll position and the current anchor.
+ */
 export function LanguageSwitch({ current, label }: { current: Locale; label: string }) {
   const router = useRouter();
+  const pathname = usePathname() ?? `/${current}`;
+  const to = (locale: Locale) => pathname.replace(/^\/[a-z]{2}(?=\/|$)/, `/${locale}`);
   return (
     <div role="group" aria-label={label} className="flex items-center gap-1 text-[13px] font-medium">
       {locales.map((locale, i) => (
         <span key={locale} className="flex items-center gap-1">
           {i > 0 && <span aria-hidden className="opacity-30">/</span>}
           <Link
-            href={`/${locale}`}
+            href={to(locale)}
             hrefLang={locale}
             lang={locale}
             title={localeNames[locale]}
@@ -23,7 +28,7 @@ export function LanguageSwitch({ current, label }: { current: Locale; label: str
               if (event.metaKey || event.ctrlKey || event.shiftKey) return;
               event.preventDefault();
               if (locale === current) return;
-              router.push(`/${locale}${window.location.hash}`, { scroll: false });
+              router.push(`${to(locale)}${window.location.hash}`, { scroll: false });
             }}
             className={cn(
               "rounded px-1.5 py-2 uppercase transition-opacity duration-200",

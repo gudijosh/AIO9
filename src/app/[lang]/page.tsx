@@ -11,6 +11,8 @@ import { ServiceScenes } from "@/components/impact/ServiceScenes";
 import { DevicesScenes } from "@/components/impact/DevicesScenes";
 import { Process } from "@/components/impact/Process";
 import { VideoReel } from "@/components/impact/VideoReel";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { homeGraph } from "@/lib/structured-data";
 
 export default async function Page({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
@@ -37,6 +39,7 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
         <Contact dict={dict} locale={lang} />
       </main>
       <Footer dict={dict} locale={lang} />
+      <JsonLd data={homeGraph(lang, dict)} />
     </>
   );
 }

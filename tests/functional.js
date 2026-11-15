@@ -1,11 +1,23 @@
 // Functional checks against the production build: `npm run build && npx next start -p 3100`,
-// then `node tests/functional.js`.
+// then `node tests/functional.js`. Start a fresh server for every run: the contact API's
+// per-IP limit lives in the server's memory, and a second run would hit it.
 const { chromium } = require('playwright');
 const base = 'http://localhost:3100';
 const results = [];
 const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? '  — ' + detail : ''}`); };
 (async () => {
-  const b = await chromium.launch();
+  const b0 = await chromium.launch();
+  // Every context reports Content-Security-Policy violations here.
+  const csp = [];
+  const b = {
+    newContext: async (opts) => {
+      const c = await b0.newContext(opts);
+      await c.exposeBinding('__cspReport', ({ page }, v) => csp.push(`${page.url()} ${v}`));
+      await c.addInitScript(() => document.addEventListener('securitypolicyviolation', (e) => window.__cspReport(`${e.violatedDirective} ${e.blockedURI} ${e.sourceFile}:${e.lineNumber}`)));
+      return c;
+    },
+    close: () => b0.close(),
+  };
   const errors = [];
   const watch = (p) => { p.on('console', m => m.type() === 'error' && errors.push(m.text())); p.on('pageerror', e => errors.push('PAGEERROR ' + e.message)); };
   const topOf = (p, id) => p.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, id);
@@ -157,11 +169,47 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   errors.splice(0, errors.length, ...errors.filter(e => !e.includes('503'))); // expected network error line
 
   // API contract
-  const api = async (body) => (await p.request.post(base + '/api/contact', { data: body, failOnStatusCode: false })).status();
+  const post = (data, headers = {}) => p.request.post(base + '/api/contact', { data, headers: { origin: base, 'content-type': 'application/json', ...headers }, failOnStatusCode: false });
+  const api = async (body, headers) => (await post(body, headers)).status();
+  const valid = { name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'fleet', message: 'x'.repeat(30) };
   check('API: invalid fields → 422', (await api({ name: 'A' })) === 422);
-  check('API: unknown industry → 422', (await api({ name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'nope', message: 'x'.repeat(30) })) === 422);
-  check('API: honeypot filled → 400', (await api({ name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'fleet', message: 'x'.repeat(30), website: 'spam' })) === 400);
-  check('API: malformed body → 400', (await p.request.post(base + '/api/contact', { data: 'nope', headers: { 'content-type': 'application/json' }, failOnStatusCode: false })).status() === 400);
+  check('API: unknown industry → 422', (await api({ ...valid, industry: 'nope' })) === 422);
+  check('API: honeypot filled → 400', (await api({ ...valid, website: 'spam' })) === 400);
+  check('API: malformed body → 400', (await api('nope')) === 400);
+  check('API: another site posting → 403', (await api(valid, { origin: 'https://evil.example' })) === 403);
+  check('API: no Origin (script or server) → 403', (await p.request.post(base + '/api/contact', { data: valid, failOnStatusCode: false })).status() === 403);
+  check('API: form-encoded or text/plain body → 415', (await api(JSON.stringify(valid), { 'content-type': 'text/plain' })) === 415);
+  check('API: body over 16 KB → 413', (await api({ ...valid, message: 'x'.repeat(20000) })) === 413);
+  check('API: hidden characters (line break in company, RTL override in name) → 422', (await api({ ...valid, company: 'Demo\r\nBcc: x@y.z' })) === 422 && (await api({ ...valid, name: 'Ana \u202eevil' })) === 422);
+  const apiHeaders = (await post({ name: 'A' })).headers();
+  check('API responses: no-store and a CSP that loads nothing', apiHeaders['cache-control'] === 'no-store' && apiHeaders['content-security-policy']?.startsWith("default-src 'none'"));
+
+  // Security headers and the nonce-based CSP
+  const pageRes = await p.request.get(base + '/es');
+  const ph = pageRes.headers(); const html = await pageRes.text();
+  const nonce = /'nonce-([^']+)'/.exec(ph['content-security-policy'] || '')?.[1];
+  check('CSP: per-request nonce with strict-dynamic, no unsafe-inline/eval for scripts', !!nonce && /script-src 'self' 'nonce-[^']+' 'strict-dynamic';/.test(ph['content-security-policy']) && /frame-ancestors 'none'/.test(ph['content-security-policy']) && /object-src 'none'/.test(ph['content-security-policy']), ph['content-security-policy']?.slice(0, 120));
+  const scripts = [...html.matchAll(/<script\b[^>]*>/g)].map((m) => m[0]);
+  check('CSP: every <script> in the HTML carries that nonce', scripts.length > 0 && scripts.every((tag) => tag.includes(`nonce="${nonce}"`)), `${scripts.filter((t) => !t.includes(nonce)).length} of ${scripts.length} without it`);
+  const nonce2 = /'nonce-([^']+)'/.exec((await p.request.get(base + '/es')).headers()['content-security-policy'] || '')?.[1];
+  check('CSP: the nonce changes on every request', !!nonce2 && nonce2 !== nonce);
+  check('headers: HSTS, nosniff, DENY framing, COOP, referrer and permissions policy', ph['strict-transport-security']?.includes('max-age=63072000') && ph['x-content-type-options'] === 'nosniff' && ph['x-frame-options'] === 'DENY' && ph['cross-origin-opener-policy'] === 'same-origin' && ph['referrer-policy'] === 'strict-origin-when-cross-origin' && ph['permissions-policy']?.includes('camera=()'));
+  check('headers: no X-Powered-By', !('x-powered-by' in ph));
+
+  // Structured data on the home page
+  const homeLd = JSON.parse(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/.exec(html)?.[1] || '{}');
+  const org = homeLd['@graph']?.find((n) => n['@type'] === 'Organization');
+  check('JSON-LD: Organization with the four services, WebSite and WebPage', !!org && org.hasOfferCatalog?.itemListElement?.length === 4 && homeLd['@graph'].some((n) => n['@type'] === 'WebSite') && homeLd['@graph'].some((n) => n['@type'] === 'WebPage'));
+
+  // Files for AI agents
+  const llms = await p.request.get(base + '/llms.txt'); const llmsText = await llms.text();
+  check('/llms.txt: Markdown summary with the four products, sectors and the FAQ link', llms.status() === 200 && llms.headers()['content-type'].startsWith('text/markdown') && ['AIO9 Automate', 'AIO9 Web', 'AIO9 Systems', 'AIO9 Devices', 'Salud', 'Healthcare', '/es/faq', '/en/faq'].every((w) => llmsText.includes(w)));
+  const llmsFull = await (await p.request.get(base + '/llms-full.txt')).text();
+  check('/llms-full.txt: every question in both languages', llmsFull.includes('¿Qué es AIO9?') && llmsFull.includes('What is AIO9?') && llmsFull.includes('¿AIO9 diagnostica pacientes'));
+  const robots = await (await p.request.get(base + '/robots.txt')).text();
+  check('robots.txt: AI crawlers named and allowed, /api/ disallowed', ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'Claude-SearchBot', 'PerplexityBot', 'Google-Extended'].every((w) => robots.includes(`User-Agent: ${w}`)) && robots.includes('Disallow: /api/') && !/Disallow: \/\s*$/m.test(robots));
+  const sitemap = await (await p.request.get(base + '/sitemap.xml')).text();
+  check('sitemap: home and questions page in both languages, with x-default', ['/es</loc>', '/en</loc>', '/es/faq</loc>', '/en/faq</loc>'].every((w) => sitemap.includes(w)) && sitemap.includes('hreflang="x-default"'));
 
   // Language
   await p.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
@@ -180,6 +228,33 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('unknown locale → 404', (await p.request.get(base + '/fr', { failOnStatusCode: false })).status() === 404);
   check('og image renders', (await p.request.get(base + (await p.getAttribute('meta[property="og:image"]', 'content')).replace(/^https?:\/\/[^/]+/, ''))).status() === 200);
   check('sitemap + robots', (await p.request.get(base + '/sitemap.xml')).status() === 200 && (await p.request.get(base + '/robots.txt')).status() === 200);
+
+  // Questions page: linked only from the footer
+  const faqLinks = await p.locator('a[href="/es/faq"]').evaluateAll((els) => els.map((e) => e.closest('footer, header, main')?.tagName));
+  check('questions page is linked once, from the footer only', faqLinks.length === 1 && faqLinks[0] === 'FOOTER', faqLinks.join(','));
+  await p.locator('footer a[href="/es/faq"]').click(); await p.waitForURL('**/es/faq'); await p.waitForTimeout(600);
+  check('footer link opens /es/faq with its title', (await p.locator('h1').innerText()).toUpperCase().includes('PREGUNTAS Y RESPUESTAS') && (await p.title()).startsWith('Preguntas y respuestas'));
+  const shownQs = await p.locator('main details summary > span:first-child').allInnerTexts();
+  const faqLd = JSON.parse(await p.locator('script[type="application/ld+json"]').textContent());
+  const ldQs = faqLd['@graph'].find((n) => n['@type'] === 'FAQPage').mainEntity.map((q) => q.name);
+  check('FAQPage data lists exactly the questions on screen', shownQs.length >= 20 && shownQs.length === ldQs.length && shownQs.every((q, i) => q.trim() === ldQs[i]), `${shownQs.length} shown, ${ldQs.length} in data`);
+  check('every answer is in the HTML (readable without JavaScript)', (await p.locator('main details p').count()) === shownQs.length);
+  check('FAQ: canonical and language alternates', (await p.getAttribute('link[rel=canonical]', 'href')).endsWith('/es/faq') && (await p.getAttribute('link[rel=alternate][hreflang=en]', 'href')).endsWith('/en/faq'));
+  const firstQ = p.locator('main details').first();
+  await firstQ.locator('summary').focus(); await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+  const opened = await firstQ.evaluate((d) => d.open);
+  await p.keyboard.press('Enter'); await p.waitForTimeout(200);
+  check('questions open and close with the keyboard', opened && !(await firstQ.evaluate((d) => d.open)));
+  check('FAQ: header links lead back to the home sections', (await p.locator('#site-menu nav a').first().getAttribute('href')) === '/es#industries' && (await p.locator('main a[href="/es#contact"]').count()) === 1);
+  const faqEsBody = await p.locator('body').innerText();
+  const faqEnLeaks = ['Industries', 'How it works', 'Contact us', 'Healthcare', 'We identify', 'Company', 'All rights', 'Farms', 'Online', 'Questions and answers'].filter((w) => faqEsBody.includes(w));
+  check('ES questions page has no English strings', faqEnLeaks.length === 0, faqEnLeaks.join(', '));
+  await p.locator('header a[hreflang=en]').click(); await p.waitForURL('**/en/faq'); await p.waitForTimeout(600);
+  check('language switch keeps the page: /es/faq → /en/faq', p.url().endsWith('/en/faq') && (await p.getAttribute('html', 'lang')) === 'en');
+  const faqEnBody = await p.locator('body').innerText();
+  const faqEsLeaks = ['Sectores', 'Cómo funciona', 'Contactar', 'clínica', 'Empresa', 'Simulación', 'Identificamos', 'Todos los derechos', 'Granjas', 'Preguntas y respuestas', 'Inicio'].filter((w) => faqEnBody.includes(w));
+  check('EN questions page has no Spanish strings', faqEsLeaks.length === 0, faqEsLeaks.join(', '));
+  check('unknown locale questions page → 404', (await p.request.get(base + '/fr/faq', { failOnStatusCode: false })).status() === 404);
   await ctx.close();
 
   // ---------- Reduced motion
@@ -226,15 +301,25 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   for (const [w, h] of [[375, 667], [820, 1180], [1280, 720], [1440, 900], [1920, 1080]]) {
     for (const lang of ['es', 'en']) {
       ctx = await b.newContext({ viewport: { width: w, height: h } }); p = await ctx.newPage(); watch(p);
-      await p.goto(`${base}/${lang}`, { waitUntil: 'networkidle' });
+      for (const page of ['', '/faq']) {
+      await p.goto(`${base}/${lang}${page}`, { waitUntil: 'networkidle' });
       const total = await p.evaluate(() => document.documentElement.scrollHeight);
       let over = 0;
       for (let y = 0; y < total; y += h * 2) { await p.evaluate((y) => scrollTo({ top: y, behavior: 'instant' }), y); await p.waitForTimeout(120); over = Math.max(over, await p.evaluate(() => document.documentElement.scrollWidth - innerWidth)); }
-      check(`${w}px ${lang}: no horizontal overflow anywhere`, over <= 0, `overflow ${over}px`);
+      check(`${w}px ${lang}${page}: no horizontal overflow anywhere`, over <= 0, `overflow ${over}px`);
+      }
       await ctx.close();
     }
   }
 
+  // Rate limit, last so it doesn't block the form checks above
+  ctx = await b.newContext(); p = await ctx.newPage();
+  const statuses = [];
+  for (let i = 0; i < 7; i++) statuses.push((await p.request.post(base + '/api/contact', { data: { name: 'Ana Pérez', company: 'Demo', email: 'a@b.co', industry: 'agro', message: 'x'.repeat(30) }, headers: { origin: base }, failOnStatusCode: false })).status());
+  check('API: repeated inquiries from one client → 429', statuses.includes(429) && statuses.indexOf(429) <= 6, statuses.join(' '));
+  await ctx.close();
+
+  check('no Content-Security-Policy violations anywhere', csp.length === 0, csp.slice(0, 3).join(' | '));
   check('no console errors or page errors', errors.length === 0, errors.slice(0, 3).join(' | '));
   console.log(`\n${results.filter(Boolean).length}/${results.length} passed`);
   await b.close();
