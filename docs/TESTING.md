@@ -7,7 +7,7 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es` y `/en` prerenderizadas) |
-| Pruebas funcionales (`tests/functional.js`) | 77 de 77 |
+| Pruebas funcionales (`tests/functional.js`) | 75 de 75 |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
 | Scroll horizontal accidental | Ninguno (375, 820, 1280, 1440, 1920 px) |
 
@@ -17,15 +17,15 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   un solo `h1`; la cortina de carga desaparece.
 - Menú: abre a pantalla completa, recibe el foco, Escape lo cierra y devuelve
   el foco; cada uno de sus cinco enlaces lleva a su sección.
-- Diseño: ninguna sección queda fija; la página mide menos de 20 pantallas;
-  cada pareja (cinco de sectores, dos de servicios) aparece lado a lado.
+- Diseño: ninguna sección queda fija; la página mide menos de 16 pantallas;
+  cada pareja aparece lado a lado, en escritorio y en móvil.
 - Entradas: una columna por debajo de la pantalla espera oculta y se muestra
-  al llegar a ella; la frase central muestra la oración completa.
-- Demostración: reproduce hasta el último paso, repetir, pausar, reanudar y
-  saltar a un paso; la ventana muestra el resultado; las diez llevan la
-  etiqueta "Simulación ilustrativa".
-- "Quiero esto en mi negocio" preselecciona el rubro en el formulario, tanto
-  para una industria como para un sector de AIO9 Devices.
+  al llegar a ella.
+- Ventanas: recorren todos sus pasos solas y vuelven a empezar; no hay texto
+  de pasos, controles, numeración ni etiquetas "Ejemplo de…"; las diez llevan
+  "Simulación ilustrativa".
+- La sección "Además" ya no existe; el proceso muestra tres pasos sin texto.
+- "Quiero esto" preselecciona el sector en el formulario (industria y Devices).
 - Servicios en orden: Automate, Web, Systems, Devices.
 - Formulario: 5 errores con envío vacío, foco en el primer campo inválido,
   correo inválido, y respuesta 503 con mensaje claro cuando no hay entrega
@@ -34,10 +34,10 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 - Idiomas: la página en inglés no contiene textos en español y viceversa,
   incluidos los rótulos de las ventanas.
 - Movimiento reducido: sin cortina de carga, ninguna entrada pendiente, la
-  demo muestra su estado final y los pasos se recorren a mano.
-- Móvil: sin desborde, menú, sectores en una sola columna, la demo arranca al
-  entrar en pantalla, la ventana cabe en su columna, objetivos táctiles de al
-  menos 24 px.
+  ventana muestra su estado final y no se mueve.
+- Móvil: sin desborde, menú, sectores de dos en dos, cada columna muestra
+  media ventana, la ventana se anima al entrar en pantalla, objetivos táctiles
+  de al menos 24 px.
 - Sin desborde horizontal en ningún punto del scroll a 375, 820, 1280, 1440 y
   1920 px, en ambos idiomas; sin errores de consola.
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
@@ -50,10 +50,10 @@ entre secciones, el giro 3D de las ventanas y la suavidad del parallax.
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 87 | 97 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 95 | 97 | 100 | 100 |
 | Escritorio | 99 | 97 | 100 | 100 |
 
-LCP 1.1 s en móvil emulado y 0.3 s en escritorio; bloqueo total 450 ms y 0 ms;
+LCP 0.9 s en móvil emulado y 0.3 s en escritorio; bloqueo total 240 ms y 0 ms;
 CLS 0 en ambos. Las cifras varían entre ejecuciones: en móvil se midieron 86 y
 92 con el mismo código.
 
@@ -115,5 +115,7 @@ node tests/contrast.js
 - Entrega real del formulario (Resend o webhook): requiere credenciales.
 - Dispositivos físicos: todo se verificó en Chromium con emulación; conviene
   revisar Safari en iPhone y un Android de gama media antes de publicar.
+- Las ventanas se repiten en bucle y no tienen botón de pausa: quien no tenga
+  activado "reducir movimiento" no puede detenerlas.
 - Lectores de pantalla reales (solo auditoría automática y revisión de marcado).
 - Rendimiento en un teléfono real: las cifras de Lighthouse son de emulación.

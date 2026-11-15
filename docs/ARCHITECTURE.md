@@ -63,22 +63,22 @@ de lectura.
 
 ## Mensaje y oferta
 
-Cuatro productos y tres complementos; los sectores son ejemplos de aplicación.
+Cuatro productos; los sectores son ejemplos de aplicación. La página usa
+frases cortas: un nombre, un título y una línea por bloque.
 
-- `capabilities.items` en los diccionarios, en orden: AIO9 Automate (oferta
-  principal), AIO9 Web, AIO9 Systems, AIO9 Devices, y después Mantenimiento y
-  mejoras, Tecnología creativa, Conexión y capacitación. Los cuatro primeros
-  son las pantallas de `ServiceScenes`; el resto, la lista de `Extras`.
+- `capabilities.items` en los diccionarios: AIO9 Automate, AIO9 Web, AIO9
+  Systems y AIO9 Devices, cada uno con una línea.
 - **AIO9 Devices** es la automatización con ESP32 y Raspberry Pi. Sus textos
-  están en `devices` (diccionarios) y sus sectores en `src/data/devices.ts`:
-  Granjas, Inventarios físicos, Flota y cadena de frío, Agro.
-- Cada industria tiene `service` ("Ejemplo de AIO9 Automate"…) y `word`, el
-  nombre corto que se dibuja con puntos al fondo de su pantalla.
+  están en `devices` y sus sectores en `src/data/devices.ts`.
+- Cada industria tiene `word`, el nombre corto que se dibuja en puntos LED.
+- Los diccionarios conservan claves que la página ya no muestra (`steps`,
+  `from`, `to`, `service`, `hardware`, y las de pasos en `experience`). Se
+  dejaron por si vuelven los controles; se pueden borrar sin efecto visible.
 
 ## La página, de arriba abajo
 
-Nada queda fijo: es una página de scroll normal, de unas 16 pantallas en
-escritorio. El movimiento son entradas que ocurren una sola vez.
+Nada queda fijo: es una página de scroll normal, de unas 13 pantallas en
+escritorio y 11 en móvil.
 
 | Sección | Componente | Qué hace |
 |---|---|---|
@@ -88,18 +88,22 @@ escritorio. El movimiento son entradas que ocurren una sola vez.
 | Frase | `Statement` | Una frase que entra girando en 3D. |
 | Servicios | `ServiceScenes` | Cuatro productos, de dos en dos. |
 | AIO9 Devices | `DevicesScenes` | Entrada con las dos placas y sus cuatro sectores, de dos en dos. |
-| Complementos | `Extras` | Lista; cada renglón reacciona al cursor. |
-| Proceso | `Process` | La línea lima se llena al bajar. |
+| Proceso | `Process` | Tres pasos con solo su nombre; la línea lima se llena al bajar. |
 | Contacto y pie | `Contact`, `Footer` | Corte diagonal de vuelta al fondo claro. |
 
 ### Parejas, entradas y parallax
 
 - `Pairs` (en `DemoScene.tsx`) es la rejilla de dos columnas con línea
-  divisoria; una sola columna por debajo de 1024 px.
-- `DemoScene` es la columna de un sector: su nombre en puntos LED
-  (`LedWord`: un brillo blanco recorre los puntos y el resplandor crece al
-  cruzar la pantalla), título, texto, ventana y controles. La demostración
-  arranca cuando la columna está en pantalla y se detiene al terminar.
+  divisoria, **en todos los tamaños de pantalla**.
+- `DemoScene` es la columna de un sector: nombre en puntos LED (`LedWord`, que
+  se ajusta al ancho de su columna), título, una línea y su ventana.
+- `LiveWindow` hace que la ventana funcione sola: reproduce sus pasos mientras
+  está en pantalla, mantiene el resultado un momento y vuelve a empezar
+  (`useDemoTimeline` con `loopAfter`). No hay texto de pasos ni controles. Con
+  "reducir movimiento" muestra el estado final y se queda quieta.
+- `Half` es el marco de la ventana. Por debajo de 1024 px muestra **solo una
+  mitad** al doble de tamaño: la columna izquierda la mitad izquierda, la
+  derecha la mitad derecha. En escritorio se ve completa.
 
 Efectos, todos en `Parallax.tsx` y `Reveal.tsx`:
 
