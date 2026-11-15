@@ -29,9 +29,6 @@ export function Statement({ dict }: { dict: Dictionary }) {
           >
             {dict.ui.statement}
           </h2>
-          <p className="mx-auto mt-7 max-w-[34ch] text-[1.0625rem] leading-relaxed text-fog">
-            {dict.ui.statementNote}
-          </p>
         </Reveal>
       </Drift>
     </section>

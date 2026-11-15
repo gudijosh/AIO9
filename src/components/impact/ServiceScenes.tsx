@@ -1,25 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import type { ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { industryById } from "@/data/industries";
 import { cn } from "@/lib/cn";
-import devicesPhoto from "../../../public/images/hero/devices.webp";
-import { Pairs } from "./DemoScene";
+import chip from "../../../public/images/hero/esp32.webp";
+import { Half, LiveWindow, Pairs, type Side } from "./DemoScene";
 import { LedWord } from "./LedWord";
 import { Curtain, Drift, Fly } from "./Parallax";
 import { Reveal } from "./Reveal";
 import { Fit } from "./scroll/Fit";
 import { HealthcareWindow } from "./windows/HealthcareWindow";
 import { OperationsWindow } from "./windows/OperationsWindow";
-import { ServicesWindow } from "./windows/ServicesWindow";
 import { SiteWindow } from "./windows/SiteWindow";
 
 const COLORS = ["#2F63FF", "#FF7A52", "#B79CFF", "#D4FF3A"];
 
 /**
- * The four products, two to a row: the name in LED dots, one object that
- * stands for it, and what it does in plain words.
+ * The four products, two to a row: the name in LED dots, one thing that
+ * stands for it (a running window, this site in a browser, a real board),
+ * and one line on what it does.
  */
 export function ServiceScenes({
   dict,
@@ -28,68 +30,42 @@ export function ServiceScenes({
   dict: Dictionary;
   locale: Locale;
 }) {
-  const items = dict.capabilities.items.slice(0, 4);
-  const done = { locale, simulation: dict.experience.simulation } as const;
-  const frame = "rounded-[12px] shadow-[0_50px_90px_-30px_#000]";
+  const items = dict.capabilities.items;
+  const simulation = dict.experience.simulation;
 
   const objects: ReactNode[] = [
-    // Automate: the assistant's window over a real desk-top photo.
-    <div key="automate" className="relative aspect-[760/480] w-full">
-      <Image
-        src={industryById.healthcare.image}
-        alt=""
-        sizes="(min-width: 1024px) 30vw, 60vw"
-        className="absolute top-0 right-0 h-[78%] w-[62%] rounded-[12px] object-cover shadow-[0_40px_80px_-20px_#000]"
-        style={{ objectPosition: industryById.healthcare.focus }}
+    <LiveWindow
+      key="automate"
+      id="service-automate"
+      Window={HealthcareWindow}
+      durations={industryById.healthcare.stepDurations}
+      locale={locale}
+      simulation={simulation}
+    />,
+    <Fit key="web">
+      <SiteWindow
+        lines={dict.hero.lines}
+        cta={dict.hero.primary}
+        words={[
+          dict.industries.healthcare.word,
+          dict.industries.hospitality.word,
+        ]}
       />
-      <div
-        className={cn(
-          frame,
-          "absolute bottom-0 left-0 w-[74%] shadow-[0_50px_90px_-30px_#000,0_0_110px_-30px_var(--color-azure)]",
-        )}
-      >
-        <Fit className="overflow-hidden rounded-[inherit]">
-          <HealthcareWindow step={5} {...done} />
-        </Fit>
-      </div>
-    </div>,
-    // Web: this very site, in a browser window.
-    <div
-      key="web"
-      className={cn(
-        frame,
-        "shadow-[0_50px_90px_-30px_#000,0_0_110px_-34px_#FF7A52]",
-      )}
-    >
-      <Fit className="overflow-hidden rounded-[inherit]">
-        <SiteWindow
-          lines={dict.hero.lines}
-          cta={dict.hero.primary}
-          words={[
-            dict.industries.healthcare.word,
-            dict.industries.hospitality.word,
-          ]}
-        />
-      </Fit>
-    </div>,
-    <div key="systems" className="relative aspect-[760/480] w-full">
-      <div className={cn(frame, "absolute top-0 left-0 w-[70%]")}>
-        <Fit className="overflow-hidden rounded-[inherit]">
-          <ServicesWindow step={5} {...done} />
-        </Fit>
-      </div>
-      <div className={cn(frame, "absolute right-0 bottom-0 w-[72%]")}>
-        <Fit className="overflow-hidden rounded-[inherit]">
-          <OperationsWindow step={5} {...done} />
-        </Fit>
-      </div>
-    </div>,
+    </Fit>,
+    <LiveWindow
+      key="systems"
+      id="service-systems"
+      Window={OperationsWindow}
+      durations={industryById.logistics.stepDurations}
+      locale={locale}
+      simulation={simulation}
+    />,
     <Image
       key="devices"
-      src={devicesPhoto}
-      alt=""
-      sizes="(min-width: 1024px) 46vw, 92vw"
-      className="aspect-[760/480] w-full rounded-[12px] object-cover shadow-[0_50px_90px_-30px_#000,0_0_110px_-34px_var(--color-volt)]"
+      src={chip}
+      alt={dict.devices.chipAlt}
+      sizes="(min-width: 1024px) 46vw, 96vw"
+      className="aspect-[380/480] w-full object-cover lg:aspect-[760/480]"
     />,
   ];
 
@@ -106,45 +82,48 @@ export function ServiceScenes({
       </h2>
       <Pairs>
         {items.map((item, i) => {
-          const side = i % 2 ? "right" : "left";
+          const side: Side = i % 2 ? "right" : "left";
           const wait = i % 2 ? 160 : 0;
+          const pad = side === "right" && "pl-4 lg:pl-0";
           return (
             <article
               key={item.name}
               aria-labelledby={`service-${i}`}
-              className="flex min-w-0 flex-col px-5 py-16 lg:px-10 lg:py-20 xl:px-14"
+              className={cn(
+                "flex min-w-0 flex-col py-12 lg:px-10 lg:py-20 xl:px-14",
+                side === "left" ? "pr-0 pl-4" : "pr-4 pl-0",
+              )}
             >
-              <Reveal from={side} delay={wait}>
+              <Reveal from={side} delay={wait} className={cn(pad)}>
                 <LedWord word={dict.ui.serviceWords[i]} color={COLORS[i]} />
               </Reveal>
-              <Fly from={side} className="mt-8">
-                <div aria-hidden>{objects[i]}</div>
+              <Fly from={side} className="mt-6 lg:mt-8">
+                <Half side={side} color={COLORS[i]} whole={i === 3}>
+                  <div aria-hidden={i === 3 ? undefined : true}>
+                    {objects[i]}
+                  </div>
+                </Half>
               </Fly>
-              <Drift speed={-30} className="mt-9">
+              <Drift speed={-30} className={cn("mt-6 lg:mt-9", pad)}>
                 <Reveal
                   from={side}
                   delay={wait + 160}
-                  className="flex flex-col"
+                  className="flex flex-col pr-3"
                 >
                   <h3
                     id={`service-${i}`}
-                    className="display text-[clamp(2.5rem,3.9vw,4rem)]"
+                    className="display text-[clamp(1.5rem,3.9vw,4rem)]"
                   >
                     {item.name}
                   </h3>
-                  {i === 0 && (
-                    <p className="mt-2 font-mono text-[11px] tracking-[0.14em] text-volt uppercase">
-                      {dict.ui.mainOffer}
-                    </p>
-                  )}
-                  <p className="mt-4 max-w-[48ch] text-base leading-relaxed text-fog">
+                  <p className="mt-2 max-w-[48ch] text-[13px] leading-snug text-fog lg:mt-4 lg:text-base lg:leading-relaxed">
                     {item.text}
                   </p>
                   <a
-                    href={i === 3 ? "#devices" : "#contact"}
-                    className="pill mt-7 self-start bg-bone text-ink"
+                    href="#contact"
+                    className="pill mt-5 self-start bg-bone text-ink lg:mt-7"
                   >
-                    {i === 3 ? dict.nav.devices : dict.nav.cta}{" "}
+                    {dict.experience.consult}{" "}
                     <span aria-hidden>→</span>
                   </a>
                 </Reveal>

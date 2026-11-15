@@ -13,7 +13,8 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   const show = async (p, id) => { await p.evaluate((id) => document.querySelector(`article[aria-labelledby="scene-${id}"]`).scrollIntoView({ block: 'center', behavior: 'instant' }), id); await p.waitForTimeout(900); };
   const box = (p, id) => p.evaluate((id) => { const r = document.querySelector(`article[aria-labelledby="scene-${id}"]`).getBoundingClientRect(); return { top: Math.round(r.top + scrollY), left: Math.round(r.left), width: Math.round(r.width) }; }, id);
   const scene = (p, id) => p.locator(`article[aria-labelledby="scene-${id}"]`);
-  const stepText = async (p, id) => (await scene(p, id).locator('span.tabular-nums').first().textContent()).trim();
+  // Which step the window of a sector is showing (0-based).
+  const stepOf = async (p, id) => Number(await scene(p, id).locator('[data-step]').getAttribute('data-step'));
 
   // ---------- Desktop
   let ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
@@ -21,7 +22,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   await p.goto(base + '/', { waitUntil: 'networkidle' }); await p.waitForTimeout(1800);
   check('root redirects to /es', p.url().endsWith('/es'), p.url());
   check('html lang is es', (await p.getAttribute('html', 'lang')) === 'es');
-  check('ES headline', (await p.getAttribute('h1', 'aria-label')) === 'IA y software para que tu empresa trabaje mejor.');
+  check('ES headline', (await p.getAttribute('h1', 'aria-label')) === 'Soluciones para que tu empresa trabaje mejor.');
   check('one h1 on the page', (await p.locator('h1').count()) === 1);
   check('preloader has left the screen', await p.evaluate(() => getComputedStyle(document.querySelector('[class*="preload-out"]')).visibility === 'hidden'));
 
@@ -40,7 +41,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
 
   // Layout: nothing is pinned, sectors sit two to a row
   check('no section is pinned', await p.evaluate(() => [...document.querySelectorAll('main *')].every(n => getComputedStyle(n).position !== 'sticky')));
-  check('the page is under 20 screens tall', await p.evaluate(() => document.documentElement.scrollHeight / innerHeight) < 20, (await p.evaluate(() => document.documentElement.scrollHeight / innerHeight)).toFixed(1) + ' screens');
+  check('the page is under 16 screens tall', await p.evaluate(() => document.documentElement.scrollHeight / innerHeight) < 16, (await p.evaluate(() => document.documentElement.scrollHeight / innerHeight)).toFixed(1) + ' screens');
   check('the old sectors rail is gone', (await p.locator('#sectors').count()) === 0);
   for (const [a, c] of [['healthcare', 'hospitality'], ['realEstate', 'retail'], ['services', 'logistics'], ['farms', 'inventory'], ['fleet', 'agro']]) {
     const l = await box(p, a), r = await box(p, c);
@@ -59,28 +60,26 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('it enters when scrolled to', (await revealState()) === 'shown' && await p.evaluate(() => getComputedStyle(document.querySelector('article[aria-labelledby="scene-logistics"] [data-reveal]')).opacity === '1'));
   check('statement is a plain section with the whole sentence', (await p.locator('#statement-heading').innerText()).replace(/\s+/g, ' ').trim().toUpperCase() === 'EMPEZAMOS POR UN PROCESO CONCRETO Y MEDIBLE.');
 
-  // Demo: plays to the end, replay, pause, resume, jump to a step
-  await show(p, 'healthcare'); await p.waitForTimeout(8500);
-  check('demo plays to the last step', (await stepText(p, 'healthcare')) === 'Paso 6 de 6', await stepText(p, 'healthcare'));
-  check('window shows the confirmed appointment at the end', (await scene(p, 'healthcare').innerText()).includes('Cita confirmada'));
-  await scene(p, 'healthcare').getByRole('button', { name: /^Repetir/ }).click(); await p.waitForTimeout(400);
-  check('replay restarts at step 1', (await stepText(p, 'healthcare')) === 'Paso 1 de 6', await stepText(p, 'healthcare'));
-  await scene(p, 'healthcare').getByRole('button', { name: /^Pausar/ }).click();
-  const frozen = await stepText(p, 'healthcare'); await p.waitForTimeout(2600);
-  check('pause holds the step', (await stepText(p, 'healthcare')) === frozen, frozen);
-  await scene(p, 'healthcare').getByRole('button', { name: /^Reproducir/ }).click(); await p.waitForTimeout(2600);
-  check('play resumes', (await stepText(p, 'healthcare')) !== frozen, await stepText(p, 'healthcare'));
-  await scene(p, 'healthcare').getByRole('button', { name: /Ir al paso 2/ }).click(); await p.waitForTimeout(300);
-  check('step segment jumps to step 2', (await stepText(p, 'healthcare')) === 'Paso 2 de 6');
+  // Demo: runs by itself, shows its result, then starts over. No step controls.
+  await show(p, 'healthcare');
+  const seen = new Set();
+  for (let i = 0; i < 26; i++) { seen.add(await stepOf(p, 'healthcare')); await p.waitForTimeout(500); }
+  check('window plays through every step by itself', [0, 1, 2, 3, 4, 5].every((n) => seen.has(n)), [...seen].join(','));
+  let wrapped = false, prev = await stepOf(p, 'healthcare');
+  for (let i = 0; i < 30 && !wrapped; i++) { await p.waitForTimeout(500); const now = await stepOf(p, 'healthcare'); if (now < prev) wrapped = true; prev = now; }
+  check('window starts over after showing its result', wrapped);
+  check('no step text or step controls are shown', !(await p.locator('main').innerText()).match(/Paso \d+ de \d+/) && (await p.getByRole('button', { name: /Pausar|Reproducir|Repetir|Ir al paso/ }).count()) === 0);
+  check('no numbering or "example of" labels', !(await p.locator('main').innerText()).match(/\d\d \/ \d\d|EJEMPLO DE/i));
+  check('the "Además" section is gone', (await p.locator('#extras-heading').count()) === 0 && !(await p.locator('main').innerText()).includes('MANTENIMIENTO'));
+  check('process shows three bare steps', (await p.locator('#process ol li').allInnerTexts()).map((x) => x.replace(/\s+/g, ' ').trim().toUpperCase()).join('|') === '01 IDENTIFICAMOS|02 CONSTRUIMOS|03 CONECTAMOS Y CAPACITAMOS', (await p.locator('#process ol li').allInnerTexts()).join('|'));
   check('every window is labelled as a simulation', (await p.locator('main').innerText()).split('Simulación ilustrativa').length - 1 >= 10);
 
   // "I want this" preselects the sector in the form (an industry and a device sector)
   await show(p, 'realEstate');
-  await scene(p, 'realEstate').getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(3500);
+  await scene(p, 'realEstate').getByRole('link', { name: 'Contactar' }).click(); await p.waitForTimeout(3500);
   check('industry link preselects it in the form', (await p.inputValue('#industry')) === 'realEstate', await p.inputValue('#industry'));
-  await show(p, 'agro'); await p.waitForTimeout(7500);
-  check('devices: agro demo plays to its last step', (await stepText(p, 'agro')) === 'Paso 5 de 5', await stepText(p, 'agro'));
-  await scene(p, 'agro').getByRole('link', { name: 'Quiero esto en mi negocio' }).click(); await p.waitForTimeout(3500);
+  await show(p, 'agro');
+  await scene(p, 'agro').getByRole('link', { name: 'Contactar' }).click(); await p.waitForTimeout(3500);
   check('device sector link preselects it in the form', (await p.inputValue('#industry')) === 'agro', await p.inputValue('#industry'));
 
   // Services: four products, in order
@@ -114,15 +113,15 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   await p.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
   await p.locator('header a[hreflang=en]').click(); await p.waitForURL('**/en**'); await p.waitForTimeout(800);
   check('EN: url and html lang', p.url().includes('/en') && (await p.getAttribute('html', 'lang')) === 'en');
-  check('EN headline', (await p.getAttribute('h1', 'aria-label')) === 'AI and software that help your business work better.');
+  check('EN headline', (await p.getAttribute('h1', 'aria-label')) === 'Solutions that help your business work better.');
   const body = (await p.locator('body').innerText());
-  const leaks = ['Sectores', 'Cómo funciona', 'Hablemos', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificar', 'Mantenimiento', 'Repetir', 'Reproducir', 'Pausar', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos', 'Granjas', 'Galpón', 'Válvulas', 'En línea', 'Órdenes', 'Además', 'Cargando'].filter(w => body.includes(w));
+  const leaks = ['Sectores', 'Cómo funciona', 'Contactar', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificamos', 'Construimos', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos', 'Granjas', 'Galpón', 'Válvulas', 'En línea', 'Órdenes', 'Además', 'Cargando'].filter(w => body.includes(w));
   check('EN page has no Spanish strings', leaks.length === 0, leaks.join(', '));
   check('EN <title> and description', (await p.title()).includes('AI and software that help your business work better') && (await p.getAttribute('meta[name=description]', 'content')).startsWith('AIO9 implements'));
   check('hreflang alternates present', (await p.locator('link[rel=alternate][hreflang]').count()) >= 3);
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
   const esBody = await p.locator('body').innerText();
-  const enLeaks = ['Industries', 'How it works', "Let's talk", 'Healthcare', 'Step ', 'Replay', 'Illustrative', 'Identify', 'Company', 'All rights', 'Farms', 'Online', 'Loading', 'Orders', 'Schedule'].filter(w => esBody.includes(w));
+  const enLeaks = ['Industries', 'How it works', 'Contact us', 'Healthcare', 'Illustrative', 'We identify', 'Company', 'All rights', 'Farms', 'Online', 'Loading', 'Orders', 'Schedule'].filter(w => esBody.includes(w));
   check('ES page has no English strings', enLeaks.length === 0, enLeaks.join(', '));
   check('unknown locale → 404', (await p.request.get(base + '/fr', { failOnStatusCode: false })).status() === 404);
   check('og image renders', (await p.request.get(base + (await p.getAttribute('meta[property="og:image"]', 'content')).replace(/^https?:\/\/[^/]+/, ''))).status() === 200);
@@ -135,9 +134,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
   check('reduced motion: no preloader', await p.evaluate(() => getComputedStyle(document.querySelector('[class*="preload-out"]')).display === 'none'));
   await p.evaluate(() => document.getElementById('scene-healthcare').scrollIntoView({ block: 'center' })); await p.waitForTimeout(600);
-  check('reduced motion: demo shows its final state at once', (await stepText(p, 'healthcare')) === 'Paso 6 de 6', await stepText(p, 'healthcare'));
-  await scene(p, 'healthcare').getByRole('button', { name: /Ir al paso 3/ }).click();
-  check('reduced motion: steps navigable by hand', (await stepText(p, 'healthcare')) === 'Paso 3 de 6');
+  check('reduced motion: window shows its final state and stays there', (await stepOf(p, 'healthcare')) === 5 && (await p.waitForTimeout(3000), (await stepOf(p, 'healthcare')) === 5));
   check('reduced motion: nothing waits for an entrance', await p.evaluate(() => [...document.querySelectorAll('[data-reveal]')].every(n => getComputedStyle(n).opacity === '1' && getComputedStyle(n).transform === 'none')));
   await ctx.close();
 
@@ -151,10 +148,13 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   await p.locator('#site-menu nav a', { hasText: 'Cómo funciona' }).click(); await p.waitForTimeout(4500);
   check('mobile menu link scrolls and closes', !(await p.locator('#site-menu').isVisible()) && await p.evaluate(() => { const r = document.getElementById('process-heading').getBoundingClientRect(); return r.top > -40 && r.top < innerHeight; }));
   const mh = await box(p, 'healthcare'), mr = await box(p, 'hospitality');
-  check('mobile: sectors are stacked in one column', mr.top > mh.top && mr.left === mh.left && mh.width > 300, `tops ${mh.top}/${mr.top}`);
-  await p.evaluate(() => document.querySelector('article[aria-labelledby="scene-hospitality"]').scrollIntoView({ block: 'center', behavior: 'instant' })); await p.waitForTimeout(9000);
-  check('mobile: demo plays when its scene is on screen', (await stepText(p, 'hospitality')) === 'Paso 5 de 5', await stepText(p, 'hospitality'));
-  check('mobile: window fits its column', await p.evaluate(() => { const r = document.querySelector('article[aria-labelledby="scene-hospitality"] [style*="aspect-ratio"]').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; }));
+  check('mobile: sectors sit two to a row', mr.top === mh.top && mr.left > mh.left && Math.abs(mh.width - mr.width) < 3, `tops ${mh.top}/${mr.top}, lefts ${mh.left}/${mr.left}`);
+  await show(p, 'hospitality');
+  const halves = await p.evaluate(() => ['healthcare', 'hospitality'].map((id) => { const a = document.querySelector(`article[aria-labelledby="scene-${id}"]`); const frame = a.querySelector('[data-step]').parentElement.parentElement.getBoundingClientRect(); const win = a.querySelector('[data-step]').getBoundingClientRect(); return { frame: Math.round(frame.width), win: Math.round(win.width), winLeft: Math.round(win.left - frame.left) }; }));
+  check('mobile: each column shows half of its window', halves.every((h) => Math.abs(h.win - 2 * h.frame) < 4) && halves[0].winLeft === 0 && Math.abs(halves[1].winLeft + halves[1].frame) < 4, JSON.stringify(halves));
+  let moved = false; const first = await stepOf(p, 'hospitality');
+  for (let i = 0; i < 12 && !moved; i++) { await p.waitForTimeout(500); moved = (await stepOf(p, 'hospitality')) !== first; }
+  check('mobile: window animates when on screen', moved);
   check('mobile: still no horizontal overflow', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   const small = await p.evaluate(() => [...document.querySelectorAll('main button, main a, header button, header a, footer a')].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.height < 24 || r.width < 24); }).map(e => (e.getAttribute('aria-label') || e.textContent).trim().slice(0, 30)));
   check('mobile: touch targets ≥ 24px', small.length === 0, small.join(' | '));

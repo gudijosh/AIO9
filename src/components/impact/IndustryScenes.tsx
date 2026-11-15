@@ -25,13 +25,8 @@ export function IndustryScenes({
       id: industry.id,
       color: industry.color,
       word: text.word,
-      name: text.name,
-      label: text.service,
       title: text.title,
       description: text.description,
-      from: text.from,
-      to: text.to,
-      steps: text.steps,
       durations: industry.stepDurations,
       Window: industryWindows[industry.id],
     };
@@ -60,9 +55,6 @@ export function IndustryScenes({
           >
             {dict.experience.heading}
           </h2>
-          <p className="mt-6 max-w-[52ch] text-[1.0625rem] leading-relaxed text-fog">
-            {dict.experience.intro}
-          </p>
         </Reveal>
       </Drift>
       <Pairs>
@@ -70,8 +62,6 @@ export function IndustryScenes({
           <DemoScene
             key={scene.id}
             data={scene}
-            index={i}
-            total={scenes.length}
             side={i % 2 ? "right" : "left"}
             locale={locale}
             dict={dict}

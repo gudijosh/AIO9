@@ -31,15 +31,20 @@ export function LedWord({ word, color }: { word: string; color: string }) {
       `drop-shadow(0 0 ${(v * 0.09).toFixed(3)}em ${color}) drop-shadow(0 0 ${(v * 0.3).toFixed(3)}em ${color})`,
   );
   const x = useTransform(scrollYProgress, [0, 1], ["3%", "-3%"]);
+  // As large as the design allows, but never wider than its column.
+  const fontSize = `min(clamp(1.75rem, 11vw, 8.5rem), ${(41 / (word.length * 0.4)).toFixed(2)}vw)`;
 
   return (
     <m.p
       ref={ref}
       aria-hidden
-      style={
-        reduced ? { filter: `drop-shadow(0 0 0.12em ${color})` } : { filter, x }
-      }
-      className="display text-[clamp(3rem,8.6vw,8.5rem)] whitespace-nowrap select-none"
+      style={{
+        fontSize,
+        ...(reduced
+          ? { filter: `drop-shadow(0 0 0.12em ${color})` }
+          : { filter, x }),
+      }}
+      className="display flex min-h-[10vw] items-end whitespace-nowrap select-none lg:min-h-0"
     >
       <m.span
         style={{
@@ -47,7 +52,7 @@ export function LedWord({ word, color }: { word: string; color: string }) {
           backgroundSize: "260% 100%",
           backgroundPositionX: reduced ? "130%" : shine,
         }}
-        className="dots inline-block bg-clip-text text-transparent [mask-size:max(4px,0.05em)_max(4px,0.05em)]"
+        className="dots inline-block bg-clip-text text-transparent [mask-size:max(3px,0.05em)_max(3px,0.05em)]"
       >
         {word}
       </m.span>

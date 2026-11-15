@@ -10,7 +10,6 @@ import { IndustryScenes } from "@/components/impact/IndustryScenes";
 import { Statement } from "@/components/impact/Statement";
 import { ServiceScenes } from "@/components/impact/ServiceScenes";
 import { DevicesScenes } from "@/components/impact/DevicesScenes";
-import { Extras } from "@/components/impact/Extras";
 import { Process } from "@/components/impact/Process";
 
 export default async function Page({ params }: PageProps<"/[lang]">) {
@@ -34,7 +33,6 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
         <Statement dict={dict} />
         <ServiceScenes dict={dict} locale={lang} />
         <DevicesScenes dict={dict} locale={lang} />
-        <Extras dict={dict} />
         <Process dict={dict} />
         <Contact dict={dict} locale={lang} />
       </main>

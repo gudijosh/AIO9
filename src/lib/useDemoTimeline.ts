@@ -10,6 +10,8 @@ interface Options {
   resetKey: string;
   /** The timeline only advances while this is true (stage is on screen). */
   enabled: boolean;
+  /** Start over after holding the last step for this long (ms). Omit to play once. */
+  loopAfter?: number;
 }
 
 export interface DemoTimeline {
@@ -31,10 +33,10 @@ interface State {
 
 /**
  * Deterministic step engine behind every industry demonstration.
- * It plays once and stops; nothing loops on its own. With reduced motion it
+ * By default it plays once and stops; with `loopAfter` it starts over. With reduced motion it
  * shows the finished state and lets the visitor step through manually.
  */
-export function useDemoTimeline({ durations, resetKey, enabled }: Options): DemoTimeline {
+export function useDemoTimeline({ durations, resetKey, enabled, loopAfter }: Options): DemoTimeline {
   const reduced = usePrefersReducedMotion();
   const last = durations.length - 1;
   const [state, setState] = useState<State>({ key: resetKey, step: 0, paused: false, touched: false });
@@ -45,15 +47,17 @@ export function useDemoTimeline({ durations, resetKey, enabled }: Options): Demo
 
   const step = reduced && !state.touched ? last : Math.min(state.step, last);
   const done = step >= last;
-  const playing = enabled && !reduced && !state.paused && !done;
+  const loops = loopAfter !== undefined;
+  const playing = enabled && !reduced && !state.paused && (!done || loops);
 
   useEffect(() => {
     if (!playing) return;
+    const wait = done ? durations[step] + (loopAfter ?? 0) : durations[step];
     const id = window.setTimeout(() => {
-      setState((s) => (s.key === resetKey ? { ...s, step: s.step + 1 } : s));
-    }, durations[step]);
+      setState((s) => (s.key === resetKey ? { ...s, step: done ? 0 : s.step + 1 } : s));
+    }, wait);
     return () => window.clearTimeout(id);
-  }, [playing, step, resetKey, durations]);
+  }, [playing, done, step, resetKey, durations, loopAfter]);
 
   const toggle = useCallback(() => setState((s) => ({ ...s, paused: !s.paused })), []);
   const replay = useCallback(

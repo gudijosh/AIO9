@@ -14,7 +14,7 @@ export const es = {
     solutions: "Soluciones",
     process: "Cómo funciona",
     contact: "Contacto",
-    cta: "Hablemos de tu proyecto",
+    cta: "Contactar",
     home: "AIO9, ir al inicio",
     primary: "Navegación principal",
     skip: "Saltar al contenido",
@@ -27,12 +27,11 @@ export const es = {
     tagline: "IA + software para empresas",
   },
   hero: {
-    title: "IA y software para que tu empresa trabaje mejor.",
+    title: "Soluciones para que tu empresa trabaje mejor.",
     /** The same title, split into the three lines of the hero. */
-    lines: ["IA y software para", "que tu empresa", "trabaje mejor."],
-    subtitle:
-      "Implementamos IA y software para que tu empresa atienda mejor, reduzca tareas manuales y conecte sus operaciones.",
-    primary: "Hablemos de tu proyecto",
+    lines: ["Soluciones para", "que tu empresa", "trabaje mejor."],
+    subtitle: "IA y software que atienden, automatizan y conectan tu operación.",
+    primary: "Contactar",
     secondary: "Mira ejemplos por sector",
     stackLabel: "Ejemplos de sectores donde aplicamos nuestras soluciones",
     show: "Mostrar",
@@ -40,9 +39,7 @@ export const es = {
     play: "Reanudar la rotación",
   },
   experience: {
-    heading: "Nuestros productos son las soluciones. Los sectores, ejemplos.",
-    intro:
-      "Clínicas, restaurantes, inmobiliarias, comercios y empresas de servicios: así se ve nuestro trabajo en cada uno. Elige un sector y míralo paso a paso.",
+    heading: "Nuestros productos son las soluciones.",
     railLabel: "Industrias",
     simulation: "Simulación ilustrativa",
     stepOf: "Paso {n} de {total}",
@@ -53,7 +50,7 @@ export const es = {
     play: "Reproducir",
     pause: "Pausar",
     replay: "Repetir",
-    consult: "Quiero esto en mi negocio",
+    consult: "Contactar",
   },
   industries: {
     healthcare: {
@@ -63,8 +60,7 @@ export const es = {
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate",
       title: "Tu clínica, sin llamadas perdidas.",
-      description:
-        "Un asistente responde a tus pacientes, revisa la agenda y aparta la cita.",
+      description: "Responde y agenda citas por ti.",
       from: "Consulta",
       to: "Cita confirmada",
       alt: "Estetoscopio azul sobre una tablilla con una hoja de citas, junto a un calendario",
@@ -105,8 +101,7 @@ export const es = {
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate",
       title: "Cada huésped importa.",
-      description:
-        "Responde a quien escribe, revisa el salón y deja la mesa reservada.",
+      description: "Responde y reserva la mesa.",
       from: "Consulta",
       to: "Mesa reservada",
       alt: "Menú de restaurante junto a un plato de pasta y una servilleta azul",
@@ -145,9 +140,8 @@ export const es = {
       word: "Bienes raíces",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate",
-      title: "Del interés a la oportunidad.",
-      description:
-        "Atiende al interesado, entiende qué busca y registra la oportunidad en tu CRM.",
+      title: "Del interés a la visita.",
+      description: "Atiende, califica y agenda.",
       from: "Consulta",
       to: "Visita agendada",
       alt: "Maqueta de una casa con puerta azul y un juego de llaves",
@@ -191,9 +185,8 @@ export const es = {
       word: "Comercio",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Automate + Systems",
-      title: "Vende sin hacer esperar a nadie.",
-      description:
-        "Responde con tu inventario real y da seguimiento a cada pedido.",
+      title: "Vende sin hacer esperar.",
+      description: "Responde con tu inventario real.",
       from: "Pregunta",
       to: "Pedido en seguimiento",
       alt: "Bolsa de compras con un suéter azul, unos tenis y un lector de tarjetas",
@@ -235,9 +228,8 @@ export const es = {
       word: "Servicios",
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Systems",
-      title: "Menos papeleo, más tiempo para tus clientes.",
-      description:
-        "Un sistema que lee, ordena y resume documentos; tu equipo revisa y decide.",
+      title: "Menos papeleo.",
+      description: "Lee, ordena y resume documentos.",
       from: "Documento",
       to: "Información organizada",
       alt: "Portafolio azul con documentos, pluma, lentes y calculadora",
@@ -277,8 +269,7 @@ export const es = {
       /** Which AIO9 service this example illustrates. */
       service: "Ejemplo de AIO9 Systems",
       title: "Operaciones que se anticipan.",
-      description:
-        "Seguimiento de órdenes que detecta incidencias y propone qué hacer; tú decides.",
+      description: "Detecta incidencias y propone qué hacer.",
       from: "Orden",
       to: "Acción asignada",
       alt: "Caja de envío con cinta azul, paquetes y un lector de códigos",
@@ -319,61 +310,40 @@ export const es = {
     },
   },
   process: {
-    title: "Así trabajamos contigo.",
-    subtitle: "Identificamos qué está frenando tu operación y construimos la solución con IA, automatización o software.",
-    steps: [
-      {
-        name: "Identificar",
-        text: "Vemos contigo qué te quita tiempo y qué proceso conviene resolver primero.",
-      },
-      {
-        name: "Construir",
-        text: "Armamos la solución con IA, automatización o software, según lo que haga falta.",
-      },
-      {
-        name: "Conectar y capacitar",
-        text: "La unimos a tus herramientas y enseñamos a tu equipo a usarla.",
-      },
-    ],
+    title: "Cómo trabajamos.",
+    steps: ["Identificamos", "Construimos", "Conectamos y capacitamos"],
   },
   capabilities: {
-    title: "Empezamos por un proceso concreto y medible. La web y el software a medida amplían la solución cuando los necesitas.",
     items: [
-      { name: "AIO9 Automate", text: "Nuestra oferta principal: asistentes de IA, automatizaciones e integración de tus herramientas. Atiende consultas, agenda citas y registra oportunidades en tu CRM." },
-      { name: "AIO9 Web", text: "Páginas empresariales y experiencias web hechas para captar solicitudes y conectarlas con tu proceso comercial." },
-      { name: "AIO9 Systems", text: "Software a medida para lo que tu operación necesita: seguimiento de pedidos, documentos o tareas internas." },
-      { name: "AIO9 Devices", text: "Sensores y controladores con ESP32 y Raspberry Pi que miden, avisan y actúan, conectados a un software hecho para tu operación." },
-      { name: "Mantenimiento y mejoras", text: "Seguimos contigo después de la entrega: ajustes, soporte y nuevas funciones." },
-      { name: "Tecnología creativa", text: "Imágenes, video y experiencias interactivas con IA." },
-      { name: "Conexión y capacitación", text: "Conectamos la solución con tus herramientas y enseñamos a tu equipo a usarla." },
+      { name: "AIO9 Automate", text: "Asistentes de IA y automatizaciones." },
+      { name: "AIO9 Web", text: "Sitios que captan clientes." },
+      { name: "AIO9 Systems", text: "Software a medida para tu operación." },
+      { name: "AIO9 Devices", text: "Sensores y controladores con ESP32 y Raspberry Pi." },
     ],
   },
   ui: {
     loading: "Cargando",
     sectors: "Sectores",
     mainOffer: "Oferta principal",
-    also: "Además",
     online: "En línea",
     statement: "Empezamos por un proceso concreto y medible.",
-    statementNote: "La web y el software a medida amplían la solución cuando los necesitas.",
     serviceWords: ["Automate", "Web", "Systems", "Devices"],
   },
   devices: {
     word: "Dispositivos",
     label: "AIO9 Devices · ESP32 + Raspberry Pi",
     title: "Automatización que toca el mundo físico.",
-    description:
-      "Sensores y controladores que miden, avisan y actúan, conectados a un software hecho para tu operación.",
+    description: "Sensores y controladores conectados a tu software.",
     tags: ["Sensores", "Válvulas y relés", "Lectores RFID", "GPS"],
-    photoAlt: "Una placa ESP32 y una Raspberry Pi conectadas a sensores sobre una mesa de trabajo",
+    photoAlt: "Una Raspberry Pi con un módulo controlador de relés",
+    chipAlt: "Una placa ESP32 sobre fondo oscuro",
     sectors: {
       farms: {
         name: "Granjas",
         word: "Granjas",
         hardware: "ESP32 · sensores de clima y gases",
-        title: "Tu galpón te avisa antes de que sea un problema.",
-        description:
-          "Sensores de temperatura, humedad y amoníaco; control de ventilación y registro de agua y alimento.",
+        title: "Tu galpón te avisa.",
+        description: "Mide el clima y ajusta la ventilación.",
         from: "Lectura",
         to: "Ventilación ajustada",
         steps: [
@@ -389,9 +359,8 @@ export const es = {
         name: "Inventarios físicos",
         word: "Inventarios",
         hardware: "Raspberry Pi · lectores RFID y de barras",
-        title: "Cuenta tu bodega sin cerrarla.",
-        description:
-          "Lectores RFID y de código de barras que comparan lo contado con tu sistema y marcan las diferencias.",
+        title: "Cuenta sin cerrar la bodega.",
+        description: "Lectores que marcan las diferencias.",
         from: "Lectura",
         to: "Diferencia detectada",
         steps: [
@@ -407,9 +376,8 @@ export const es = {
         name: "Flota y cadena de frío",
         word: "Flota",
         hardware: "Raspberry Pi · GPS, temperatura y puertas",
-        title: "Sabes dónde va y a qué temperatura.",
-        description:
-          "GPS, temperatura y apertura de puertas en cada unidad, con alertas por ruta y geocerca.",
+        title: "Dónde va y a qué temperatura.",
+        description: "GPS, temperatura y puertas en cada unidad.",
         from: "Evento en ruta",
         to: "Aviso al supervisor",
         steps: [
@@ -426,8 +394,7 @@ export const es = {
         word: "Agro",
         hardware: "ESP32 · humedad de suelo y válvulas",
         title: "Riega cuando la tierra lo pide.",
-        description:
-          "Humedad de suelo por zona, válvulas a distancia y riego programado según el clima.",
+        description: "Humedad por zona y riego programado.",
         from: "Suelo seco",
         to: "Riego programado",
         steps: [

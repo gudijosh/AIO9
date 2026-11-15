@@ -43,9 +43,6 @@ export function Process({ dict }: { dict: Dictionary }) {
             >
               {t.title}
             </h2>
-            <p className="max-w-[40ch] pb-4 text-[1.0625rem] leading-relaxed text-fog">
-              {t.subtitle}
-            </p>
           </Reveal>
         </Drift>
 
@@ -58,7 +55,7 @@ export function Process({ dict }: { dict: Dictionary }) {
 
         <ol ref={ref} className="mt-8 grid gap-12 lg:grid-cols-3 lg:gap-10">
           {t.steps.map((step, i) => (
-            <li key={step.name}>
+            <li key={step}>
               <Reveal
                 from={i === 0 ? "left" : i === 2 ? "right" : "up"}
                 delay={i * 140}
@@ -74,11 +71,8 @@ export function Process({ dict }: { dict: Dictionary }) {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="display mt-4 text-[clamp(2.75rem,4.6vw,4.5rem)]">
-                  {step.name}
+                  {step}
                 </h3>
-                <p className="mt-3 max-w-[36ch] text-base leading-relaxed text-fog">
-                  {step.text}
-                </p>
               </Reveal>
             </li>
           ))}

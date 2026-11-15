@@ -12,7 +12,7 @@ export const en: Dictionary = {
     solutions: "Solutions",
     process: "How it works",
     contact: "Contact",
-    cta: "Let's talk",
+    cta: "Contact us",
     home: "AIO9, back to top",
     primary: "Main navigation",
     skip: "Skip to content",
@@ -25,11 +25,10 @@ export const en: Dictionary = {
     tagline: "AI + software for business",
   },
   hero: {
-    title: "AI and software that help your business work better.",
-    lines: ["AI and software that", "help your business", "work better."],
-    subtitle:
-      "We implement AI and software so your business serves customers better, cuts manual work and connects its operations.",
-    primary: "Let's talk",
+    title: "Solutions that help your business work better.",
+    lines: ["Solutions that", "help your business", "work better."],
+    subtitle: "AI and software that serve, automate and connect your operation.",
+    primary: "Contact us",
     secondary: "See examples by industry",
     stackLabel: "Examples of industries where we apply our solutions",
     show: "Show",
@@ -37,9 +36,7 @@ export const en: Dictionary = {
     play: "Resume rotation",
   },
   experience: {
-    heading: "Our products are the solutions. Industries are examples.",
-    intro:
-      "Clinics, restaurants, real estate, retail and service firms: here is what our work looks like in each. Pick an industry and follow it step by step.",
+    heading: "Our products are the solutions.",
     railLabel: "Industries",
     simulation: "Illustrative simulation",
     stepOf: "Step {n} of {total}",
@@ -50,7 +47,7 @@ export const en: Dictionary = {
     play: "Play",
     pause: "Pause",
     replay: "Replay",
-    consult: "I want this for my business",
+    consult: "Contact us",
   },
   industries: {
     healthcare: {
@@ -60,8 +57,7 @@ export const en: Dictionary = {
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate",
       title: "Your clinic, without missed calls.",
-      description:
-        "An assistant replies to your patients, checks the schedule and books the visit.",
+      description: "Answers and books appointments for you.",
       from: "Request",
       to: "Confirmed appointment",
       alt: "Blue stethoscope on a clipboard with an appointment sheet, next to a calendar",
@@ -102,8 +98,7 @@ export const en: Dictionary = {
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate",
       title: "Every guest matters.",
-      description:
-        "It replies to whoever writes in, checks the floor and leaves the table booked.",
+      description: "Answers and books the table.",
       from: "Request",
       to: "Table reserved",
       alt: "Restaurant menu next to a plate of pasta and a blue napkin",
@@ -142,9 +137,8 @@ export const en: Dictionary = {
       word: "Real estate",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate",
-      title: "From interest to opportunity.",
-      description:
-        "It answers the inquiry, learns what they need and logs the opportunity in your CRM.",
+      title: "From interest to visit.",
+      description: "Answers, qualifies and schedules.",
       from: "Inquiry",
       to: "Visit scheduled",
       alt: "Scale model of a house with a blue door and a set of keys",
@@ -188,9 +182,8 @@ export const en: Dictionary = {
       word: "Retail",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Automate + Systems",
-      title: "Sell without keeping anyone waiting.",
-      description:
-        "It answers from your real stock and follows up on every order.",
+      title: "Sell without the wait.",
+      description: "Answers with your real stock.",
       from: "Question",
       to: "Order followed up",
       alt: "Shopping bag with a blue sweater, sneakers and a card reader",
@@ -232,9 +225,8 @@ export const en: Dictionary = {
       word: "Services",
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Systems",
-      title: "Less paperwork, more time for your clients.",
-      description:
-        "A system that reads, sorts and summarizes documents; your team reviews and decides.",
+      title: "Less paperwork.",
+      description: "Reads, sorts and summarizes documents.",
       from: "Document",
       to: "Organized information",
       alt: "Navy portfolio with documents, a pen, glasses and a calculator",
@@ -274,8 +266,7 @@ export const en: Dictionary = {
       /** Which AIO9 service this example illustrates. */
       service: "Example of AIO9 Systems",
       title: "Operations that think ahead.",
-      description:
-        "Order tracking that spots exceptions and suggests what to do; you decide.",
+      description: "Spots issues and suggests what to do.",
       from: "Order",
       to: "Action assigned",
       alt: "Shipping box with blue tape, parcels and a barcode scanner",
@@ -316,61 +307,40 @@ export const en: Dictionary = {
     },
   },
   process: {
-    title: "How we work with you.",
-    subtitle: "We find what is holding your operation back and build the solution with AI, automation or software.",
-    steps: [
-      {
-        name: "Identify",
-        text: "Together we look at what takes your time and which process to solve first.",
-      },
-      {
-        name: "Build",
-        text: "We build the solution with AI, automation or software, whichever it takes.",
-      },
-      {
-        name: "Connect and train",
-        text: "We connect it to your tools and teach your team to use it.",
-      },
-    ],
+    title: "How we work.",
+    steps: ["We identify", "We build", "We connect and train"],
   },
   capabilities: {
-    title: "We start with one concrete, measurable process. Web and custom software extend the solution when you need them.",
     items: [
-      { name: "AIO9 Automate", text: "Our core offer: AI assistants, automations and tool integration. Answer inquiries, book appointments and log opportunities in your CRM." },
-      { name: "AIO9 Web", text: "Business websites and web experiences built to capture requests and connect them to your sales process." },
-      { name: "AIO9 Systems", text: "Custom software for what your operation needs: tracking orders, documents or internal tasks." },
-      { name: "AIO9 Devices", text: "Sensors and controllers on ESP32 and Raspberry Pi that measure, alert and act, connected to software built for your operation." },
-      { name: "Maintenance and improvements", text: "We stay with you after delivery: adjustments, support and new features." },
-      { name: "Creative technology", text: "Images, video and interactive experiences with AI." },
-      { name: "Connection and training", text: "We connect the solution to your tools and teach your team to use it." },
+      { name: "AIO9 Automate", text: "AI assistants and automations." },
+      { name: "AIO9 Web", text: "Websites that win customers." },
+      { name: "AIO9 Systems", text: "Custom software for your operation." },
+      { name: "AIO9 Devices", text: "Sensors and controllers on ESP32 and Raspberry Pi." },
     ],
   },
   ui: {
     loading: "Loading",
     sectors: "Industries",
     mainOffer: "Core offer",
-    also: "Also",
     online: "Online",
     statement: "We start with one concrete, measurable process.",
-    statementNote: "Web and custom software extend the solution when you need them.",
     serviceWords: ["Automate", "Web", "Systems", "Devices"],
   },
   devices: {
     word: "Devices",
     label: "AIO9 Devices · ESP32 + Raspberry Pi",
     title: "Automation that reaches the physical world.",
-    description:
-      "Sensors and controllers that measure, alert and act, connected to software built for your operation.",
+    description: "Sensors and controllers connected to your software.",
     tags: ["Sensors", "Valves and relays", "RFID readers", "GPS"],
-    photoAlt: "An ESP32 board and a Raspberry Pi wired to sensors on a workbench",
+    photoAlt: "A Raspberry Pi with a relay controller module",
+    chipAlt: "An ESP32 board on a dark background",
     sectors: {
       farms: {
         name: "Farms",
         word: "Farms",
         hardware: "ESP32 · climate and gas sensors",
-        title: "Your barn warns you before it becomes a problem.",
-        description:
-          "Temperature, humidity and ammonia sensors; ventilation control and a log of water and feed.",
+        title: "Your barn warns you.",
+        description: "Measures the climate and adjusts ventilation.",
         from: "Reading",
         to: "Ventilation adjusted",
         steps: [
@@ -386,9 +356,8 @@ export const en: Dictionary = {
         name: "Physical inventory",
         word: "Inventory",
         hardware: "Raspberry Pi · RFID and barcode readers",
-        title: "Count your warehouse without closing it.",
-        description:
-          "RFID and barcode readers that compare what was counted with your system and flag the differences.",
+        title: "Count without closing.",
+        description: "Readers that flag the differences.",
         from: "Scan",
         to: "Difference detected",
         steps: [
@@ -404,9 +373,8 @@ export const en: Dictionary = {
         name: "Fleet and cold chain",
         word: "Fleet",
         hardware: "Raspberry Pi · GPS, temperature and doors",
-        title: "Know where it is and how cold it is.",
-        description:
-          "GPS, temperature and door openings on every unit, with alerts by route and geofence.",
+        title: "Where it is, how cold it is.",
+        description: "GPS, temperature and doors on every unit.",
         from: "Event on the road",
         to: "Supervisor alerted",
         steps: [
@@ -422,9 +390,8 @@ export const en: Dictionary = {
         name: "Agriculture",
         word: "Agro",
         hardware: "ESP32 · soil moisture and valves",
-        title: "Water when the soil asks for it.",
-        description:
-          "Soil moisture by zone, remote valves and irrigation scheduled around the weather.",
+        title: "Water when the soil asks.",
+        description: "Moisture by zone and scheduled irrigation.",
         from: "Dry soil",
         to: "Irrigation scheduled",
         steps: [
