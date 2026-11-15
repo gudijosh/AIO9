@@ -71,7 +71,6 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('a sector below the fold waits for its entrance', (await revealState()) === 'hidden');
   await show(p, 'logistics'); await p.waitForTimeout(1300);
   check('it enters when scrolled to', (await revealState()) === 'shown' && await p.evaluate(() => getComputedStyle(document.querySelector('article[aria-labelledby="scene-logistics"] [data-reveal]')).opacity === '1'));
-  check('statement is a plain section with the whole sentence', (await p.locator('#statement-heading').innerText()).replace(/\s+/g, ' ').trim().toUpperCase() === 'EMPEZAMOS POR UN PROCESO CONCRETO Y MEDIBLE.');
 
   // Demo: runs by itself, shows its result, then starts over. No step controls.
   await show(p, 'healthcare');
@@ -81,7 +80,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   let wrapped = false, prev = await stepOf(p, 'healthcare');
   for (let i = 0; i < 30 && !wrapped; i++) { await p.waitForTimeout(500); const now = await stepOf(p, 'healthcare'); if (now < prev) wrapped = true; prev = now; }
   check('window starts over after showing its result', wrapped);
-  check('no step text or step controls are shown', !(await p.locator('main').innerText()).match(/Paso \d+ de \d+/) && (await p.getByRole('button', { name: /Pausar|Reproducir|Repetir|Ir al paso/ }).count()) === 0);
+  check('no step text or step controls are shown', !(await p.locator('main').innerText()).match(/Paso \d+ de \d+/) && (await p.locator('#industries, #services, #devices').getByRole('button', { name: /Pausar|Reproducir|Repetir|Ir al paso/ }).count()) === 0);
   check('no numbering or "example of" labels', !(await p.locator('main').innerText()).match(/\d\d \/ \d\d|EJEMPLO DE/i));
   check('the "Además" section is gone', (await p.locator('#extras-heading').count()) === 0 && !(await p.locator('main').innerText()).includes('MANTENIMIENTO'));
   check('process shows three bare steps', (await p.locator('#process ol li').allInnerTexts()).map((x) => x.replace(/\s+/g, ' ').trim().toUpperCase()).join('|') === '01 IDENTIFICAMOS|02 CONSTRUIMOS|03 CONECTAMOS Y CAPACITAMOS', (await p.locator('#process ol li').allInnerTexts()).join('|'));
@@ -98,6 +97,40 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   // Services: four products, in order
   const serviceNames = await p.locator('#services h3').allTextContents();
   check('services: Automate, Web, Systems, Devices in that order', serviceNames.join('|') === 'AIO9 Automate|AIO9 Web|AIO9 Systems|AIO9 Devices', serviceNames.join('|'));
+
+  // Video reel: each language shows its own videos; nothing downloads until played
+  await p.goto(base + '/es', { waitUntil: 'networkidle' });
+  check('the statement section is gone', (await p.locator('#statement-heading').count()) === 0 && !(await p.locator('main').innerText()).toUpperCase().includes('PROCESO CONCRETO Y MEDIBLE'));
+  const reel = await p.locator('#videos').count();
+  if (!reel) {
+    check('video reel stays hidden while there are no videos', (await p.locator('#videos').count()) === 0);
+  } else {
+    const mediaRequests = [];
+    p.on('request', (r) => { if (/\.(mp4|webm|mov)(\?|$)/.test(r.url())) mediaRequests.push(r.url()); });
+    await p.reload({ waitUntil: 'networkidle' });
+    await p.evaluate(() => document.getElementById('videos').scrollIntoView({ behavior: 'instant' })); await p.waitForTimeout(1200);
+    check('reel sits right before the contact form', await p.evaluate(() => document.getElementById('videos').closest('section').nextElementSibling?.id === 'contact'));
+    check('no video downloads before one is played', mediaRequests.length === 0, mediaRequests.join(' '));
+    const srcs = await p.evaluate(() => [...document.querySelectorAll('#videos-row img')].map((i) => decodeURIComponent(i.currentSrc || i.src)));
+    check('/es shows only Spanish videos', srcs.length > 0 && srcs.every((x) => x.includes('/videos/es/')), srcs.slice(0, 2).join(' '));
+    const left0 = await p.evaluate(() => document.getElementById('videos-row').scrollLeft);
+    await p.getByRole('button', { name: 'Video siguiente' }).click(); await p.waitForTimeout(900);
+    const left1 = await p.evaluate(() => document.getElementById('videos-row').scrollLeft);
+    check('next arrow slides the row', left1 > left0 + 100, `${left0} -> ${left1}`);
+    await p.getByRole('button', { name: 'Video anterior' }).click(); await p.waitForTimeout(900);
+    check('previous arrow slides it back', (await p.evaluate(() => document.getElementById('videos-row').scrollLeft)) < 5);
+    const cards = p.locator('#videos-row li button');
+    await cards.nth(0).click(); await p.waitForTimeout(1500);
+    const first = await p.evaluate(() => { const v = document.querySelector('#videos-row video'); return v && { src: v.currentSrc, paused: v.paused }; });
+    check('tapping a card plays its video', !!first && !first.paused && first.src.includes('/videos/es/'), JSON.stringify(first));
+    await p.locator('#videos-row li').nth(1).locator('button').click(); await p.waitForTimeout(1500);
+    const playing = await p.evaluate(() => [...document.querySelectorAll('#videos-row video')].map((v) => ({ src: v.currentSrc, paused: v.paused })));
+    check('playing another stops the first (one at a time)', playing.length === 1 && !playing[0].paused && playing[0].src !== first.src, JSON.stringify(playing));
+    await p.goto(base + '/en', { waitUntil: 'networkidle' });
+    const enSrcs = await p.evaluate(() => [...document.querySelectorAll('#videos-row img')].map((i) => decodeURIComponent(i.currentSrc || i.src)));
+    check('/en shows only English videos', enSrcs.length > 0 && enSrcs.every((x) => x.includes('/videos/en/')), enSrcs.slice(0, 2).join(' '));
+    await p.goto(base + '/es', { waitUntil: 'networkidle' });
+  }
 
   // Form
   await p.reload({ waitUntil: 'networkidle' }); await p.evaluate(() => document.getElementById('contact-heading').scrollIntoView({ behavior: 'instant' })); await p.waitForTimeout(500);
@@ -128,7 +161,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('EN: url and html lang', p.url().includes('/en') && (await p.getAttribute('html', 'lang')) === 'en');
   check('EN headline', (await p.getAttribute('h1', 'aria-label')) === 'Solutions that help your business work better.');
   const body = (await p.locator('body').innerText());
-  const leaks = ['Sectores', 'Cómo funciona', 'Contactar', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificamos', 'Construimos', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos', 'Granjas', 'Galpón', 'Válvulas', 'En línea', 'Órdenes', 'Además', 'Cargando'].filter(w => body.includes(w));
+  const leaks = ['Sectores', 'Cómo funciona', 'Contactar', 'clínica', 'Paso ', 'Enviar', 'Empresa', 'Simulación', 'Identificamos', 'Construimos', 'Paciente', 'Asistente', 'mañana', 'Todos los derechos', 'Granjas', 'Galpón', 'Válvulas', 'En línea', 'Órdenes', 'Además', 'Cargando', 'Video siguiente', 'Prueba'].filter(w => body.includes(w));
   check('EN page has no Spanish strings', leaks.length === 0, leaks.join(', '));
   check('EN <title> and description', (await p.title()).includes('AI and software that help your business work better') && (await p.getAttribute('meta[name=description]', 'content')).startsWith('AIO9 implements'));
   check('hreflang alternates present', (await p.locator('link[rel=alternate][hreflang]').count()) >= 3);

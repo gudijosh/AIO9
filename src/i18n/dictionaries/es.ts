@@ -326,8 +326,13 @@ export const es = {
     sectors: "Sectores",
     mainOffer: "Oferta principal",
     online: "En línea",
-    statement: "Empezamos por un proceso concreto y medible.",
     serviceWords: ["Automate", "Web", "Systems", "Devices"],
+  },
+  videos: {
+    title: "AIO9 en video.",
+    prev: "Video anterior",
+    next: "Video siguiente",
+    play: "Reproducir",
   },
   devices: {
     word: "Dispositivos",

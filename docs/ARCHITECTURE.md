@@ -19,7 +19,7 @@ src/
     impact/       Las escenas de la página (ver abajo)
       scroll/     Fit (escala las ventanas)
       windows/    kit.tsx + diez ventanas de software + index.ts
-  data/           industries.ts (seis rubros) · devices.ts (cuatro sectores de AIO9 Devices)
+  data/           industries.ts (seis rubros) · devices.ts (sectores de AIO9 Devices) · videos.ts
   fonts/          League Gothic (SIL OFL), servida desde el propio sitio
   i18n/           config + diccionarios es.ts / en.ts
   lib/            useDemoTimeline, usePrefersReducedMotion, contact-*, site-config, analytics
@@ -85,10 +85,10 @@ escritorio y 11 en móvil.
 | Carga | `Preloader` | Cortina de un segundo, solo CSS. No bloquea la página. |
 | Hero | `Hero`, `HeroCollage` | Fondo claro; "AIO9" de fondo con volumen (sombra escalonada + cara punteada); collage de tres ventanas y cuatro objetos que entran volando al levantarse la cortina y luego flotan. |
 | Rubros | `IndustryScenes` | Corte diagonal sobre el hero. Seis rubros, de dos en dos, con línea divisoria. |
-| Frase | `Statement` | Una frase que entra girando en 3D. |
 | Servicios | `ServiceScenes` | Cuatro productos, de dos en dos. |
 | AIO9 Devices | `DevicesScenes` | Entrada con las dos placas y sus cuatro sectores, de dos en dos. |
 | Proceso | `Process` | Tres pasos con solo su nombre; la línea lima se llena al bajar. |
+| Videos | `VideoReel` | Fila de videos verticales que se desliza a mano; cada idioma muestra los suyos (`src/data/videos.ts`, ver `docs/VIDEOS.md`). Oculta si no hay videos. |
 | Contacto y pie | `Contact`, `Footer` | Corte diagonal de vuelta al fondo claro. |
 
 ### Parejas, entradas y parallax

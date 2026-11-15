@@ -323,8 +323,13 @@ export const en: Dictionary = {
     sectors: "Industries",
     mainOffer: "Core offer",
     online: "Online",
-    statement: "We start with one concrete, measurable process.",
     serviceWords: ["Automate", "Web", "Systems", "Devices"],
+  },
+  videos: {
+    title: "AIO9 on video.",
+    prev: "Previous video",
+    next: "Next video",
+    play: "Play",
   },
   devices: {
     word: "Devices",

@@ -7,10 +7,10 @@ import { Contact } from "@/components/sections/Contact";
 import { Preloader } from "@/components/impact/Preloader";
 import { Hero } from "@/components/impact/Hero";
 import { IndustryScenes } from "@/components/impact/IndustryScenes";
-import { Statement } from "@/components/impact/Statement";
 import { ServiceScenes } from "@/components/impact/ServiceScenes";
 import { DevicesScenes } from "@/components/impact/DevicesScenes";
 import { Process } from "@/components/impact/Process";
+import { VideoReel } from "@/components/impact/VideoReel";
 
 export default async function Page({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
@@ -30,10 +30,10 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
       <main id="main">
         <Hero dict={dict} locale={lang} />
         <IndustryScenes dict={dict} locale={lang} />
-        <Statement dict={dict} />
         <ServiceScenes dict={dict} locale={lang} />
         <DevicesScenes dict={dict} locale={lang} />
         <Process dict={dict} />
+        <VideoReel dict={dict} locale={lang} />
         <Contact dict={dict} locale={lang} />
       </main>
       <Footer dict={dict} locale={lang} />

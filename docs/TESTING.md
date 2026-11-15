@@ -28,6 +28,12 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   de pasos, controles, numeración ni etiquetas "Ejemplo de…"; las diez llevan
   "Simulación ilustrativa".
 - La sección "Además" ya no existe; el proceso muestra tres pasos sin texto.
+- Videos: la frase central ya no existe. Si hay videos, la fila está justo
+  antes del formulario, no descarga ningún video al cargar, `/es` muestra solo
+  los de español y `/en` solo los de inglés, las flechas la desplazan, tocar
+  una tarjeta reproduce su video y tocar otra detiene el anterior. Si no hay,
+  la sección no aparece. (Las pruebas con videos se corrieron con clips de
+  prueba generados localmente, que no se suben.)
 - "Quiero esto" preselecciona el sector en el formulario (industria y Devices).
 - Servicios en orden: Automate, Web, Systems, Devices.
 - Formulario: 5 errores con envío vacío, foco en el primer campo inválido,

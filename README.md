@@ -97,3 +97,5 @@ servidor; no es un export estático.
 - [`docs/TESTING.md`](docs/TESTING.md): pruebas realizadas y resultados.
 - `docs/screenshots/`: capturas de escritorio y móvil.
 - `.claude/skills/`: guías de buenas prácticas usadas durante el desarrollo.
+- [`docs/VIDEOS.md`](docs/VIDEOS.md): cómo añadir y preparar los videos.
+
