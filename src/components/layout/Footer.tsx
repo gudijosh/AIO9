@@ -10,24 +10,31 @@ const links = [
   { href: "#contact", key: "contact" },
 ] as const;
 
-/** The page closes on the wordmark, as large as the screen allows. */
-export function Footer({ dict, locale }: { dict: Dictionary; locale: Locale }) {
+/**
+ * The page closes on the wordmark, as large as the screen allows. The link
+ * list ends with the questions page, the only place it is linked from.
+ */
+export function Footer({ dict, locale, base = "" }: { dict: Dictionary; locale: Locale; base?: string }) {
   const t = dict.footer;
+  const items = [
+    ...links.map((link) => ({ href: `${base}${link.href}`, label: dict.nav[link.key] })),
+    { href: `/${locale}/faq`, label: dict.nav.faq },
+  ];
   return (
     <footer className="relative overflow-hidden bg-bone px-5 pt-16 text-ink lg:px-10 lg:pt-20">
       <div className="mx-auto flex max-w-[1500px] flex-col gap-10 lg:flex-row lg:items-start lg:gap-20">
         <div className="lg:flex-1">
           <p className="display text-[clamp(3rem,6vw,5.5rem)]">{t.tagline}</p>
-          <a href="#contact" className="pill mt-6 bg-ink text-bone">
+          <a href={`${base}#contact`} className="pill mt-6 bg-ink text-bone">
             {dict.nav.cta} <span aria-hidden>→</span>
           </a>
         </div>
         <nav aria-label={dict.nav.primary}>
           <ul className="grid gap-1 font-mono text-[12px] tracking-[0.14em] uppercase">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className="inline-block py-1.5 underline-offset-4 hover:underline">
-                  {dict.nav[link.key]}
+            {items.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} className="inline-block py-1.5 underline-offset-4 hover:underline">
+                  {item.label}
                 </a>
               </li>
             ))}

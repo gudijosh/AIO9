@@ -1,15 +1,19 @@
 # Pruebas realizadas
 
 Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
+Inicia un servidor nuevo antes de cada corrida: el límite de envíos de la API
+vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
 
 | Comprobación | Resultado |
 |---|---|
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
-| `npm run build` | Correcto (`/es` y `/en` prerenderizadas) |
-| Pruebas funcionales (`tests/functional.js`) | 90 de 90 |
+| `npm run build` | Correcto (`/es`, `/en` y `/faq` se generan por visita por la CSP con nonce) |
+| Pruebas funcionales (`tests/functional.js`) | 160 de 160 |
+| Bot (`node tests/bot.test.mjs`) | ES 91,7 % y EN 93,7 % de aciertos; 100 % de "no sé" fuera de tema |
+| Violaciones de CSP | Ninguna (todas las páginas, videos, formulario y bot) |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
-| Scroll horizontal accidental | Ninguno (375, 820, 1280, 1440, 1920 px) |
+| Scroll horizontal accidental | Ninguno (375, 820, 1280, 1440, 1920 px; inicio y preguntas) |
 
 ## Qué cubren las pruebas funcionales
 
@@ -28,6 +32,15 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
   de pasos, controles, numeración ni etiquetas "Ejemplo de…"; las diez llevan
   "Simulación ilustrativa".
 - La sección "Además" ya no existe; el proceso muestra tres pasos sin texto.
+- Videos: la frase central ya no existe. Si hay videos, la fila está justo
+  antes del formulario, no descarga ningún video al cargar, `/es` muestra solo
+  los de español y `/en` solo los de inglés (con títulos en inglés), tocar
+  una tarjeta reproduce su video y tocar otra detiene el anterior. En
+  escritorio, con los dos videos actuales la fila cabe entera y se comprueba
+  que no haya flechas; si la fila desborda (más videos), se comprueba que las
+  flechas la desplacen. En móvil se ve una tarjeta y el borde de la siguiente,
+  y al deslizar la siguiente queda entera en pantalla. Si un idioma no tiene
+  videos, la sección no aparece.
 - "Quiero esto" preselecciona el sector en el formulario (industria y Devices).
 - Servicios en orden: Automate, Web, Systems, Devices.
 - Formulario: 5 errores con envío vacío, foco en el primer campo inválido,
@@ -44,6 +57,50 @@ Ejecutadas sobre el build de producción (`npm run build` + `npm run start`).
 - Sin desborde horizontal en ningún punto del scroll a 375, 820, 1280, 1440 y
   1920 px, en ambos idiomas; sin errores de consola.
 - 404 para idiomas desconocidos; imagen Open Graph, sitemap y robots.
+- Seguridad: CSP con nonce distinto en cada petición y `strict-dynamic`, cada
+  `<script>` del HTML con ese nonce, ninguna violación en toda la suite; HSTS,
+  `nosniff`, `X-Frame-Options: DENY`, COOP, políticas de referencia y permisos,
+  sin `X-Powered-By`. API: 403 desde otro sitio o sin `Origin`, 415 si no es
+  JSON, 413 por encima de 16 KB, 422 con caracteres ocultos, 429 al repetir
+  envíos; respuestas `no-store` con CSP que no carga nada.
+- Datos estructurados: `Organization` con los cuatro servicios, `WebSite` y
+  `WebPage` en el inicio; en `/faq`, el `FAQPage` tiene exactamente las
+  preguntas visibles. `/llms.txt`, `/llms-full.txt`, `robots.txt` con los
+  rastreadores de IA y sitemap con `/faq` y `x-default`.
+- Página de preguntas: enlazada solo desde el pie; título; respuestas en el
+  HTML; canónica y versiones de idioma; abre y cierra con teclado; enlaces de
+  vuelta a las secciones; el cambio de idioma conserva la página; sin textos
+  del otro idioma; 404 para idiomas desconocidos.
+- Bot (Io): el botón está en el inicio y en `/faq` y muestra solo el robot,
+  sin texto; su código se descarga solo al abrirlo; la cabecera muestra solo
+  "Io" y el saludo es "Soy Io", sin "respuestas predefinidas" ni "no soy una
+  IA"; a "are you human?" responde que es el asistente virtual de AIO9; el
+  foco va al campo; responde
+  precio y "no diagnostica"; ante lo desconocido y los intentos de
+  manipulación responde "no tengo esa respuesta" con el botón al formulario;
+  el HTML que escribe el visitante queda como texto; campo de 200 caracteres
+  como máximo; ninguna petición de red al conversar; "Ir al formulario" cierra
+  el panel, va a `#contact` y preselecciona la industria; Escape cierra y
+  devuelve el foco; en inglés responde en inglés; en móvil es una hoja a todo
+  el ancho, sin desborde.
+
+## Bot (`tests/bot.test.mjs`)
+
+- **Estructura de los dos catálogos:** cada uno de los 58 temas existe una sola
+  vez; los botones apuntan a temas e industrias válidos; las respuestas no
+  tienen HTML ni pasan de 60 palabras.
+- **Seguridad del motor:** ninguna respuesta repite lo que escribió el
+  visitante, 5.000 caracteres se procesan en milisegundos y la misma entrada
+  da siempre la misma respuesta.
+- **Precisión:** se mide con 174 preguntas por idioma escritas por un agente
+  que nunca vio el catálogo, más 44 preguntas fuera de tema e intentos de
+  manipulación por idioma.
+  - Resultado: ES 91,7 % y EN 93,7 % de aciertos; 100 % de las preguntas fuera
+    de tema terminan en "no tengo esa respuesta".
+  - Una respuesta de "¿te refieres a…?" que incluye el tema correcto cuenta
+    medio acierto.
+  - Falla si los aciertos bajan del 90 % o las respuestas "no sé" fuera de tema
+    bajan del 95 %.
 
 Sin prueba automática (revisado en capturas): el aspecto de cada sección, el
 corte diagonal, el vuelo de las piezas del hero, el brillo de los nombres LED, las cortinas
@@ -53,12 +110,14 @@ entre secciones, el giro 3D de las ventanas y la suavidad del parallax.
 
 | | Rendimiento | Accesibilidad | Buenas prácticas | SEO |
 |---|---|---|---|---|
-| Móvil (emulado, 4G lenta) | 95 | 97 | 100 | 100 |
+| Móvil (emulado, 4G lenta) | 92 | 97 | 100 | 100 |
 | Escritorio | 99 | 97 | 100 | 100 |
 
-LCP 0.9 s en móvil emulado y 0.3 s en escritorio; bloqueo total 240 ms y 0 ms;
-CLS 0 en ambos. Las cifras varían entre ejecuciones: en móvil se midieron 86 y
-92 con el mismo código.
+Medido con la CSP con nonce (páginas generadas por visita) y el bot. LCP 1,2 s
+en móvil emulado y 0,3 s en escritorio; bloqueo total 280 ms y 0 ms; CLS 0;
+primera respuesta del servidor 210 ms (móvil emulado) y 30 ms (escritorio).
+Antes, con las páginas estáticas, móvil daba 95 (con variaciones entre 86 y
+95 de una ejecución a otra) y escritorio 99.
 
 Accesibilidad no llega a 100 por un solo aviso, de contraste, en la cabecera.
 La cabecera se dibuja en modo "diferencia" (blanco que se invierte según lo que

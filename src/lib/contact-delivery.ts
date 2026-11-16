@@ -3,6 +3,21 @@ import type { ContactInput } from "./contact-schema";
 
 type Deliver = (input: ContactInput, locale: string) => Promise<void>;
 
+/** A failure we describe ourselves: safe to log (status codes, no URLs or data). */
+export class DeliveryError extends Error {
+  name = "DeliveryError";
+}
+
+/** Outbound calls give up after this long instead of holding the function open. */
+const TIMEOUT_MS = 8000;
+
+/**
+ * Chat webhooks (Slack, Discord, Teams) render `text` as markup. Escaping
+ * these three characters stops a visitor from writing mentions such as
+ * <!channel> or disguised links such as <https://…|Invoice>.
+ */
+const escapeChat = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 const env = (name: string) => process.env[name]?.trim() || undefined;
 
 const asText = (input: ContactInput, locale: string) =>
@@ -32,6 +47,7 @@ export function getDelivery(): Deliver | null {
       const response = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
         body: JSON.stringify({
           from,
           to: [to],
@@ -40,7 +56,7 @@ export function getDelivery(): Deliver | null {
           text: asText(input, locale),
         }),
       });
-      if (!response.ok) throw new Error(`Resend responded ${response.status}`);
+      if (!response.ok) throw new DeliveryError(`Resend responded ${response.status}`);
     };
   }
 
@@ -50,9 +66,17 @@ export function getDelivery(): Deliver | null {
       const response = await fetch(webhook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ source: "aio9-landing", locale, ...input, text: asText(input, locale) }),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+        body: JSON.stringify({
+          source: "aio9-landing",
+          locale,
+          ...input,
+          text: escapeChat(asText(input, locale)),
+          // Discord: never ping anyone, whatever the text says.
+          allowed_mentions: { parse: [] },
+        }),
       });
-      if (!response.ok) throw new Error(`Webhook responded ${response.status}`);
+      if (!response.ok) throw new DeliveryError(`Webhook responded ${response.status}`);
     };
   }
 

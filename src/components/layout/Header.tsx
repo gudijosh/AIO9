@@ -19,7 +19,16 @@ const links = [
  * dark on the light sections and light on the dark ones. The menu opens as
  * a full-screen panel with oversized links.
  */
-export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) {
+export function Header({
+  locale,
+  t,
+  base = "",
+}: {
+  locale: Locale;
+  t: Dictionary["nav"];
+  /** "" on the home page (plain #anchors); "/es" or "/en" on other pages. */
+  base?: string;
+}) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -56,7 +65,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
     <>
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50 text-white mix-blend-difference">
         <div className="flex h-16 items-center px-5 lg:h-[76px] lg:px-10">
-          <a href="#top" aria-label={t.home} className="display pointer-events-auto text-[2.125rem] leading-none">
+          <a href={base || "#top"} aria-label={t.home} className="display pointer-events-auto text-[2.125rem] leading-none">
             AIO9
           </a>
           <p className="mx-auto hidden font-mono text-[11px] tracking-[0.14em] uppercase lg:block">{t.tagline}</p>
@@ -113,7 +122,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
             {links.map((link, i) => (
               <li key={link.href}>
                 <a
-                  href={link.href}
+                  href={`${base}${link.href}`}
                   onClick={() => setOpen(false)}
                   className="display group flex items-baseline gap-4 py-1 text-[clamp(3.75rem,11.5vw,10rem)] transition-[color,translate] duration-500 ease-(--ease-signal) hover:text-azure motion-safe:hover:translate-x-8"
                 >
@@ -128,7 +137,7 @@ export function Header({ locale, t }: { locale: Locale; t: Dictionary["nav"] }) 
               </li>
             ))}
           </ul>
-          <a href="#contact" onClick={() => setOpen(false)} className="pill mt-8 bg-ink text-bone">
+          <a href={`${base}#contact`} onClick={() => setOpen(false)} className="pill mt-8 bg-ink text-bone">
             {t.cta} <span aria-hidden>→</span>
           </a>
         </nav>

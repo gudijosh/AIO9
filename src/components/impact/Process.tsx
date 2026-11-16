@@ -23,7 +23,7 @@ export function Process({ dict }: { dict: Dictionary }) {
     <section
       id="process"
       aria-labelledby="process-heading"
-      className="relative isolate overflow-x-clip bg-ink px-5 pt-24 pb-[calc(6rem+14vw)] lg:px-10 lg:pt-32"
+      className="relative isolate overflow-x-clip bg-ink px-5 pt-24 pb-[calc(6rem+14vw)] lg:px-10 lg:pt-32 [&:has(+#videos)]:pb-24"
     >
       <div
         aria-hidden

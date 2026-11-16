@@ -1,14 +1,23 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { isLocale, defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "AIO9 — Intelligence in Motion";
+
+/** One card per language, with its alt text in that language. */
+export async function generateImageMetadata({ params }: { params: { lang: string } | Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const dict = getDictionary(isLocale(lang) ? lang : defaultLocale);
+  return [{ id: "card", alt: dict.meta.ogAlt, size, contentType }];
+}
 
 export default async function OpenGraphImage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const dict = getDictionary(isLocale(lang) ? lang : defaultLocale);
+  // Only real languages get an image; anything else is a 404, not a render.
+  if (!isLocale(lang)) notFound();
+  const dict = getDictionary(lang);
 
   return new ImageResponse(
     (
