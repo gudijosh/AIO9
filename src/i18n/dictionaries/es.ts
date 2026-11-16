@@ -26,6 +26,7 @@ export const es = {
     devices: "AIO9 Devices",
     tagline: "IA + software para empresas",
     faq: "Preguntas y respuestas",
+    privacy: "Privacidad",
   },
   hero: {
     title: "Soluciones para que tu empresa trabaje mejor.",
@@ -347,6 +348,20 @@ export const es = {
     moreText: "Escríbenos en el formulario y te respondemos.",
     cta: "Contactar",
   },
+  privacyPage: {
+    title: "Aviso de privacidad.",
+    lead: "Qué datos recibimos en este sitio, para qué los usamos y qué puedes pedirnos.",
+    metaTitle: "Aviso de privacidad — AIO9",
+    metaDescription: "Qué datos recibe AIO9 en este sitio, para qué los usa, con quién se comparten y cómo pedir verlos, corregirlos o borrarlos.",
+    updated: "Última actualización",
+  },
+  notFound: {
+    metaTitle: "Página no encontrada — AIO9",
+    title: "Esta página no existe.",
+    text: "Puede que el enlace esté mal escrito o que la página ya no esté aquí.",
+    home: "Volver al inicio",
+    faq: "Ver preguntas",
+  },
   bot: {
     open: "Abrir el chat con Io",
     close: "Cerrar el chat",
@@ -455,6 +470,8 @@ export const es = {
       messageHint: "Con unas líneas basta (mínimo 20 caracteres).",
       submit: "Enviar mensaje",
       submitting: "Enviando…",
+      privacyNote: "Usamos tus datos solo para responderte.",
+      privacyLink: "Aviso de privacidad",
       errors: {
         name_min: "¿Cómo te llamas?",
         company_min: "¿Cómo se llama tu empresa?",

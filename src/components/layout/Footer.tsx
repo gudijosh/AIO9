@@ -12,13 +12,15 @@ const links = [
 
 /**
  * The page closes on the wordmark, as large as the screen allows. The link
- * list ends with the questions page, the only place it is linked from.
+ * list ends with the questions page (linked only from here) and the
+ * privacy notice.
  */
 export function Footer({ dict, locale, base = "" }: { dict: Dictionary; locale: Locale; base?: string }) {
   const t = dict.footer;
   const items = [
     ...links.map((link) => ({ href: `${base}${link.href}`, label: dict.nav[link.key] })),
     { href: `/${locale}/faq`, label: dict.nav.faq },
+    { href: `/${locale}/privacy`, label: dict.nav.privacy },
   ];
   return (
     <footer className="relative overflow-hidden bg-bone px-5 pt-16 text-ink lg:px-10 lg:pt-20">

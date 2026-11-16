@@ -59,10 +59,12 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
    definir un webhook, y cargar las variables.
 2. **Datos de contacto reales**: correo y número de WhatsApp.
 3. **Dominio** y `NEXT_PUBLIC_SITE_URL`.
-4. **Analítica**: no hay ninguna instalada. El punto de conexión es
-   `src/lib/analytics.ts` (`track()` ya se llama en los eventos clave). Si se
-   añade un script de terceros, la CSP lo bloqueará hasta cargarlo con el
-   nonce (ver `docs/SECURITY.md`).
+4. **Analítica sin cookies (Vercel Web Analytics)**: ya está en el código, apagada.
+   Para encenderla, activa *Web Analytics* en la pestaña *Analytics* del
+   proyecto en Vercel, añade la variable `ENABLE_ANALYTICS=1` y vuelve a
+   desplegar. Cuenta visitas sin cookies ni datos personales; los eventos del
+   formulario (`src/lib/analytics.ts`) solo se guardan en los planes de pago de
+   Vercel.
 5. **Límite de envíos en Vercel**: el código ya limita por IP (honeypot,
    validación, origen, tamaño y frecuencia), pero el límite definitivo es una
    regla del Firewall de Vercel. Pasos en `docs/SECURITY.md`.
@@ -103,4 +105,6 @@ servidor; no es un export estático.
 - [`docs/SECURITY.md`](docs/SECURITY.md): CSP, cabeceras, protección de la API y lo que hay que configurar en Vercel.
 - [`docs/BOT.md`](docs/BOT.md): cómo funciona el bot de preguntas y cómo ampliar sus respuestas.
 - [`docs/SEO.md`](docs/SEO.md): página de preguntas, datos estructurados, `llms.txt` y rastreadores de IA.
+- Aviso de privacidad: `src/data/privacy.ts` (texto general con "AIO9" como responsable; conviene que lo revise un abogado antes del lanzamiento).
+- Revisión automática: `.github/workflows/ci.yml` corre lint, tipos, pruebas del bot, compilación y la suite funcional en cada PR.
 

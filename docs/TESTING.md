@@ -9,7 +9,8 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es`, `/en` y `/faq` se generan por visita por la CSP con nonce) |
-| Pruebas funcionales (`tests/functional.js`) | 160 de 160 |
+| Pruebas funcionales (`tests/functional.js`) | 193 de 193 |
+| CI en GitHub (`.github/workflows/ci.yml`) | Corre todo lo anterior en cada PR y en cada push a `main` |
 | Bot (`node tests/bot.test.mjs`) | ES 91,7 % y EN 93,7 % de aciertos; 100 % de "no sé" fuera de tema |
 | Violaciones de CSP | Ninguna (todas las páginas, videos, formulario y bot) |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
@@ -71,6 +72,18 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
   HTML; canónica y versiones de idioma; abre y cierra con teclado; enlaces de
   vuelta a las secciones; el cambio de idioma conserva la página; sin textos
   del otro idioma; 404 para idiomas desconocidos.
+- Privacidad: enlazada desde el pie y bajo el formulario; ES y EN, cada una
+  en su idioma, con "AIO9" como responsable y los cinco datos del formulario;
+  en el sitemap; ninguna cookie después de navegar, enviar el formulario y
+  usar la API.
+- 404: `/es/no-existe`, `/en/nope`, `/fr` y `/xyz/abc` responden 404, `noindex`
+  y con el nonce en cada script; la página propia aparece en el idioma de la
+  ruta, o del navegador cuando la ruta no tiene idioma; "Volver al inicio"
+  funciona. (Next 16 entrega estas 404 como un HTML base que el navegador
+  completa: el texto se comprueba en el navegador.)
+- Íconos y manifiesto: `apple-touch-icon`, PNG de 192 y 512 px, 404 para otros
+  tamaños; el manifiesto tiene nombre, colores y tres íconos.
+- Analítica: fuera de Vercel no se carga ningún script ni se envía nada.
 - Bot (Io): el botón está en el inicio y en `/faq` y muestra solo el robot,
   sin texto; su código se descarga solo al abrirlo; la cabecera muestra solo
   "Io" y el saludo es "Soy Io", sin "respuestas predefinidas" ni "no soy una
