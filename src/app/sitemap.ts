@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
     { path: "", priority: 1 },
     { path: "/faq", priority: 0.8 },
+    { path: "/privacy", priority: 0.3 },
   ];
   const lastModified = new Date();
   return pages.flatMap(({ path, priority }) => {

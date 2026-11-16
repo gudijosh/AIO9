@@ -24,6 +24,7 @@ export const en: Dictionary = {
     devices: "AIO9 Devices",
     tagline: "AI + software for business",
     faq: "Questions and answers",
+    privacy: "Privacy",
   },
   hero: {
     title: "Solutions that help your business work better.",
@@ -344,6 +345,20 @@ export const en: Dictionary = {
     moreText: "Write to us through the form and we'll get back to you.",
     cta: "Contact us",
   },
+  privacyPage: {
+    title: "Privacy notice.",
+    lead: "What data we receive on this site, what we use it for and what you can ask of us.",
+    metaTitle: "Privacy notice — AIO9",
+    metaDescription: "What data AIO9 receives on this site, what it is used for, who it is shared with and how to ask to see, correct or delete it.",
+    updated: "Last updated",
+  },
+  notFound: {
+    metaTitle: "Page not found — AIO9",
+    title: "This page doesn't exist.",
+    text: "The link may be mistyped, or the page is no longer here.",
+    home: "Back to home",
+    faq: "See questions",
+  },
   bot: {
     open: "Open chat with Io",
     close: "Close chat",
@@ -452,6 +467,8 @@ export const en: Dictionary = {
       messageHint: "A few lines is plenty (at least 20 characters).",
       submit: "Send message",
       submitting: "Sending…",
+      privacyNote: "We use your details only to reply to you.",
+      privacyLink: "Privacy notice",
       errors: {
         name_min: "What's your name?",
         company_min: "What's your company called?",

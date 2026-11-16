@@ -11,6 +11,11 @@ src/
     [lang]/layout.tsx        Layout raíz por idioma, metadata bilingüe, fuentes
     [lang]/page.tsx          Composición de la página, en orden de lectura
     [lang]/faq/page.tsx      Preguntas y respuestas (enlazada solo desde el pie)
+    [lang]/privacy/page.tsx  Aviso de privacidad (texto en src/data/privacy.ts)
+    [lang]/not-found.tsx     404 propia, en el idioma de la ruta o del navegador
+    [lang]/[...rest]         Cualquier ruta inexistente bajo /es o /en → 404
+    apple-icon.tsx, icons/   Íconos para la pantalla de inicio (src/lib/app-icon.tsx)
+    manifest.ts              Archivo de app web
     [lang]/opengraph-image   Imagen Open Graph generada por idioma
     api/contact/route.ts     Recepción del formulario (origen, tipo, tamaño, límite por IP)
     llms.txt, llms-full.txt  Resumen del sitio para agentes de IA (src/lib/llms.ts)
@@ -30,7 +35,8 @@ src/
   i18n/           config + diccionarios es.ts / en.ts
   lib/            useDemoTimeline, usePrefersReducedMotion, contact-*, site-config, analytics,
                   rate-limit, structured-data, llms, bot/ (tipos, intenciones y motor)
-  proxy.ts        CSP con nonce por visita (docs/SECURITY.md)
+  proxy.ts        CSP con nonce por visita (docs/SECURITY.md); idioma de la visita
+                  (x-locale) y 404 para rutas sin idioma válido
 ```
 
 ## Idiomas

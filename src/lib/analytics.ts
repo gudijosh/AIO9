@@ -1,7 +1,11 @@
+import { track as vercelTrack } from "@vercel/analytics";
+
 /**
- * Single entry point for product analytics. No provider is installed yet:
- * connect one here (and document it in the README) instead of sprinkling
- * vendor snippets through components.
+ * Single entry point for product analytics: Vercel Web Analytics, which
+ * uses no cookies and identifies no one. Events carry no personal data.
+ * Nothing is recorded unless <Analytics /> is mounted, which the layout
+ * does only on Vercel with ENABLE_ANALYTICS=1 (see README); otherwise
+ * Vercel's `track` is a no-op.
  */
 export type AnalyticsEvent =
   | { name: "industry_view"; industry: string }
@@ -9,7 +13,9 @@ export type AnalyticsEvent =
   | { name: "contact_submit"; outcome: "sent" | "error" | "not_configured" };
 
 export function track(event: AnalyticsEvent): void {
+  const { name, ...properties } = event;
   if (process.env.NODE_ENV === "development") {
     console.debug("[analytics]", event);
   }
+  vercelTrack(name, properties);
 }
