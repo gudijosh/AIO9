@@ -282,6 +282,21 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   await p.locator('main a', { hasText: 'Volver al inicio' }).click(); await p.waitForURL('**/es'); await p.waitForTimeout(600);
   check('404: "Volver al inicio" goes home', p.url().endsWith('/es') && (await p.locator('h1').count()) === 1);
 
+  // Share cards: every page has its own Open Graph card, light enough for WhatsApp
+  const cards = [];
+  for (const path of ['/es', '/en', '/es/faq', '/en/faq', '/es/privacy', '/en/privacy']) {
+    const html = await (await p.request.get(base + path)).text();
+    const meta = (prop) => new RegExp(`<meta (?:property|name)="${prop}" content="([^"]*)"`).exec(html)?.[1];
+    const image = meta('og:image'); const res = image && await p.request.get(base + image.replace(/^https?:\/\/[^/]+/, ''));
+    const body = res ? await res.body() : Buffer.alloc(0);
+    const dims = body.length > 24 ? [body.readUInt32BE(16), body.readUInt32BE(20)] : [0, 0];
+    cards.push({ path, ok: !!meta('og:title') && !!meta('og:description') && !!meta('og:image:alt') && (meta('og:url') || '').endsWith(path) && res?.headers()['content-type'] === 'image/png' && dims[0] === 1200 && dims[1] === 630 && body.length < 300_000, kb: Math.round(body.length / 1024) });
+  }
+  check('share cards: each page has title, description, its own 1200×630 PNG under 300 KB and its own og:url', cards.every((c) => c.ok), JSON.stringify(cards));
+  const homeCard = (await (await p.request.get(base + '/es')).text()).match(/og:image" content="([^"]*)"/)?.[1];
+  const faqCard = (await (await p.request.get(base + '/es/faq')).text()).match(/og:image" content="([^"]*)"/)?.[1];
+  check('share cards: the questions page has its own card, not the home one', !!homeCard && !!faqCard && homeCard !== faqCard && faqCard.includes('/es/faq/opengraph-image'));
+
   // Home-screen icons and web app manifest
   await p.goto(base + '/es', { waitUntil: 'networkidle' });
   const appleHref = await p.getAttribute('link[rel="apple-touch-icon"]', 'href');

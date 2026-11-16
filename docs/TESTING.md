@@ -9,7 +9,7 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es`, `/en` y `/faq` se generan por visita por la CSP con nonce) |
-| Pruebas funcionales (`tests/functional.js`) | 193 de 193 |
+| Pruebas funcionales (`tests/functional.js`) | 195 de 195 |
 | CI en GitHub (`.github/workflows/ci.yml`) | Corre todo lo anterior en cada PR y en cada push a `main` |
 | Bot (`node tests/bot.test.mjs`) | ES 91,7 % y EN 93,7 % de aciertos; 100 % de "no sé" fuera de tema |
 | Violaciones de CSP | Ninguna (todas las páginas, videos, formulario y bot) |
@@ -81,6 +81,9 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
   ruta, o del navegador cuando la ruta no tiene idioma; "Volver al inicio"
   funciona. (Next 16 entrega estas 404 como un HTML base que el navegador
   completa: el texto se comprueba en el navegador.)
+- Tarjetas para compartir: inicio, preguntas y privacidad, en ES y EN, tienen
+  título, descripción, texto alternativo, `og:url` propio y su propia imagen
+  PNG de 1200×630 de menos de 300 KB.
 - Íconos y manifiesto: `apple-touch-icon`, PNG de 192 y 512 px, 404 para otros
   tamaños; el manifiesto tiene nombre, colores y tres íconos.
 - Analítica: fuera de Vercel no se carga ningún script ni se envía nada.
