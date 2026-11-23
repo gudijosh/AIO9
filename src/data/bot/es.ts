@@ -38,6 +38,9 @@ export const kb: BotKnowledge = {
     actions: [toForm, seeFaq],
   },
   stopwords: [
+    "estrategica", "estrategico", "monton", "largos", "largo", "bastantes", "gente", "sola", "solas", "solos", "parte", "cubren", "serio",
+    "android", "iphone", "ios",
+    "lol", "jaja", "jajaja", "xd", "pue", "mira", "fijate", "wey", "guey", "aprox", "aproximadamente", "exactamente", "realmente", "neta", "incluye", "incluyen", "incluido", "chateando", "nesecito", "nececito", "ocupo", "manejo",
     // artículos, preposiciones y conjunciones
     "a", "al", "ante", "bajo", "con", "contra", "de", "del", "desde", "durante", "en", "entre",
     "hacia", "hasta", "mediante", "para", "pa", "por", "x", "segun", "sin", "sobre", "tras",
@@ -64,6 +67,22 @@ export const kb: BotKnowledge = {
     "ahora", "hoy", "consulta", "mio", "mia", "orden",
   ],
   synonyms: {
+    animada: "animacion", animadas: "animacion", animado: "animacion",
+    // ampliación de vocabulario (tipos de negocio, herramientas, muletillas)
+    hotelito: "hotel", hostales: "hotel", posada: "hotel", hospedaje: "hospitalidad", hoteleria: "hospitalidad", hotelero: "hospitalidad",
+    turismo: "hospitalidad", airbnb: "hotel", cocina: "restaurante", zapatos: "tienda", abarroteria: "tienda", libreria: "tienda",
+    papeleria: "tienda", farmacia: "tienda", local: "tienda", arquitecto: "profesional", arquitecta: "profesional", arquitectura: "profesional",
+    asesoria: "consultoria", fisioterapeuta: "salud", fisio: "salud", psicologo: "salud", psicologa: "salud", nutriologo: "salud",
+    nutricionista: "salud", odontologia: "salud", laboratorio: "salud", optica: "salud", terapeuta: "salud", furgoneta: "camion",
+    pickup: "camion", reparto: "transporte", maiz: "cultivo", sembrar: "cultivo", plantacion: "cultivo", huerto: "cultivo",
+    hortalizas: "cultivo", regado: "riego", plc: "industrial", pantallitas: "ventanas",
+    pantallas: "ventanas", ventanitas: "ventanas", sap: "erp", odoo: "erp", netsuite: "erp", quickbooks: "erp",
+    contpaqi: "erp", sheets: "excel", hubspot: "crm", salesforce: "crm", pipedrive: "crm", costar: "precio",
+    cobrarian: "precio", inversion: "precio", forms: "formulario", cargando: "trabo", congelo: "trabo", pegado: "trabo",
+    cdmx: "ciudad", monterrey: "ciudad", guadalajara: "ciudad", xela: "ciudad", quetzaltenango: "ciudad", aliarnos: "alianza",
+    asociarnos: "socio", plataforma: "software", programa: "software", reportes: "documento",
+    informes: "documento", informe: "documento", filtro: "calificar", chiquita: "pyme", negocito: "pyme", despido: "adios",
+    especializan: "rubro", especialidad: "rubro",
     // saludo, gracias, despedida
     holaa: "hola", holaaa: "hola", ola: "hola", holi: "hola", holis: "hola",
     wenas: "buenas", buenass: "buenas", saludo: "saludos",
@@ -169,7 +188,7 @@ export const kb: BotKnowledge = {
     diferentes: "diferente", distinto: "diferente", distinta: "diferente",
     belleza: "salon", barberia: "salon", estetica: "salon", constructora: "construccion",
     ongs: "ong", fundacion: "ong", municipalidad: "gobierno", municipio: "gobierno",
-    banco: "finanzas", financiera: "finanzas", cooperativa: "finanzas",
+    financiera: "finanzas", cooperativa: "finanzas",
     // demos, videos, proceso
     demos: "demo", demostracion: "demo", demostraciones: "demo",
     simulaciones: "simulacion", simulado: "simulacion", simulada: "simulacion",
@@ -360,6 +379,7 @@ export const kb: BotKnowledge = {
       id: "human",
       label: "Hablar con una persona",
       patterns: [
+        "me puede atender una persona de verdad", "quiero hablar con alguien real", "me atiende un humano",
         "quiero hablar con una persona", "hablar con un humano", "me comunicas con un asesor",
         "puedo hablar con alguien", "pasame con un agente", "hay alguien ahi",
         "necesito hablar con un vendedor", "quiero que me atienda una persona", "me atiende alguien porfa",
@@ -429,6 +449,7 @@ export const kb: BotKnowledge = {
       id: "systems",
       label: "AIO9 Systems",
       patterns: [
+        "que incluye systems", "que incluye el producto systems", "que trae aio9 systems",
         "que es aio9 systems", "systems que hace", "para que sirve systems", "software para mi operacion",
         "software a medida para la operacion", "systems sirve para mi empresa", "info de aio9 systems",
         "como funciona aio9 systems", "software que organice mi operacion",
@@ -483,6 +504,7 @@ export const kb: BotKnowledge = {
       id: "healthcare",
       label: "Salud",
       patterns: [
+        "tengo una clinica como me pueden ayudar", "tengo una clinica que me ofrecen", "en mi clinica como me ayudan",
         "trabajan con clinicas", "tengo una clinica", "sirve para consultorios medicos", "para hospitales",
         "soy doctor", "tengo un consultorio dental", "que hacen en salud", "clinica veterinaria",
         "sector salud", "para mi clinica que hace el asistente", "soy dentista", "pierdo llamadas de pacientes",
@@ -510,6 +532,7 @@ export const kb: BotKnowledge = {
       id: "restaurants",
       label: "Restaurantes",
       patterns: [
+        "tengo un restaurante que me ofrecen", "tengo un restaurante como me ayudan", "para mi restaurante que tienen",
         "tengo un restaurante", "sirve para restaurantes", "para mi cafeteria", "trabajan con restaurantes",
         "tengo un bar", "tengo una fonda", "tengo un comedor", "sector hospitalidad", "para hoteles",
         "mi negocio de comida", "tengo una pizzeria", "que hacen en restaurantes",
@@ -523,6 +546,7 @@ export const kb: BotKnowledge = {
       id: "real_estate",
       label: "Bienes raíces",
       patterns: [
+        "tengo una inmobiliaria como me ayudan", "vendo casas que me ofrecen",
         "soy agente inmobiliario", "tengo una inmobiliaria", "bienes raices", "vendo casas",
         "renta de departamentos", "para corredores de propiedades", "trabajan con bienes raices",
         "manejo propiedades en renta", "lotificadora", "vendo terrenos", "que hacen en bienes raices",
@@ -537,6 +561,7 @@ export const kb: BotKnowledge = {
       id: "retail",
       label: "Comercio",
       patterns: [
+        "tengo una tienda como me ayudan", "tengo una tienda de ropa que me ofrecen",
         "tengo una tienda", "sirve para comercios", "vendo ropa", "tengo una ferreteria", "para tiendas",
         "mis clientes preguntan si hay stock", "tienda de abarrotes", "tengo una tiendita",
         "comercio minorista", "que hacen en comercio", "apartar un producto para un cliente", "tienda en linea",
@@ -563,6 +588,7 @@ export const kb: BotKnowledge = {
       id: "operations",
       label: "Operaciones",
       patterns: [
+        "como ayudan en operaciones", "que hacen en logistica", "como ayudan con las entregas",
         "logistica", "empresa de logistica", "manejo entregas", "tengo una distribuidora",
         "control de pedidos", "incidencias en entregas", "sirve para operaciones",
         "entregas fuera de horario", "empresa de paqueteria", "cadena de suministro",
@@ -608,6 +634,7 @@ export const kb: BotKnowledge = {
       id: "fleet",
       label: "Flota y cadena de frío",
       patterns: [
+        "me avisan si abren las puertas del camion", "alertas de puertas abiertas en la flota",
         "tengo camiones", "rastreo gps de mi flota", "cadena de frio",
         "monitorear temperatura de camiones refrigerados", "control de flotilla", "gps para vehiculos",
         "saber donde van mis unidades", "transporte refrigerado", "sensor de puertas en camion",
@@ -639,6 +666,7 @@ export const kb: BotKnowledge = {
       id: "other_sector",
       label: "Otro sector",
       patterns: [
+        "y si mi negocio es de otro rubro", "no veo mi sector en la lista", "mi industria no aparece",
         "mi sector no aparece", "no aparece mi industria", "y si mi rubro no aparece", "trabajan con escuelas",
         "tengo un gimnasio", "tengo una fabrica", "mi negocio es diferente", "mi giro no aparece en la lista",
         "sirve para cualquier negocio", "tengo un salon de belleza", "trabajan con ong", "somos una cooperativa",
@@ -680,6 +708,8 @@ export const kb: BotKnowledge = {
       id: "sensors",
       label: "Sensores e IoT",
       patterns: [
+        "automatizan maquinas", "automatizacion de maquinas y equipos",
+        "instalan sensores", "ustedes ponen los sensores", "hacen la instalacion de sensores",
         "hacen iot", "internet de las cosas", "sensores", "automatizacion industrial", "monitoreo con sensores",
         "sensor de temperatura", "medir humedad y temperatura", "telemetria",
         "pueden poner sensores en mi negocio", "que sensores usan", "monitoreo de maquinas",
@@ -754,6 +784,7 @@ export const kb: BotKnowledge = {
       id: "human_review",
       label: "Revisión humana",
       patterns: [
+        "hay una persona que revise lo que hace la ia", "alguien aprueba las acciones antes de aplicarlas", "la ia hace cosas sin permiso",
         "la ia decide sola", "toma decisiones sola", "hay supervision humana", "alguien revisa lo que hace la ia",
         "y si la ia se equivoca", "necesita aprobacion", "es autonomo", "quien aprueba los cambios",
         "la ia hace todo sola", "revision humana", "puede actuar sin permiso", "quien tiene el control",
@@ -767,6 +798,7 @@ export const kb: BotKnowledge = {
       id: "integrations",
       label: "Integraciones",
       patterns: [
+        "funciona con excel o google sheets", "se integra con mi programa de facturacion", "se conecta con mi sistema contable", "funciona con mi erp",
         "se conecta con mi sistema", "se integra con mi crm", "funciona con excel",
         "se puede conectar a mi erp", "tiene api", "se conecta con lo que ya uso",
         "se integran con otras herramientas", "jala con mi sistema actual", "conectar con mi software actual",
@@ -827,6 +859,7 @@ export const kb: BotKnowledge = {
       id: "start",
       label: "Cómo empezar",
       patterns: [
+        "quiero empezar un proyecto con ustedes", "como contrato sus servicios",
         "como empiezo", "como los contrato", "quiero contratar", "me interesa", "como inicio",
         "quiero empezar", "que tengo que hacer para contratarlos", "cual es el primer paso", "como arrancamos",
         "va, quiero empezar ya", "como le hago para contratarlos", "quiero una propuesta", "estoy interesado",
@@ -872,6 +905,7 @@ export const kb: BotKnowledge = {
       id: "contact_channels",
       label: "Contacto",
       patterns: [
+        "cual es su correo electronico", "a que correo les escribo", "tienen email",
         "tienen whatsapp", "numero de telefono", "me pasas su correo", "cual es su email", "tienen instagram",
         "facebook", "como los contacto", "a que numero llamo", "tienen redes sociales", "pasame tu cel",
         "me pueden llamar", "linkedin de aio9",
@@ -1010,6 +1044,7 @@ export const kb: BotKnowledge = {
       id: "custom_software",
       label: "Software a medida",
       patterns: [
+        "necesito un sistema para administrar mi negocio", "quiero un programa para mi empresa", "necesito una app para mi negocio",
         "desarrollan software", "hacen apps", "necesito una aplicacion", "programan sistemas a la medida",
         "me pueden hacer un sistema", "desarrollo de software", "app para mi negocio", "hacen erp",
         "sistema de gestion", "una app movil", "hacen sistemas de facturacion", "software personalizado",
@@ -1055,6 +1090,7 @@ export const kb: BotKnowledge = {
       id: "reservations",
       label: "Reservas",
       patterns: [
+        "quiero que mis clientes reserven en linea", "reservas por internet", "que mis clientes puedan reservar solos",
         "reservas automaticas", "que tome reservaciones", "reservar mesa", "sistema de reservas",
         "bot para reservaciones", "reservas por whatsapp", "manejar las reservaciones de mi restaurante",
         "booking", "reservas de hotel", "confirmar reservas", "que reserve mesas solo",

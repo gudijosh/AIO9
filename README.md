@@ -3,14 +3,19 @@
 Landing bilingüe (ES / EN) de AIO9: implementamos IA y software para que las
 empresas atiendan mejor, reduzcan tareas manuales y conecten sus operaciones.
 
-La oferta son cuatro productos: **AIO9 Automate** (principal: asistentes de IA,
-automatizaciones e integración de herramientas), **AIO9 Web**, **AIO9 Systems**
-y **AIO9 Devices** (automatización con ESP32 y Raspberry Pi), más
-mantenimiento, tecnología creativa y capacitación como complementos. Los diez
-sectores de la página son ejemplos de aplicación: cada uno tiene su propia
-ventana de software que reproduce, paso a paso, cómo se vería la solución. Los
-sectores y los productos se presentan de dos en dos, cada uno con su propia
-entrada al aparecer, y la página termina en el formulario de contacto.
+La oferta son cuatro productos: **AIO9 Automate** (asistentes de IA y
+automatizaciones), **AIO9 Web** (sitios que captan clientes), **AIO9 Systems**
+(software a medida) y **AIO9 Devices** (sensores y controladores con ESP32 y
+Raspberry Pi). La capacitación es parte del proceso: identificamos, construimos,
+conectamos y capacitamos. Los seis sectores y los cuatro de AIO9 Devices son
+ejemplos de aplicación: cada uno tiene su propia ventana de software que se
+reproduce sola, en bucle, mientras está a la vista. Sectores y productos se
+presentan de dos en dos; después vienen el proceso, los videos y el formulario
+de contacto.
+
+Además: página de preguntas (`/es/faq`), aviso de privacidad (`/es/privacy`),
+404 propia y **Io**, un asistente de respuestas predefinidas (sin IA) que abre
+desde el botón flotante del robot.
 
 > Las demostraciones son **simulaciones locales y deterministas**, identificadas
 > como ilustrativas en la interfaz: muestran posibilidades, y cada implementación
@@ -68,7 +73,10 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
 5. **Límite de envíos en Vercel**: el código ya limita por IP (honeypot,
    validación, origen, tamaño y frecuencia), pero el límite definitivo es una
    regla del Firewall de Vercel. Pasos en `docs/SECURITY.md`.
-6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
+6. **Logotipo definitivo**: hoy "AIO9" es texto en League Gothic con el 9 azul
+   (`src/components/layout/Header.tsx`, `Footer.tsx` y la tarjeta para compartir
+   en `src/lib/share-card.tsx`). El ícono del navegador es `src/app/icon.svg`.
+   Si hay un logotipo definitivo, se cambia en esos archivos.
 ## Despliegue en Vercel
 
 1. En Vercel: **Add New → Project** e importa `gudijosh/AIO9`. Detecta Next.js

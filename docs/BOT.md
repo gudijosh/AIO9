@@ -85,9 +85,24 @@ Los botones bajo cada respuesta pueden:
    datos de contacto inventados. Nunca decir que AIO9 diagnostica o da
    recomendaciones médicas. El único canal es el formulario.
 5. Corre `node tests/bot.test.mjs`. Revisa la estructura de los dos
-   catálogos y mide los aciertos con preguntas de evaluación escritas aparte,
-   sin mirar el catálogo. Falla si los aciertos bajan del 90 % o si una
-   pregunta fuera de tema no termina en "no lo sé".
+   catálogos y mide los aciertos con tres sets de preguntas escritas por
+   agentes que nunca vieron el catálogo:
+   - `eval`: el primero. Sus fallas se añadieron después al catálogo, así que
+     ya no es una medida ciega (99 %).
+   - `dev`: el segundo, usado para ampliar el vocabulario (sinónimos, tipos de
+     negocio, herramientas, muletillas). Tampoco es ciego (94–96 %).
+   - `holdout`: el tercero, **ciego**, nunca usado para ajustar. Es la cifra
+     honesta: **64,7 % en español y 61,2 % en inglés** con preguntas muy
+     variadas. De las fallas, casi todas son "no tengo esa respuesta" con el
+     botón al formulario; respuestas equivocadas, 2 de 116 (ES) y 5 de 116 (EN).
+   - Fuera de tema e intentos de manipulación terminan en "no lo sé" en el
+     97–100 % de los casos en los tres sets.
+   - Falla si `eval` o `dev` bajan del 90 %, `holdout` del 60 %, o "no lo sé"
+     fuera de tema del 95 %.
 6. Si una pregunta real se responde mal, añade esa forma de preguntar a las
-   frases del tema correcto. No edites las preguntas de evaluación para que
-   pasen.
+   frases del tema correcto, o la palabra que falta a los sinónimos. **No
+   mires ni uses el `holdout` para ajustar**: cuando quede viejo, conviértelo
+   en `dev` y pide un `holdout` nuevo a alguien que no vea el catálogo.
+7. Lo que más mejora a Io son **preguntas reales de clientes**: Io no guarda
+   conversaciones, así que la fuente son los mensajes que llegan por el
+   formulario, WhatsApp o en persona.

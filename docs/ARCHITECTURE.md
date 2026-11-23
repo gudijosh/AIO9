@@ -155,8 +155,9 @@ Diez productos distintos, cada uno con sus colores y opciones. Todas:
   disponible, como una captura. Su diseño interno es idéntico en cualquier
   pantalla.
 - Son funciones puras de `step`: sin estado ni efectos. `useDemoTimeline`
-  (en `DemoScene`) avanza los pasos una sola vez y se detiene; `DemoBar` da
-  reproducir, pausar, repetir y saltar a un paso.
+  (en `DemoScene`) avanza los pasos mientras la ventana está a la vista y, con
+  `loopAfter`, vuelve a empezar. Con "reducir movimiento" muestra el último paso
+  y no se mueve. No hay controles de reproducción.
 - El texto secundario (`muted`) de cada ventana da al menos 4.5:1 sobre su
   fondo y sobre su barra de título.
 - Usan `Step` (de `kit.tsx`) para lo que aparece: el elemento siempre ocupa
