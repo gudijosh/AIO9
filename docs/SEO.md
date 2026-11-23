@@ -22,6 +22,28 @@ cambias un texto, cambian a la vez la página, los datos estructurados,
 `llms.txt` y el bot. Una prueba comprueba que las preguntas del `FAQPage`
 sean exactamente las que se ven.
 
+## Compartir el enlace (con o sin dominio propio)
+
+Al compartir un enlace, WhatsApp, LinkedIn, Slack o iMessage muestran una
+tarjeta: imagen, título, descripción y, en pequeño, el dominio. Cada página
+tiene su propia tarjeta con el diseño del sitio (`src/lib/share-card.tsx`):
+inicio, preguntas y privacidad, en los dos idiomas. Son PNG de 1200×630 de
+menos de 100 KB, y la tipografía es League Gothic en `.woff`
+(`src/fonts/league-gothic-latin.woff`), porque el generador no lee `.woff2`.
+
+Sin dominio propio:
+
+1. En Vercel, *Settings → Domains*, agrega una dirección corta gratuita como
+   `aio9.vercel.app` (si está libre) como dominio de producción.
+2. Pon `NEXT_PUBLIC_SITE_URL` con esa dirección y vuelve a desplegar.
+3. Comparte solo esa dirección, nunca las de vista previa
+   (`aio-9-git-…vercel.app`).
+4. Si una app guardó una tarjeta vieja, renuévala con el depurador de
+   Facebook (Sharing Debugger) o el Post Inspector de LinkedIn.
+
+No pongas en `NEXT_PUBLIC_SITE_URL` un dominio que no hayas comprado: las
+apps y los buscadores mandarían a la gente ahí.
+
 ## Imprescindible al publicar
 
 1. **`NEXT_PUBLIC_SITE_URL`** con el dominio definitivo, por ejemplo

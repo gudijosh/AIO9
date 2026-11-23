@@ -9,8 +9,9 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
 | `npm run lint` | Sin errores |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Correcto (`/es`, `/en` y `/faq` se generan por visita por la CSP con nonce) |
-| Pruebas funcionales (`tests/functional.js`) | 160 de 160 |
-| Bot (`node tests/bot.test.mjs`) | ES 91,7 % y EN 93,7 % de aciertos; 100 % de "no sé" fuera de tema |
+| Pruebas funcionales (`tests/functional.js`) | 195 de 195 |
+| CI en GitHub (`.github/workflows/ci.yml`) | Corre todo lo anterior en cada PR y en cada push a `main` |
+| Io (`node tests/bot.test.mjs`) | Set ciego: ES 64,7 % y EN 61,2 % de aciertos (las demás, casi todas, "no sé" + formulario); 97–100 % de "no sé" fuera de tema. Sets de ajuste: 94–99 % |
 | Violaciones de CSP | Ninguna (todas las páginas, videos, formulario y bot) |
 | Errores de consola en 5 tamaños, ES y EN | Ninguno |
 | Scroll horizontal accidental | Ninguno (375, 820, 1280, 1440, 1920 px; inicio y preguntas) |
@@ -71,6 +72,21 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
   HTML; canónica y versiones de idioma; abre y cierra con teclado; enlaces de
   vuelta a las secciones; el cambio de idioma conserva la página; sin textos
   del otro idioma; 404 para idiomas desconocidos.
+- Privacidad: enlazada desde el pie y bajo el formulario; ES y EN, cada una
+  en su idioma, con "AIO9" como responsable y los cinco datos del formulario;
+  en el sitemap; ninguna cookie después de navegar, enviar el formulario y
+  usar la API.
+- 404: `/es/no-existe`, `/en/nope`, `/fr` y `/xyz/abc` responden 404, `noindex`
+  y con el nonce en cada script; la página propia aparece en el idioma de la
+  ruta, o del navegador cuando la ruta no tiene idioma; "Volver al inicio"
+  funciona. (Next 16 entrega estas 404 como un HTML base que el navegador
+  completa: el texto se comprueba en el navegador.)
+- Tarjetas para compartir: inicio, preguntas y privacidad, en ES y EN, tienen
+  título, descripción, texto alternativo, `og:url` propio y su propia imagen
+  PNG de 1200×630 de menos de 300 KB.
+- Íconos y manifiesto: `apple-touch-icon`, PNG de 192 y 512 px, 404 para otros
+  tamaños; el manifiesto tiene nombre, colores y tres íconos.
+- Analítica: fuera de Vercel no se carga ningún script ni se envía nada.
 - Bot (Io): el botón está en el inicio y en `/faq` y muestra solo el robot,
   sin texto; su código se descarga solo al abrirlo; la cabecera muestra solo
   "Io" y el saludo es "Soy Io", sin "respuestas predefinidas" ni "no soy una
@@ -92,15 +108,11 @@ vive en la memoria del servidor y una segunda corrida lo encontraría agotado.
 - **Seguridad del motor:** ninguna respuesta repite lo que escribió el
   visitante, 5.000 caracteres se procesan en milisegundos y la misma entrada
   da siempre la misma respuesta.
-- **Precisión:** se mide con 174 preguntas por idioma escritas por un agente
-  que nunca vio el catálogo, más 44 preguntas fuera de tema e intentos de
-  manipulación por idioma.
-  - Resultado: ES 91,7 % y EN 93,7 % de aciertos; 100 % de las preguntas fuera
-    de tema terminan en "no tengo esa respuesta".
-  - Una respuesta de "¿te refieres a…?" que incluye el tema correcto cuenta
-    medio acierto.
-  - Falla si los aciertos bajan del 90 % o las respuestas "no sé" fuera de tema
-    bajan del 95 %.
+- **Precisión:** tres sets de preguntas escritas por agentes que nunca vieron
+  el catálogo (ver `docs/BOT.md`). El ciego (`holdout`): ES 64,7 % y EN 61,2 %;
+  casi todas las fallas son "no tengo esa respuesta" con el botón al
+  formulario, y solo 2 (ES) y 5 (EN) de 116 son respuestas equivocadas. Los
+  sets usados para ajustar dan 94–99 %. Fuera de tema: 97–100 % de "no sé".
 
 Sin prueba automática (revisado en capturas): el aspecto de cada sección, el
 corte diagonal, el vuelo de las piezas del hero, el brillo de los nombres LED, las cortinas

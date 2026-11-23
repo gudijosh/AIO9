@@ -7,6 +7,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { siteConfig } from "@/lib/site-config";
 import { Providers } from "@/components/Providers";
 import { BotLauncher } from "@/components/bot/BotLauncher";
+import { Analytics } from "@vercel/analytics/next";
 import "../globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -25,6 +26,7 @@ export function generateStaticParams() {
 
 /** Only /es and /en exist; anything else is a 404 without rendering. */
 export const dynamicParams = false;
+
 
 export const viewport: Viewport = { themeColor: "#0a0a12", colorScheme: "dark light" };
 
@@ -67,6 +69,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
           {/* Rule-based bot (not an AI): loads its code and answers on first use. */}
           <BotLauncher locale={lang} t={dict.bot} homeHref={`/${lang}`} faqHref={`/${lang}/faq`} />
         </Providers>
+        {/* Cookie-free visit counts. Only on Vercel, once Web Analytics is enabled
+            there and ENABLE_ANALYTICS=1 is set; before that its script would 404. */}
+        {process.env.VERCEL && process.env.ENABLE_ANALYTICS === "1" && <Analytics />}
       </body>
     </html>
   );

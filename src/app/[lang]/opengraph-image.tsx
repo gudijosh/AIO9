@@ -1,12 +1,12 @@
-import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 import { isLocale, defaultLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { shareCard, shareCardSize } from "@/lib/share-card";
 
-export const size = { width: 1200, height: 630 };
+/** Card shown when the home page is shared, one per language. */
+export const size = shareCardSize;
 export const contentType = "image/png";
 
-/** One card per language, with its alt text in that language. */
 export async function generateImageMetadata({ params }: { params: { lang: string } | Promise<{ lang: string }> }) {
   const { lang } = await params;
   const dict = getDictionary(isLocale(lang) ? lang : defaultLocale);
@@ -18,36 +18,5 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ lan
   // Only real languages get an image; anything else is a 404, not a render.
   if (!isLocale(lang)) notFound();
   const dict = getDictionary(lang);
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 72,
-          background: "#0B1421",
-          color: "#fff",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "baseline", fontSize: 44, fontWeight: 600, letterSpacing: -2 }}>
-          AIO9
-          <div style={{ width: 13, height: 13, marginLeft: 6, background: "#2558DC" }} />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 84, lineHeight: 1, letterSpacing: -4, maxWidth: 900 }}>{dict.hero.title}</div>
-          <div style={{ display: "flex", alignItems: "center", marginTop: 44, color: "#86A8FF" }}>
-            <div style={{ width: 12, height: 12, borderRadius: 12, background: "#86A8FF" }} />
-            <div style={{ width: 260, height: 2, margin: "0 8px", background: "#86A8FF" }} />
-            <div style={{ width: 16, height: 16, background: "#86A8FF" }} />
-            <div style={{ marginLeft: 24, fontSize: 28, color: "#8997A8" }}>{dict.footer.tagline}</div>
-          </div>
-        </div>
-      </div>
-    ),
-    size,
-  );
+  return shareCard({ lines: dict.hero.lines, tagline: dict.nav.tagline });
 }

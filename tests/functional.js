@@ -19,7 +19,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
     close: () => b0.close(),
   };
   const errors = [];
-  const watch = (p) => { p.on('console', m => m.type() === 'error' && errors.push(m.text())); p.on('pageerror', e => errors.push('PAGEERROR ' + e.message)); };
+  const watch = (p) => { p.on('console', m => m.type() === 'error' && !(m.text().includes('404') && /no-existe|\/nope|\/fr$|\/xyz/.test(m.location()?.url || '')) && errors.push(m.text())); p.on('pageerror', e => errors.push('PAGEERROR ' + e.message)); };
   const topOf = (p, id) => p.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, id);
   // Bring one sector's column to the middle of the screen.
   const show = async (p, id) => { await p.evaluate((id) => document.querySelector(`article[aria-labelledby="scene-${id}"]`).scrollIntoView({ block: 'center', behavior: 'instant' }), id); await p.waitForTimeout(900); };
@@ -255,6 +255,63 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   const faqEsLeaks = ['Sectores', 'Cómo funciona', 'Contactar', 'clínica', 'Empresa', 'Simulación', 'Identificamos', 'Todos los derechos', 'Granjas', 'Preguntas y respuestas', 'Inicio'].filter((w) => faqEnBody.includes(w));
   check('EN questions page has no Spanish strings', faqEsLeaks.length === 0, faqEsLeaks.join(', '));
   check('unknown locale questions page → 404', (await p.request.get(base + '/fr/faq', { failOnStatusCode: false })).status() === 404);
+
+  // Privacy notice
+  await p.goto(base + '/es', { waitUntil: 'networkidle' });
+  check('privacy: linked from the footer and from under the form', (await p.locator('footer a[href="/es/privacy"]').count()) === 1 && (await p.locator('#contact form a[href="/es/privacy"]').count()) === 1);
+  const privacyEs = await p.request.get(base + '/es/privacy'); const privacyEsHtml = await privacyEs.text();
+  await p.goto(base + '/es/privacy', { waitUntil: 'networkidle' });
+  const privacyEsText = await p.locator('main').innerText();
+  check('privacy (ES): loads, names AIO9 and the five form fields', privacyEs.status() === 200 && (await p.locator('h1').innerText()).toUpperCase().includes('AVISO DE PRIVACIDAD') && ['AIO9', 'nombre', 'empresa', 'correo', 'industria', 'mensaje', 'no usa cookies'].every((w) => privacyEsText.includes(w)));
+  check('privacy (ES): no English strings, canonical set', !['Privacy', 'Company', 'cookies and', 'Contact us'].some((w) => privacyEsText.includes(w)) && privacyEsHtml.includes('/es/privacy"'));
+  await p.goto(base + '/en/privacy', { waitUntil: 'networkidle' });
+  const privacyEnText = await p.locator('main').innerText();
+  check('privacy (EN): loads in English with the same content', (await p.locator('h1').innerText()).toUpperCase().includes('PRIVACY NOTICE') && ['AIO9', 'name', 'business', 'email', 'industry', 'message', "doesn't use cookies"].every((w) => privacyEnText.includes(w)) && !['Aviso', 'Empresa', 'correo', 'Contactar'].some((w) => privacyEnText.includes(w)));
+  check('sitemap lists the privacy notice', sitemap.includes('/es/privacy</loc>') && sitemap.includes('/en/privacy</loc>'));
+
+  // 404: status 404 with the CSP nonce; the page itself (rendered in the browser) in the right language
+  const nf = async (path, lang = 'es-ES') => { const r = await p.request.get(base + path, { headers: { 'accept-language': lang }, failOnStatusCode: false }); const html = await r.text(); const n = /'nonce-([^']+)'/.exec(r.headers()['content-security-policy'] || '')?.[1]; const tags = [...html.matchAll(/<script\b[^>]*>/g)].map((m) => m[0]); return { status: r.status(), noindex: html.includes('name="robots" content="noindex'), nonced: !!n && tags.length > 0 && tags.every((t) => t.includes(`nonce="${n}"`)) }; };
+  const nfStatus = await Promise.all([nf('/es/no-existe'), nf('/en/nope'), nf('/fr'), nf('/xyz/abc', 'en-US,en;q=0.9')]);
+  check('404: unknown pages and languages answer 404, noindex, every script with the CSP nonce', nfStatus.every((r) => r.status === 404 && r.noindex && r.nonced), JSON.stringify(nfStatus.map((r) => r.status)));
+  const shown404 = async (path, lang) => { const c = await b.newContext({ viewport: { width: 1440, height: 900 }, locale: lang }); const q = await c.newPage(); await q.goto(base + path, { waitUntil: 'networkidle' }); await q.waitForTimeout(600); const out = { lang: await q.getAttribute('html', 'lang'), h1: (await q.locator('h1').innerText().catch(() => '')).toUpperCase(), title: await q.title() }; await c.close(); return out; };
+  const nfEs = await shown404('/es/no-existe', 'es-ES'); const nfEn = await shown404('/en/nope', 'es-ES');
+  check('404: the site\'s own page in the language of the path', nfEs.lang === 'es' && nfEs.h1.includes('ESTA PÁGINA NO EXISTE') && nfEs.title.startsWith('Página no encontrada') && nfEn.lang === 'en' && nfEn.h1.includes("THIS PAGE DOESN'T EXIST") && nfEn.title.startsWith('Page not found'), JSON.stringify([nfEs, nfEn]));
+  const nfFr = await shown404('/fr', 'es-ES'); const nfXyz = await shown404('/xyz/abc', 'en-US');
+  check('404: paths without a language → Spanish, or English if the browser prefers it', nfFr.h1.includes('ESTA PÁGINA NO EXISTE') && nfXyz.h1.includes("THIS PAGE DOESN'T EXIST"), JSON.stringify([nfFr.h1, nfXyz.h1]));
+  await p.goto(base + '/es/no-existe', { waitUntil: 'networkidle' }); await p.waitForTimeout(600);
+  await p.locator('main a', { hasText: 'Volver al inicio' }).click(); await p.waitForURL('**/es'); await p.waitForTimeout(600);
+  check('404: "Volver al inicio" goes home', p.url().endsWith('/es') && (await p.locator('h1').count()) === 1);
+
+  // Share cards: every page has its own Open Graph card, light enough for WhatsApp
+  const cards = [];
+  for (const path of ['/es', '/en', '/es/faq', '/en/faq', '/es/privacy', '/en/privacy']) {
+    const html = await (await p.request.get(base + path)).text();
+    const meta = (prop) => new RegExp(`<meta (?:property|name)="${prop}" content="([^"]*)"`).exec(html)?.[1];
+    const image = meta('og:image'); const res = image && await p.request.get(base + image.replace(/^https?:\/\/[^/]+/, ''));
+    const body = res ? await res.body() : Buffer.alloc(0);
+    const dims = body.length > 24 ? [body.readUInt32BE(16), body.readUInt32BE(20)] : [0, 0];
+    cards.push({ path, ok: !!meta('og:title') && !!meta('og:description') && !!meta('og:image:alt') && (meta('og:url') || '').endsWith(path) && res?.headers()['content-type'] === 'image/png' && dims[0] === 1200 && dims[1] === 630 && body.length < 300_000, kb: Math.round(body.length / 1024) });
+  }
+  check('share cards: each page has title, description, its own 1200×630 PNG under 300 KB and its own og:url', cards.every((c) => c.ok), JSON.stringify(cards));
+  const homeCard = (await (await p.request.get(base + '/es')).text()).match(/og:image" content="([^"]*)"/)?.[1];
+  const faqCard = (await (await p.request.get(base + '/es/faq')).text()).match(/og:image" content="([^"]*)"/)?.[1];
+  check('share cards: the questions page has its own card, not the home one', !!homeCard && !!faqCard && homeCard !== faqCard && faqCard.includes('/es/faq/opengraph-image'));
+
+  // Home-screen icons and web app manifest
+  await p.goto(base + '/es', { waitUntil: 'networkidle' });
+  const appleHref = await p.getAttribute('link[rel="apple-touch-icon"]', 'href');
+  const manifestHref = await p.getAttribute('link[rel="manifest"]', 'href');
+  const png = async (path) => { const r = await p.request.get(base + path.replace(/^https?:\/\/[^/]+/, ''), { failOnStatusCode: false }); return r.status() === 200 && r.headers()['content-type'] === 'image/png'; };
+  check('icons: apple-touch-icon and 192/512 PNGs', !!appleHref && (await png(appleHref)) && (await png('/icons/192')) && (await png('/icons/512')) && (await p.request.get(base + '/icons/300', { failOnStatusCode: false })).status() === 404);
+  const manifestJson = await (await p.request.get(base + manifestHref)).json();
+  check('manifest: name, colours and three icons', manifestJson.name === 'AIO9' && manifestJson.start_url === '/es' && manifestJson.icons?.length === 3);
+
+  // Analytics stays off locally (it only loads on Vercel when enabled)
+  const analyticsRequests = [];
+  p.on('request', (r) => { if (/_vercel\/insights|va\.vercel-scripts/.test(r.url())) analyticsRequests.push(r.url()); });
+  await p.reload({ waitUntil: 'networkidle' }); await p.waitForTimeout(800);
+  check('analytics: no script or beacon outside Vercel', analyticsRequests.length === 0, analyticsRequests.join(' '));
+  check('no cookies after browsing, sending the form and using the API', (await ctx.cookies()).length === 0);
   await ctx.close();
 
   // ---------- Bot: rule-based, loads on first use, plain text, no network
@@ -357,7 +414,7 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   for (const [w, h] of [[375, 667], [820, 1180], [1280, 720], [1440, 900], [1920, 1080]]) {
     for (const lang of ['es', 'en']) {
       ctx = await b.newContext({ viewport: { width: w, height: h } }); p = await ctx.newPage(); watch(p);
-      for (const page of ['', '/faq']) {
+      for (const page of ['', '/faq', '/privacy', '/no-existe']) {
       await p.goto(`${base}/${lang}${page}`, { waitUntil: 'networkidle' });
       const total = await p.evaluate(() => document.documentElement.scrollHeight);
       let over = 0;
@@ -379,4 +436,6 @@ const check = (name, ok, detail = '') => { results.push(ok); console.log(`${ok ?
   check('no console errors or page errors', errors.length === 0, errors.slice(0, 3).join(' | '));
   console.log(`\n${results.filter(Boolean).length}/${results.length} passed`);
   await b.close();
+  // Fail the process (and CI) when any check failed.
+  if (!results.every(Boolean)) process.exitCode = 1;
 })();

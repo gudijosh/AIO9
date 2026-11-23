@@ -299,6 +299,12 @@ export function ContactForm({
         >
           {status === "submitting" ? t.submitting : t.submit}
         </button>
+        <p className="text-[13px] leading-relaxed text-slate-600">
+          {t.privacyNote}{" "}
+          <a href={`/${locale}/privacy`} className="font-medium text-midnight underline underline-offset-4 hover:text-signal">
+            {t.privacyLink}
+          </a>
+        </p>
       </div>
     </form>
   );

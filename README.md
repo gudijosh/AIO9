@@ -3,14 +3,19 @@
 Landing bilingüe (ES / EN) de AIO9: implementamos IA y software para que las
 empresas atiendan mejor, reduzcan tareas manuales y conecten sus operaciones.
 
-La oferta son cuatro productos: **AIO9 Automate** (principal: asistentes de IA,
-automatizaciones e integración de herramientas), **AIO9 Web**, **AIO9 Systems**
-y **AIO9 Devices** (automatización con ESP32 y Raspberry Pi), más
-mantenimiento, tecnología creativa y capacitación como complementos. Los diez
-sectores de la página son ejemplos de aplicación: cada uno tiene su propia
-ventana de software que reproduce, paso a paso, cómo se vería la solución. Los
-sectores y los productos se presentan de dos en dos, cada uno con su propia
-entrada al aparecer, y la página termina en el formulario de contacto.
+La oferta son cuatro productos: **AIO9 Automate** (asistentes de IA y
+automatizaciones), **AIO9 Web** (sitios que captan clientes), **AIO9 Systems**
+(software a medida) y **AIO9 Devices** (sensores y controladores con ESP32 y
+Raspberry Pi). La capacitación es parte del proceso: identificamos, construimos,
+conectamos y capacitamos. Los seis sectores y los cuatro de AIO9 Devices son
+ejemplos de aplicación: cada uno tiene su propia ventana de software que se
+reproduce sola, en bucle, mientras está a la vista. Sectores y productos se
+presentan de dos en dos; después vienen el proceso, los videos y el formulario
+de contacto.
+
+Además: página de preguntas (`/es/faq`), aviso de privacidad (`/es/privacy`),
+404 propia y **Io**, un asistente de respuestas predefinidas (sin IA) que abre
+desde el botón flotante del robot.
 
 > Las demostraciones son **simulaciones locales y deterministas**, identificadas
 > como ilustrativas en la interfaz: muestran posibilidades, y cada implementación
@@ -59,14 +64,19 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
    definir un webhook, y cargar las variables.
 2. **Datos de contacto reales**: correo y número de WhatsApp.
 3. **Dominio** y `NEXT_PUBLIC_SITE_URL`.
-4. **Analítica**: no hay ninguna instalada. El punto de conexión es
-   `src/lib/analytics.ts` (`track()` ya se llama en los eventos clave). Si se
-   añade un script de terceros, la CSP lo bloqueará hasta cargarlo con el
-   nonce (ver `docs/SECURITY.md`).
+4. **Analítica sin cookies (Vercel Web Analytics)**: ya está en el código, apagada.
+   Para encenderla, activa *Web Analytics* en la pestaña *Analytics* del
+   proyecto en Vercel, añade la variable `ENABLE_ANALYTICS=1` y vuelve a
+   desplegar. Cuenta visitas sin cookies ni datos personales; los eventos del
+   formulario (`src/lib/analytics.ts`) solo se guardan en los planes de pago de
+   Vercel.
 5. **Límite de envíos en Vercel**: el código ya limita por IP (honeypot,
    validación, origen, tamaño y frecuencia), pero el límite definitivo es una
    regla del Firewall de Vercel. Pasos en `docs/SECURITY.md`.
-6. **Logotipo definitivo**: el wordmark es provisional (`src/components/brand/Wordmark.tsx`).
+6. **Logotipo definitivo**: hoy "AIO9" es texto en League Gothic con el 9 azul
+   (`src/components/layout/Header.tsx`, `Footer.tsx` y la tarjeta para compartir
+   en `src/lib/share-card.tsx`). El ícono del navegador es `src/app/icon.svg`.
+   Si hay un logotipo definitivo, se cambia en esos archivos.
 ## Despliegue en Vercel
 
 1. En Vercel: **Add New → Project** e importa `gudijosh/AIO9`. Detecta Next.js
@@ -103,4 +113,6 @@ servidor; no es un export estático.
 - [`docs/SECURITY.md`](docs/SECURITY.md): CSP, cabeceras, protección de la API y lo que hay que configurar en Vercel.
 - [`docs/BOT.md`](docs/BOT.md): cómo funciona el bot de preguntas y cómo ampliar sus respuestas.
 - [`docs/SEO.md`](docs/SEO.md): página de preguntas, datos estructurados, `llms.txt` y rastreadores de IA.
+- Aviso de privacidad: `src/data/privacy.ts` (texto general con "AIO9" como responsable; conviene que lo revise un abogado antes del lanzamiento).
+- Revisión automática: `.github/workflows/ci.yml` corre lint, tipos, pruebas del bot, compilación y la suite funcional en cada PR.
 

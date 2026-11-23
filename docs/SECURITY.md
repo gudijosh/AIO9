@@ -18,7 +18,8 @@ Vercel. Las pruebas de todo esto están en `tests/functional.js`; ver
 | Menciones o enlaces disfrazados en Slack/Discord | Se escapan `& < >` y `allowed_mentions` vacío | `src/lib/contact-delivery.ts` |
 | Llamadas salientes colgadas | Timeout de 8 s | `src/lib/contact-delivery.ts` |
 | Secretos en registros | Los errores se registran sin la URL del webhook ni datos del visitante | `src/app/api/contact/route.ts` |
-| Rutas inventadas | `/xx`, `/xx/faq` y su imagen social dan 404 sin renderizar | `src/app/[lang]/layout.tsx`, `opengraph-image.tsx` |
+| Rutas inventadas | Cualquier ruta inexistente da 404 con la página propia del sitio (con nonce); la imagen social de un idioma inventado, 404 sin renderizar | `src/proxy.ts`, `src/app/[lang]/[...rest]`, `opengraph-image.tsx` |
+| Seguimiento de visitantes | Sin cookies. La analítica (Vercel Web Analytics) está apagada hasta activarla y no usa cookies ni datos personales | `src/app/[lang]/layout.tsx` |
 | Pistas para atacantes | Sin `X-Powered-By` | `next.config.ts` |
 | Prompt injection en el bot | El bot no es una IA: compara con un catálogo fijo y responde textos fijos, en el navegador, sin red | `src/lib/bot/`, [BOT.md](BOT.md) |
 
