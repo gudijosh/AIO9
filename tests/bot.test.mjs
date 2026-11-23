@@ -1,7 +1,15 @@
 // Tests for the rule-based bot: knowledge base structure, engine safety and
-// matching accuracy on independent evaluation sets (tests/bot/eval.*.json).
+// matching accuracy on independent evaluation sets:
+// - tests/bot/eval.*.json: the first set. Its misses were later added to the
+//   catalogue, so its score is no longer a blind measure.
+// - tests/bot/dev.*.json: a second blind set, then used to widen the
+//   catalogue's vocabulary. Also no longer blind.
+// - tests/bot/holdout.*.json: written last, without seeing the catalogue,
+//   and never used to tune it. This is the honest number. Don't add its
+//   misses to the catalogue; when it gets stale, write a new holdout and
+//   demote this one to a tuning set.
 // Plain Node, no framework:  node tests/bot.test.mjs
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 import { isDeepStrictEqual } from "node:util";
 
@@ -18,6 +26,15 @@ const { intentIds } = await import("../src/lib/bot/intents.ts");
 const LOCALES = ["es", "en"];
 const IN_SCOPE_MIN = 0.9;
 const OUT_OF_SCOPE_MIN = 0.95;
+/**
+ * Extra sets and their in-scope floors. The blind holdout measured 64.7 % (ES)
+ * and 61.2 % (EN) when it was written; most of its misses are safe "I don't
+ * know, use the form" fallbacks. Its floor guards against regressions only.
+ */
+const EXTRA_SETS = [
+  ["dev", 0.9],
+  ["holdout", 0.6],
+];
 const MAX_WORDS = 60;
 const SLOW_MS = 50;
 const INDUSTRIES = new Set([
@@ -346,6 +363,26 @@ for (const locale of LOCALES) {
   }
   if (result.inScope < IN_SCOPE_MIN || result.outOfScope < OUT_OF_SCOPE_MIN) belowTarget = true;
   summary.push(`${locale} ${pct(result.inScope)} in-scope, ${pct(result.outOfScope)} out-of-scope fallback`);
+
+  for (const [name, inScopeMin] of EXTRA_SETS) {
+    const url = new URL(`./bot/${name}.${locale}.json`, import.meta.url);
+    if (!existsSync(url)) continue;
+    const set = JSON.parse(readFileSync(url, "utf8"));
+    checkEngine(locale, kb, set.outOfScope);
+    const r = evaluate(locale, kb, set);
+    console.log(`--- ${locale} ${name}${name === "holdout" ? " (blind)" : ""} ---`);
+    console.log(`in-scope: ${pct(r.inScope)} of ${r.total}; out-of-scope fallback: ${pct(r.outOfScope)} of ${r.totalOut}`);
+    if (r.misses.length > 0) {
+      console.log(`misses (${r.misses.length}):`);
+      for (const m of r.misses) console.log(`  [${m.expected}] ${show(m.q)} -> ${m.got}${m.half ? " (half)" : ""}`);
+    }
+    if (r.leaks.length > 0) {
+      console.log(`out-of-scope not falling back (${r.leaks.length}):`);
+      for (const l of r.leaks) console.log(`  ${show(l.q)} -> ${l.got}`);
+    }
+    if (r.inScope < inScopeMin || r.outOfScope < OUT_OF_SCOPE_MIN) belowTarget = true;
+    summary.push(`${locale} ${name} ${pct(r.inScope)} in-scope, ${pct(r.outOfScope)} out-of-scope fallback`);
+  }
 }
 
 if (failures.length > 0) {
@@ -354,6 +391,8 @@ if (failures.length > 0) {
 }
 console.log(`\nbot: ${summary.join("; ")}`);
 if (belowTarget) {
-  console.log(`below target: in-scope must be >= ${pct(IN_SCOPE_MIN)} and out-of-scope fallback >= ${pct(OUT_OF_SCOPE_MIN)}`);
+  console.log(
+    `below target: in-scope must be >= ${pct(IN_SCOPE_MIN)} (${EXTRA_SETS.map(([n, m]) => `${n} >= ${pct(m)}`).join(", ")}) and out-of-scope fallback >= ${pct(OUT_OF_SCOPE_MIN)}`,
+  );
 }
 process.exit(failures.length > 0 || belowTarget || summary.length < LOCALES.length ? 1 : 0);

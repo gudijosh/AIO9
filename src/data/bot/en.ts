@@ -36,6 +36,9 @@ export const kb: BotKnowledge = {
     actions: [toForm, seeFaq],
   },
   stopwords: [
+    "possible", "particular", "specific", "run", "running", "own", "owner", "private", "set", "under", "people", "getting", "going", "serious", "wow",
+    "android", "iphone", "ios",
+    "lol", "lmao", "anyways", "kinda", "sorta", "literally", "included", "include", "includes", "point", "anytime", "hood",
     // articles, prepositions, conjunctions
     "a", "an", "the", "and", "or", "but", "if", "of", "to", "in", "on", "at", "for", "with",
     "from", "by", "about", "as", "into", "onto", "than", "then", "so", "too", "very", "just",
@@ -60,6 +63,15 @@ export const kb: BotKnowledge = {
     "currently", "goes", "make", "makes", "making", "build", "builds", "building",
   ],
   synonyms: {
+    filter: "qualify", filtering: "qualify", parties: "share", party: "share",
+    // wider vocabulary (business types, tools, fillers)
+    taco: "restaurant", tacos: "restaurant", taqueria: "restaurant", inn: "hotel", bnb: "hotel", airbnb: "hotel",
+    lodge: "hotel", physiotherapist: "healthcare", physio: "healthcare", therapist: "healthcare", chiropractor: "healthcare", psychologist: "healthcare",
+    nutritionist: "healthcare", optometrist: "healthcare", architect: "professional", architects: "professional", architecture: "professional", bookkeeper: "accountant",
+    corn: "crop", maize: "crop", harvest: "crop", sprinkler: "irrigation", machinery: "industrial", plc: "industrial",
+    sap: "erp", quickbooks: "erp", xero: "erp", odoo: "erp", netsuite: "erp", hubspot: "crm",
+    salesforce: "crm", pipedrive: "crm", hook: "connect", strategic: "partner", tailor: "custom", tailormade: "custom", reports: "document", report: "document", specialize: "industry",
+    specialise: "industry", specialty: "industry", mixing: "combine",
     // greeting, thanks, goodbye
     hii: "hi", hiya: "hi", heya: "hey", yo: "hey", sup: "hey", hallo: "hello", helo: "hello",
     howdy: "hello", greetings: "hello",
@@ -233,8 +245,7 @@ export const kb: BotKnowledge = {
     dm: "message", dms: "message", texts: "message", inbox: "message", replies: "reply",
     respond: "reply", responds: "reply", answers: "reply", answer: "reply",
     answering: "reply", responses: "reply", response: "reply", chats: "chat",
-    apps: "app", application: "app", applications: "app", mobile: "app",
-    develop: "development", developer: "development", developers: "development",
+    apps: "app", application: "app", applications: "app", develop: "development", developer: "development", developers: "development",
     dev: "development", programming: "development", programmer: "development",
     coding: "development", bespoke: "custom", tailored: "custom",
     documents: "document", docs: "document", files: "document", paperwork: "document",
@@ -342,6 +353,7 @@ export const kb: BotKnowledge = {
       id: "about",
       label: "What is AIO9",
       patterns: [
+        "who are you guys", "what is aio9 all about", "tell me about your company",
         "what is aio9", "what's aio9", "what do you do", "who is aio9", "what does aio9 do",
         "tell me about aio9", "what is this company", "what kind of company is aio9",
         "whats aio9 about", "what do you guys do exactly", "about aio9", "aio9?",
@@ -424,6 +436,7 @@ export const kb: BotKnowledge = {
       id: "combine",
       label: "Combining products",
       patterns: [
+        "can i use automate and devices together", "i want to combine two of your services", "can i mix products",
         "can i combine products", "can i get several services together", "use several products together",
         "full package", "combine automate and web", "everything together",
         "can i have web and automate together", "mix and match", "bundle", "multiple products together",
@@ -452,6 +465,7 @@ export const kb: BotKnowledge = {
       id: "healthcare",
       label: "Healthcare",
       patterns: [
+        "i run a clinic how can you help", "i have a dental office does it work", "for my clinic what do you offer",
         "do you work with clinics", "i have a clinic", "for doctors", "for hospitals",
         "i'm a doctor", "dental clinic", "what do you do in healthcare", "vet clinic",
         "healthcare sector", "we miss a lot of patient calls", "i'm a dentist", "medical practice",
@@ -479,6 +493,7 @@ export const kb: BotKnowledge = {
       id: "restaurants",
       label: "Restaurants",
       patterns: [
+        "i have a restaurant what do you offer", "i own a restaurant how can you help",
         "i have a restaurant", "for restaurants", "for my cafe", "do you work with restaurants",
         "i own a bar", "food business", "hospitality sector", "for hotels", "i run a pizzeria",
         "what do you do for restaurants", "small diner", "i run a bistro",
@@ -518,6 +533,7 @@ export const kb: BotKnowledge = {
       id: "professional_services",
       label: "Professional services",
       patterns: [
+        "im an accountant is aio9 useful for me", "i run a law firm can you help", "do you work with accountants",
         "i'm a lawyer", "accounting firm", "law firm", "professional services", "for accountants",
         "consulting firm", "notary services", "legal practice",
         "what do you do for professional services", "we do audits", "bookkeeping business",
@@ -532,6 +548,7 @@ export const kb: BotKnowledge = {
       id: "operations",
       label: "Operations",
       patterns: [
+        "how do you help with operations", "can you detect problems with deliveries", "what about late deliveries",
         "logistics", "logistics company", "i manage deliveries", "we run a distribution company",
         "order management", "delivery issues", "for operations", "deliveries outside business hours",
         "courier company", "supply chain", "what do you do in operations", "spot issues in orders",
@@ -647,6 +664,8 @@ export const kb: BotKnowledge = {
       id: "sensors",
       label: "Sensors and IoT",
       patterns: [
+        "do you automate machines", "automation for machines and equipment",
+        "do you install sensors", "do you put in the sensors",
         "do you do iot", "internet of things", "sensors", "industrial automation", "sensor monitoring",
         "temperature sensor", "measure humidity and temperature", "telemetry",
         "can you put sensors in my business", "what sensors do you use", "equipment monitoring",
@@ -720,6 +739,7 @@ export const kb: BotKnowledge = {
       id: "human_review",
       label: "Human review",
       patterns: [
+        "does someone approve actions before they are applied", "is there a human checking the ai",
         "does the ai decide on its own", "does it make decisions alone", "is there human oversight",
         "does someone review what the ai does", "what if the ai makes a mistake", "does it need approval",
         "is it fully autonomous", "who approves the changes", "does the ai do everything by itself",
@@ -734,6 +754,7 @@ export const kb: BotKnowledge = {
       id: "integrations",
       label: "Integrations",
       patterns: [
+        "does it work with excel or google sheets", "can it connect to my accounting software",
         "does it connect to my system", "does it integrate with my crm", "does it work with excel",
         "can it connect to our erp", "do you have an api", "does it connect with what i already use",
         "integrations with other tools", "can it sync with my spreadsheets", "connect to my current software",
@@ -835,6 +856,7 @@ export const kb: BotKnowledge = {
       id: "contact_channels",
       label: "Contact",
       patterns: [
+        "what is your email", "whats your email address",
         "do you have whatsapp", "phone number", "what's your email", "email address", "are you on instagram",
         "facebook", "how do i contact you", "what number can i call", "social media", "give me your cell",
         "can you call me", "linkedin",
@@ -866,6 +888,7 @@ export const kb: BotKnowledge = {
       id: "languages",
       label: "Languages",
       patterns: [
+        "what languages do you support",
         "do you speak spanish", "is the site in spanish", "spanish version", "espanol", "what languages",
         "do you work in english", "can i change the language", "is there an english version",
         "switch to spanish", "available languages", "habla español?",
@@ -926,6 +949,7 @@ export const kb: BotKnowledge = {
       id: "privacy",
       label: "Privacy",
       patterns: [
+        "do you store this conversation",
         "what do you do with my data", "do you store my data", "is it safe", "privacy policy",
         "do you sell my data", "is my data protected", "do you save what i type", "is this chat recorded",
         "gdpr", "data protection", "is it confidential", "do you share my info",
@@ -973,6 +997,7 @@ export const kb: BotKnowledge = {
       id: "custom_software",
       label: "Custom software",
       patterns: [
+        "i need a system to manage my business", "i want an app for my company",
         "do you develop software", "do you make apps", "i need an app", "custom system for my company",
         "can you build me a system", "software development", "app for my business", "do you build erp",
         "management system", "mobile app", "billing system", "bespoke software",
@@ -1019,6 +1044,7 @@ export const kb: BotKnowledge = {
       id: "reservations",
       label: "Reservations",
       patterns: [
+        "i want customers to book online", "online bookings for my customers",
         "automatic reservations", "take reservations", "book a table", "reservation system",
         "bot for bookings", "take bookings automatically", "reservations through whatsapp", "manage my restaurant reservations",
         "booking", "hotel reservations", "confirm reservations", "table bookings",
@@ -1079,6 +1105,8 @@ export const kb: BotKnowledge = {
       id: "compliment",
       label: "Compliment",
       patterns: [
+        "this page is really cool", "cool site", "nice website",
+        "great job this is awesome", "love the site", "this looks amazing",
         "nice site", "i love this site", "the site looks great", "cool website", "awesome", "love it",
         "love the design", "looks amazing", "beautiful site", "impressive", "kudos", "congrats on the site",
       ],
@@ -1093,6 +1121,7 @@ export const kb: BotKnowledge = {
       id: "insult",
       label: "Complaint",
       patterns: [
+        "this is a piece of crap", "this sucks",
         "you're useless", "stupid bot", "this is garbage", "you suck", "idiot", "worst bot ever",
         "this is trash", "dumb bot", "wtf", "this bot is crap", "you're pathetic", "shit bot",
       ],

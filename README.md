@@ -12,10 +12,14 @@ aparte: es parte del tercer paso del proceso, "Conectamos y capacitamos".
 Los seis rubros (Salud, Restaurantes, Bienes raíces, Comercio, Servicios y
 Operaciones) y los cuatro sectores de AIO9 Devices (Granjas, Inventarios, Flota
 y Agro) son ejemplos de aplicación: cada uno tiene su propia ventana de
-software que reproduce sola, paso a paso, cómo se vería la solución, y vuelve
-a empezar. Rubros, productos y sectores se presentan de dos en dos, cada uno
-con su propia entrada al aparecer, y la página termina en el formulario de
-contacto.
+software que reproduce sola, paso a paso, cómo se vería la solución mientras
+está a la vista, y vuelve a empezar. Rubros, productos y sectores se presentan
+de dos en dos, cada uno con su propia entrada al aparecer; después vienen el
+proceso, los videos y el formulario de contacto.
+
+Además: página de preguntas (`/es/faq`), aviso de privacidad (`/es/privacy`),
+404 propia y **Io**, un asistente de respuestas predefinidas (sin IA) que abre
+desde el botón flotante del robot.
 
 > Las demostraciones son **simulaciones locales y deterministas**, identificadas
 > como ilustrativas en la interfaz: muestran posibilidades, y cada implementación
@@ -78,7 +82,8 @@ Copia `.env.example` a `.env.local`. Todas son opcionales.
    `src/components/layout/Footer.tsx`, `src/components/impact/Preloader.tsx` y
    `src/lib/share-card.tsx` (imagen para compartir). El ícono está en
    `src/app/icon.svg` y su versión para la pantalla de inicio en
-   `src/lib/app-icon.tsx`.
+   `src/lib/app-icon.tsx`. Si hay un logotipo definitivo, se cambia en esos
+   archivos.
 
 ## Despliegue en Vercel
 
